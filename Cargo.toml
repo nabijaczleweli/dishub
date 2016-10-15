@@ -1,6 +1,6 @@
 [package]
 name = "dishub"
-description = "Tool for making/verifying dishub of directory trees"
+description = "App for posting GitHub activity on Discord"
 documentation = "https://cdn.rawgit.com/nabijaczleweli/dishub/doc/dishub/index.html"
 repository = "https://github.com/nabijaczleweli/dishub"
 readme = "README.md"
