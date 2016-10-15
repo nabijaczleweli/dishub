@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Error","Enum representing all possible ways the application can fail."]],"mod":[["options","This module contains the configuration of the application."]]});
+initSidebarItems({"enum":[["Error","Enum representing all possible ways the application can fail."]],"mod":[["ops","Main functions doing actual work."],["options","This module contains the configuration of the application."],["util","Module containing various utility functions."]]});

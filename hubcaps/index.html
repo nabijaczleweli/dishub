@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `hubcaps` crate.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, hubcaps">
+
+    <title>hubcaps - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'></p><script>window.sidebarCurrent = {name: 'hubcaps', ty: 'mod', relpath: '../'};</script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content mod">
+<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>hubcaps</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-0' class='srclink' href='../src/hubcaps/lib.rs.html#1-310' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>Hubcaps provides a set of building blocks for interacting with the Github API</p>
+</div><h2 id='reexports' class='section-header'><a href="#reexports">Reexports</a></h2>
+<table><tr><td><code>pub use <a class='mod' href='../hubcaps/rep/index.html' title='hubcaps::rep'>rep</a>::*;</code></td></tr><tr><td><code>pub use errors::<a class='enum' href='../hubcaps/errors/enum.Error.html' title='hubcaps::errors::Error'>Error</a>;</code></td></tr></table><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='deployments/index.html'
+                                  title='hubcaps::deployments'>deployments</a></td>
+                           <td class='docblock short'>
+                                <p>Deployments interface</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='errors/index.html'
+                                  title='hubcaps::errors'>errors</a></td>
+                           <td class='docblock short'>
+                                <p>Client errors</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='gists/index.html'
+                                  title='hubcaps::gists'>gists</a></td>
+                           <td class='docblock short'>
+                                <p>Gists interface</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='issues/index.html'
+                                  title='hubcaps::issues'>issues</a></td>
+                           <td class='docblock short'>
+                                <p>Issues interface</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='keys/index.html'
+                                  title='hubcaps::keys'>keys</a></td>
+                           <td class='docblock short'>
+                                <p>Deploy keys interface
+This <a href="https://developer.github.com/guides/managing-deploy-keys/">this document</a> for motivation and use</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='labels/index.html'
+                                  title='hubcaps::labels'>labels</a></td>
+                           <td class='docblock short'>
+                                <p>Labels interface</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='organizations/index.html'
+                                  title='hubcaps::organizations'>organizations</a></td>
+                           <td class='docblock short'>
+                                
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='pulls/index.html'
+                                  title='hubcaps::pulls'>pulls</a></td>
+                           <td class='docblock short'>
+                                <p>Pull requests interface</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='releases/index.html'
+                                  title='hubcaps::releases'>releases</a></td>
+                           <td class='docblock short'>
+                                <p>Releases inteface</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='rep/index.html'
+                                  title='hubcaps::rep'>rep</a></td>
+                           <td class='docblock short'>
+                                <p>Rust representations of Github API data structures</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='repositories/index.html'
+                                  title='hubcaps::repositories'>repositories</a></td>
+                           <td class='docblock short'>
+                                <p>Repository interface</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='mod' href='statuses/index.html'
+                                  title='hubcaps::statuses'>statuses</a></td>
+                           <td class='docblock short'>
+                                <p>Statuses interface</p>
+                           </td>
+                       </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='struct' href='struct.Github.html'
+                                  title='hubcaps::Github'>Github</a></td>
+                           <td class='docblock short'>
+                                <p>Entry point interface for interacting with Github API</p>
+                           </td>
+                       </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.Credentials.html'
+                                  title='hubcaps::Credentials'>Credentials</a></td>
+                           <td class='docblock short'>
+                                <p>Various forms of authentication credentials supported by Github</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.SortDirection.html'
+                                  title='hubcaps::SortDirection'>SortDirection</a></td>
+                           <td class='docblock short'>
+                                <p>enum representation of Github list sorting options</p>
+                           </td>
+                       </tr>
+                       <tr class=' module-item'>
+                           <td><a class='enum' href='enum.State.html'
+                                  title='hubcaps::State'>State</a></td>
+                           <td class='docblock short'>
+                                <p>enum representation of github pull and issue state</p>
+                           </td>
+                       </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
+<table>
+                       <tr class=' module-item'>
+                           <td><a class='type' href='type.Result.html'
+                                  title='hubcaps::Result'>Result</a></td>
+                           <td class='docblock short'>
+                                <p>alias for Result that infers hubcaps::Error as Err</p>
+                           </td>
+                       </tr></table></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "hubcaps";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

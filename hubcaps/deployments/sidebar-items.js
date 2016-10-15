@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["DeploymentStatuses","INterface for deployment statuses"],["Deployments","Interface for repository deployements"]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Statuses","interface for statuses assocaited with a repository"]]});

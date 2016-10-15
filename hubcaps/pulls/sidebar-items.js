@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Sort","Sort directions for pull requests"]],"struct":[["PullRequest","A structure for accessing interfacing with a specific pull request"],["PullRequests","A structure for interfacing with a repositories list of pull requests"]]});

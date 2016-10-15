@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["init",""]],"struct":[["AppTokens","The tokens needed to authenticate the app to GitHub."]]});

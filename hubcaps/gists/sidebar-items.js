@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Gists",""],["UserGists","reference to gists associated with a github user"]]});
