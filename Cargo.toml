@@ -1,0 +1,23 @@
+[package]
+name = "dishub"
+description = "Tool for making/verifying dishub of directory trees"
+documentation = "https://cdn.rawgit.com/nabijaczleweli/dishub/doc/dishub/index.html"
+repository = "https://github.com/nabijaczleweli/dishub"
+readme = "README.md"
+keywords = ["discord", "github", "activity", "post"]
+license = "MIT"
+# Remember to also update in appveyor.yml
+version = "0.1.0"
+# Remember to also update in dishub.md
+authors = ["nabijaczleweli <nabijaczleweli@gmail.com>"]
+exclude = ["*.enc"]
+
+
+[dependencies]
+clap = "2.14"
+
+
+[[bin]]
+name = "dishub"
+test = false
+doc = false
