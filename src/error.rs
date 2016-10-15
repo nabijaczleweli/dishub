@@ -1,3 +1,4 @@
+use self::super::util::uppercase_first;
 use std::io::Write;
 
 
@@ -20,10 +21,21 @@ pub enum Error {
         /// The parsing errors that occured.
         errors: Vec<String>,
     },
+    /// An I/O error occured.
+    ///
+    /// This includes higher-level I/O errors like FS ones.
+    Io {
+        /// The file the I/O operation regards.
+        desc: &'static str,
+        /// The failed operation.
+        ///
+        /// This should be lowercase and imperative ("create", "open").
+        op: &'static str,
+    },
 }
 
 impl Error {
-    /// Get the executable exit value from an `Error` instance.
+    /// Write the error message to the specified output stream.
     ///
     /// # Examples
     ///
@@ -53,6 +65,15 @@ impl Error {
                     writeln!(err_out, "  {}", err).unwrap()
                 }
             }
+            Error::Io { desc, op } => {
+                // Strip the last 'e', if any, so we get correct inflection for continuous times
+                let op = uppercase_first(if op.ends_with('e') {
+                    &op[..op.len() - 1]
+                } else {
+                    op
+                });
+                writeln!(err_out, "{}ing {} failed.", op, desc).unwrap()
+            }
         }
     }
 
@@ -72,6 +93,7 @@ impl Error {
             Error::OverrideNoForce(_) => 1,
             Error::RequiredFileFromSubsystemNonexistant { .. } => 2,
             Error::FileParsingFailed { .. } => 3,
+            Error::Io { .. } => 4,
         }
     }
 }

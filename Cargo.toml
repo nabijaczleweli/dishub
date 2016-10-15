@@ -14,7 +14,10 @@ exclude = ["*.enc"]
 
 
 [dependencies]
+rustc-serialize = "0.3"
+hubcaps = "0.2"
 clap = "2.14"
+toml = "0.2"
 
 
 [[bin]]

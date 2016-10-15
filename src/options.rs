@@ -18,7 +18,7 @@ use std::fs;
 
 
 /// All possible subsystems, think `cargo`'s or `git`'s.
-#[derive(Debug, Clone, Hash, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
 pub enum Subsystem {
     /// Initialise global app data
     Init {
@@ -49,7 +49,9 @@ impl Options {
             .about("Rust app for posting GitHub activity on Discord")
             .arg(Arg::from_usage("-c --config-dir=[CONFIG_DIR] 'Directory containing configuration. Default: $HOME/.dishub'")
                 .validator(Options::config_dir_validator))
-            .subcommand(SubCommand::with_name("init").about("Initialise global app data"))
+            .subcommand(SubCommand::with_name("init")
+                .about("Initialise global app data")
+                .arg(Arg::from_usage("-f --force 'Override current app configuration'")))
             .get_matches();
 
         Options {

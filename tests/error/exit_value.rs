@@ -25,3 +25,8 @@ fn file_parsing_failed() {
                    .exit_value(),
                3);
 }
+
+#[test]
+fn io() {
+    assert_eq!(Error::Io { desc: "", op: "" }.exit_value(), 4);
+}

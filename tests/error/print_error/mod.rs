@@ -25,3 +25,14 @@ fn required_file_from_subsystem_nonexistant() {
     assert_eq!(String::from_iter(out.iter().map(|&i| i as char)),
                "Run the init subsystem first to produce \"$HOME/.dishub/app.toml\".\n".to_string());
 }
+
+#[test]
+fn io() {
+    let mut out = Vec::new();
+    Error::Io {
+            desc: "GitHub tokens",
+            op: "open",
+        }
+        .print_error(&mut out);
+    assert_eq!(String::from_iter(out.iter().map(|&i| i as char)), "Opening GitHub tokens failed.\n".to_string());
+}
