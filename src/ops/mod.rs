@@ -38,19 +38,12 @@ fn verify_file(fname: &str, should_exist: bool, config_dir: &(String, PathBuf), 
 
 fn read_toml_file<T: Decodable>(p: &Path, desc: &'static str) -> Result<T, Error> {
     let mut buf = String::new();
-    try!(try!(File::open(p).map_err(|_| {
-            Error::Io {
-                desc: desc,
-                op: "open",
-            }
-        }))
-        .read_to_string(&mut buf)
-        .map_err(|_| {
-            Error::Io {
-                desc: desc,
-                op: "read",
-            }
-        }));
+    try!(File::open(p).map_err(|_| "open").and_then(|mut p| p.read_to_string(&mut buf).map_err(|_| "read")).map_err(|op| {
+        Error::Io {
+            desc: desc,
+            op: op,
+        }
+    }));
 
     let mut parser = Parser::new(&buf);
     let parsed = parser.parse().and_then(|t| decode(Value::Table(t)));

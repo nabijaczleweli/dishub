@@ -29,6 +29,7 @@ impl AppTokens {
         File::create(p).unwrap().write_all(encode_str(&self).as_bytes()).unwrap();
     }
 
+    /// Get the GitHub credentials directly pluggable into `hubcaps`.
     pub fn github_credentials(&self) -> Credentials {
         Credentials::Token(self.github.clone())
     }
