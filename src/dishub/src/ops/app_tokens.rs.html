@@ -77,6 +77,7 @@
 <span id="33">33</span>
 <span id="34">34</span>
 <span id="35">35</span>
+<span id="36">36</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='self'>self</span>::<span class='kw'>super</span>::<span class='ident'>read_toml_file</span>;
 <span class='kw'>use</span> <span class='self'>self</span>::<span class='kw'>super</span>::<span class='kw'>super</span>::<span class='ident'>Error</span>;
@@ -109,6 +110,7 @@
         <span class='ident'>File</span>::<span class='ident'>create</span>(<span class='ident'>p</span>).<span class='ident'>unwrap</span>().<span class='ident'>write_all</span>(<span class='ident'>encode_str</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>).<span class='ident'>as_bytes</span>()).<span class='ident'>unwrap</span>();
     }
 
+    <span class='doccomment'>/// Get the GitHub credentials directly pluggable into `hubcaps`.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>github_credentials</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Credentials</span> {
         <span class='ident'>Credentials</span>::<span class='ident'>Token</span>(<span class='self'>self</span>.<span class='ident'>github</span>.<span class='ident'>clone</span>())
     }
