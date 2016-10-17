@@ -1,4 +1,3 @@
-extern crate hubcaps;
 extern crate dishub;
 
 mod error;

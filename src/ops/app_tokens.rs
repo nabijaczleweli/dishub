@@ -1,6 +1,5 @@
 use self::super::read_toml_file;
 use self::super::super::Error;
-use hubcaps::Credentials;
 use toml::encode_str;
 use std::path::Path;
 use std::io::Write;
@@ -27,10 +26,5 @@ impl AppTokens {
     /// Save the application GitHub tokens to the specified file.
     pub fn write(&self, p: &Path) {
         File::create(p).unwrap().write_all(encode_str(&self).as_bytes()).unwrap();
-    }
-
-    /// Get the GitHub credentials directly pluggable into `hubcaps`.
-    pub fn github_credentials(&self) -> Credentials {
-        Credentials::Token(self.github.clone())
     }
 }

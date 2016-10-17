@@ -1,5 +1,5 @@
 extern crate rustc_serialize;
-extern crate hubcaps;
+extern crate hyper;
 #[macro_use]
 extern crate clap;
 extern crate toml;
