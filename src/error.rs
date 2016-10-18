@@ -32,6 +32,15 @@ pub enum Error {
         /// This should be lowercase and imperative ("create", "open").
         op: &'static str,
     },
+    /// An I/O error occured.
+    ///
+    /// This includes higher-level I/O errors like FS ones.
+    WatchedDoesNotExist {
+        /// The type of nonexistant resource.
+        tp: &'static str,
+        /// The name of the nonexistant resource.
+        name: String,
+    },
 }
 
 impl Error {
@@ -74,6 +83,7 @@ impl Error {
                 });
                 writeln!(err_out, "{}ing {} failed.", op, desc).unwrap()
             }
+            Error::WatchedDoesNotExist { tp, ref name } => writeln!(err_out, "The watched {} \"{}\" doesn't exist.", tp, name).unwrap(),
         }
     }
 
@@ -94,6 +104,7 @@ impl Error {
             Error::RequiredFileFromSubsystemNonexistant { .. } => 2,
             Error::FileParsingFailed { .. } => 3,
             Error::Io { .. } => 4,
+            Error::WatchedDoesNotExist { .. } => 5,
         }
     }
 }

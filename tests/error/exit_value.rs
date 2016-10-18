@@ -30,3 +30,13 @@ fn file_parsing_failed() {
 fn io() {
     assert_eq!(Error::Io { desc: "", op: "" }.exit_value(), 4);
 }
+
+#[test]
+fn watched_does_not_exist() {
+    assert_eq!(Error::WatchedDoesNotExist {
+                       tp: "",
+                       name: "".to_string(),
+                   }
+                   .exit_value(),
+               5);
+}

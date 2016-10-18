@@ -5,6 +5,10 @@ use std::io::{BufRead, Write, Result as IoResult, Error, ErrorKind};
 use std::iter;
 
 
+/// The User-Agent to use when authenticating to the GitHub API.
+pub static GITHUB_USER_AGENT: &'static str = concat!("dishub/", env!("CARGO_PKG_VERSION"));
+
+
 /// Uppercase the first character of the supplied string.
 ///
 /// Based on http://stackoverflow.com/a/38406885/2851815

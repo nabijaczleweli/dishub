@@ -25,6 +25,8 @@ pub enum Subsystem {
         /// Whether to override current app configuration. Default: `false`
         force: bool,
     },
+    /// Add feeds to post to servers
+    AddFeeds,
 }
 
 
@@ -52,6 +54,7 @@ impl Options {
             .subcommand(SubCommand::with_name("init")
                 .about("Initialise global app data")
                 .arg(Arg::from_usage("-f --force 'Override current app configuration'")))
+            .subcommand(SubCommand::with_name("add-feeds").about("Add feeds to post to servers"))
             .get_matches();
 
         Options {
@@ -79,6 +82,7 @@ impl Options {
             },
             subsystem: match matches.subcommand() {
                 ("init", Some(init_matches)) => Subsystem::Init { force: init_matches.is_present("force") },
+                ("add-feeds", _) => Subsystem::AddFeeds,
                 _ => panic!("No subcommand passed"),
             },
         }

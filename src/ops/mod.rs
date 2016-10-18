@@ -13,6 +13,8 @@ use std::io::Read;
 mod app_tokens;
 
 pub mod init;
+pub mod github;
+pub mod add_feeds;
 
 pub use self::app_tokens::AppTokens;
 

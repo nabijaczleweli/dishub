@@ -15,7 +15,7 @@ exclude = ["*.enc"]
 
 [dependencies]
 rustc-serialize = "0.3"
-github-rs = "0.1"
+hyper = "0.9"
 clap = "2.14"
 toml = "0.2"
 
