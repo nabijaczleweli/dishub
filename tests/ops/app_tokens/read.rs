@@ -40,9 +40,8 @@ fn incorrect() {
 
 #[test]
 fn nonexistant() {
-    assert_eq!(AppTokens::read(&make_dir("app-tokens-read", "nonexistant")),
-               Err(Error::Io {
-                   desc: "App tokens",
-                   op: "open",
-               }));
+    // Linux makes this read rather than open
+    if let Err(Error::Io { desc: "App tokens", op: _ }) = AppTokens::read(&make_dir("app-tokens-read", "nonexistant")) {} else {
+        assert!(false);
+    }
 }
