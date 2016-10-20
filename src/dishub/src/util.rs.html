@@ -340,12 +340,20 @@
 <span id="296">296</span>
 <span id="297">297</span>
 <span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Module containing various utility functions.</span>
 
 
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::{<span class='ident'>BufRead</span>, <span class='ident'>Write</span>, <span class='prelude-ty'>Result</span> <span class='kw'>as</span> <span class='ident'>IoResult</span>, <span class='ident'>Error</span>, <span class='ident'>ErrorKind</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>iter</span>;
+
+
+<span class='doccomment'>/// The User-Agent to use when authenticating to the GitHub API.</span>
+<span class='kw'>pub</span> <span class='kw'>static</span> <span class='ident'>GITHUB_USER_AGENT</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='macro'>concat</span><span class='macro'>!</span>(<span class='string'>&quot;dishub/&quot;</span>, <span class='macro'>env</span><span class='macro'>!</span>(<span class='string'>&quot;CARGO_PKG_VERSION&quot;</span>));
 
 
 <span class='doccomment'>/// Uppercase the first character of the supplied string.</span>

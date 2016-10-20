@@ -132,6 +132,10 @@
 <span id="88">88</span>
 <span id="89">89</span>
 <span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
+<span id="93">93</span>
+<span id="94">94</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! This module contains the configuration of the application.</span>
 <span class='doccomment'>//!</span>
@@ -160,6 +164,8 @@
         <span class='doccomment'>/// Whether to override current app configuration. Default: `false`</span>
         <span class='ident'>force</span>: <span class='ident'>bool</span>,
     },
+    <span class='doccomment'>/// Add feeds to post to servers</span>
+    <span class='ident'>AddFeeds</span>,
 }
 
 
@@ -187,6 +193,7 @@
             .<span class='ident'>subcommand</span>(<span class='ident'>SubCommand</span>::<span class='ident'>with_name</span>(<span class='string'>&quot;init&quot;</span>)
                 .<span class='ident'>about</span>(<span class='string'>&quot;Initialise global app data&quot;</span>)
                 .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-f --force &#39;Override current app configuration&#39;&quot;</span>)))
+            .<span class='ident'>subcommand</span>(<span class='ident'>SubCommand</span>::<span class='ident'>with_name</span>(<span class='string'>&quot;add-feeds&quot;</span>).<span class='ident'>about</span>(<span class='string'>&quot;Add feeds to post to servers&quot;</span>))
             .<span class='ident'>get_matches</span>();
 
         <span class='ident'>Options</span> {
@@ -214,6 +221,7 @@
             },
             <span class='ident'>subsystem</span>: <span class='kw'>match</span> <span class='ident'>matches</span>.<span class='ident'>subcommand</span>() {
                 (<span class='string'>&quot;init&quot;</span>, <span class='prelude-val'>Some</span>(<span class='ident'>init_matches</span>)) <span class='op'>=&gt;</span> <span class='ident'>Subsystem</span>::<span class='ident'>Init</span> { <span class='ident'>force</span>: <span class='ident'>init_matches</span>.<span class='ident'>is_present</span>(<span class='string'>&quot;force&quot;</span>) },
+                (<span class='string'>&quot;add-feeds&quot;</span>, _) <span class='op'>=&gt;</span> <span class='ident'>Subsystem</span>::<span class='ident'>AddFeeds</span>,
                 _ <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;No subcommand passed&quot;</span>),
             },
         }

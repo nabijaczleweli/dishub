@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["init",""]],"struct":[["AppTokens","The tokens needed to authenticate the app to GitHub."]]});
+initSidebarItems({"mod":[["add_feeds",""],["github",""],["init",""]],"struct":[["AppTokens","The tokens needed to authenticate the app to GitHub."]]});
