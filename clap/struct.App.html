@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-2760' class='srclink' href='../src/clap/app/mod.rs.html#63-68' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-2738' class='srclink' href='../src/clap/app/mod.rs.html#62-67' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct App&lt;'a,&nbsp;'b&gt; <span class='where'>where 'a: 'b</span> {
     // some fields omitted
 }</pre><div class='docblock'><p>Used to create a representation of a command line program and all possible command line
@@ -74,7 +74,7 @@ called).</p>
     .<span class='ident'>get_matches</span>();
 
 <span class='comment'>// Your program logic starts here...</span></pre>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a,&nbsp;'b&gt; <a class='struct' href='../clap/struct.App.html' title='clap::App'>App</a>&lt;'a,&nbsp;'b&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2764' class='srclink' href='../src/clap/app/mod.rs.html#71-1366' title='goto source code'>[src]</a></span></h3>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a,&nbsp;'b&gt; <a class='struct' href='../clap/struct.App.html' title='clap::App'>App</a>&lt;'a,&nbsp;'b&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2742' class='srclink' href='../src/clap/app/mod.rs.html#70-1370' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>&lt;S:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;&gt;(n: S) -&gt; Self</code></h4>
 <div class='docblock'><p>Creates a new instance of an application requiring a name. The name may be, but doesn&#39;t
 have to be same as the binary. The name will be displayed to the user when they request to
@@ -84,7 +84,8 @@ print version or help and usage information.</p>
 <pre class='rust rust-example-rendered'>
 <span class='kw'>let</span> <span class='ident'>prog</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;My Program&quot;</span>)</pre>
 </div><h4 id='method.with_defaults' class='method'><code>fn <a href='#method.with_defaults' class='fnname'>with_defaults</a>&lt;S:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;&gt;(n: S) -&gt; Self</code></h4>
-<div class='docblock'><p>Creates a new instance of an application requiring a name, but uses the <a href="./macro.crate_authors!.html"><code>crate_authors!</code></a>
+<div class='stability'><em class='stab deprecated'>Deprecated since 2.14.1<p>: Can never work; use explicit App::author() and App::version() calls instead</p>
+</em></div><div class='docblock'><p>Creates a new instance of an application requiring a name, but uses the <a href="./macro.crate_authors!.html"><code>crate_authors!</code></a>
 and <a href="./macro.crate_version!.html"><code>crate_version!</code></a> macros to fill in the <a href="./struct.App.html#method.author"><code>App::author</code></a> and <a href="./struct.App.html#method.author"><code>App::version</code></a> fields.</p>
 
 <h1 id='examples-2' class='section-header'><a href='#examples-2'>Examples</a></h1>
@@ -580,19 +581,19 @@ displayed in alphabetical order.</p>
 
 <p>The above example displays the following help message</p>
 
-<pre class='rust rust-example-rendered'>
-<span class='ident'>cust</span><span class='op'>-</span><span class='ident'>ord</span>
+<pre><code class="language-text">cust-ord
 
-<span class='ident'>USAGE</span>:
-    <span class='ident'>cust</span><span class='op'>-</span><span class='ident'>ord</span> [<span class='ident'>FLAGS</span>] [<span class='ident'>OPTIONS</span>]
+USAGE:
+    cust-ord [FLAGS] [OPTIONS]
 
-<span class='ident'>FLAGS</span>:
-    <span class='op'>-</span><span class='ident'>h</span>, <span class='op'>-</span><span class='op'>-</span><span class='ident'>help</span>       <span class='ident'>Prints</span> <span class='ident'>help</span> <span class='ident'>information</span>
-    <span class='op'>-</span><span class='ident'>V</span>, <span class='op'>-</span><span class='op'>-</span><span class='ident'>version</span>    <span class='ident'>Prints</span> <span class='ident'>version</span> <span class='ident'>information</span>
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
 
-<span class='ident'>SUBCOMMANDS</span>:
-    <span class='ident'>beta</span>    <span class='ident'>I</span> <span class='ident'>should</span> <span class='ident'>be</span> <span class='macro'>first</span><span class='macro'>!</span>
-    <span class='ident'>alpha</span>   <span class='prelude-val'>Some</span> <span class='ident'>help</span> <span class='ident'>and</span> <span class='ident'>text</span></pre>
+SUBCOMMANDS:
+    beta    I should be first!
+    alpha   Some help and text
+</code></pre>
 </div><h4 id='method.print_help' class='method'><code>fn <a href='#method.print_help' class='fnname'>print_help</a>(&amp;mut self) -&gt; <a class='type' href='../clap/type.Result.html' title='clap::Result'>ClapResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
 <div class='docblock'><p>Prints the full help message to <a href="https://doc.rust-lang.org/std/io/fn.stdout.html"><code>io::stdout()</code></a> using a <a href="https://doc.rust-lang.org/std/io/struct.BufWriter.html"><code>BufWriter</code></a></p>
 
@@ -608,7 +609,7 @@ displayed in alphabetical order.</p>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>app</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;myprog&quot;</span>);
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>out</span> <span class='op'>=</span> <span class='ident'>io</span>::<span class='ident'>stdout</span>();
-<span class='ident'>app</span>.<span class='ident'>write_help</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>out</span>).<span class='ident'>ok</span>().<span class='ident'>expect</span>(<span class='string'>&quot;failed to write to stdout&quot;</span>);</pre>
+<span class='ident'>app</span>.<span class='ident'>write_help</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>out</span>).<span class='ident'>expect</span>(<span class='string'>&quot;failed to write to stdout&quot;</span>);</pre>
 </div><h4 id='method.write_version' class='method'><code>fn <a href='#method.write_version' class='fnname'>write_version</a>&lt;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>&gt;(&amp;self, w: &amp;mut W) -&gt; <a class='type' href='../clap/type.Result.html' title='clap::Result'>ClapResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
 <div class='docblock'><p>Writes the version message to the user to a <a href="https://doc.rust-lang.org/std/io/trait.Write.html"><code>io::Write</code></a> object</p>
 
@@ -617,7 +618,7 @@ displayed in alphabetical order.</p>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>app</span> <span class='op'>=</span> <span class='ident'>App</span>::<span class='ident'>new</span>(<span class='string'>&quot;myprog&quot;</span>);
 <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>out</span> <span class='op'>=</span> <span class='ident'>io</span>::<span class='ident'>stdout</span>();
-<span class='ident'>app</span>.<span class='ident'>write_version</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>out</span>).<span class='ident'>ok</span>().<span class='ident'>expect</span>(<span class='string'>&quot;failed to write to stdout&quot;</span>);</pre>
+<span class='ident'>app</span>.<span class='ident'>write_version</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>out</span>).<span class='ident'>expect</span>(<span class='string'>&quot;failed to write to stdout&quot;</span>);</pre>
 </div><h4 id='method.gen_completions' class='method'><code>fn <a href='#method.gen_completions' class='fnname'>gen_completions</a>&lt;T:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/std/ffi/os_str/struct.OsString.html' title='std::ffi::os_str::OsString'>OsString</a>&gt;,&nbsp;S:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.Into.html' title='core::convert::Into'>Into</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;&gt;(&amp;mut self, bin_name: S, for_shell: <a class='enum' href='../clap/enum.Shell.html' title='clap::Shell'>Shell</a>, out_dir: T)</code></h4>
 <div class='docblock'><p>Generate a completions file for a specified shell at compile time.</p>
 
@@ -666,11 +667,12 @@ do this as a function, or bare App definition is a matter of personal preference
 
 <p>Next, we set up our <code>Cargo.toml</code> to use a <code>build.rs</code> build script.</p>
 
-<pre class='rust rust-example-rendered'>
-<span class='ident'>build</span> <span class='op'>=</span> <span class='string'>&quot;build.rs&quot;</span>
+<pre><code class="language-toml"># Cargo.toml
+build = &quot;build.rs&quot;
 
-[<span class='ident'>build</span><span class='op'>-</span><span class='ident'>dependencies</span>]
-<span class='ident'>clap</span> <span class='op'>=</span> <span class='string'>&quot;2.9&quot;</span></pre>
+[build-dependencies]
+clap = &quot;2.9&quot;
+</code></pre>
 
 <p>Next, we place a <code>build.rs</code> in our project root.</p>
 
@@ -800,12 +802,12 @@ consume <code>self</code>.</p>
     <span class='comment'>// Args and options go here...</span>
 <span class='kw'>let</span> <span class='ident'>matches</span> <span class='op'>=</span> <span class='ident'>app</span>.<span class='ident'>get_matches_from_safe_borrow</span>(<span class='ident'>arg_vec</span>)
     .<span class='ident'>unwrap_or_else</span>( <span class='op'>|</span><span class='ident'>e</span><span class='op'>|</span> { <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;An error occurs: {}&quot;</span>, <span class='ident'>e</span>) });</pre>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a,&nbsp;'b&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../clap/struct.App.html' title='clap::App'>App</a>&lt;'a,&nbsp;'b&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2969' class='srclink' href='../src/clap/app/mod.rs.html#1502-1506' title='goto source code'>[src]</a></span></h3>
+</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl&lt;'a,&nbsp;'b&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../clap/struct.App.html' title='clap::App'>App</a>&lt;'a,&nbsp;'b&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2947' class='srclink' href='../src/clap/app/mod.rs.html#1501-1505' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; Self</code></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
 </div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
 <div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'n,&nbsp;'e&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a> for <a class='struct' href='../clap/struct.App.html' title='clap::App'>App</a>&lt;'n,&nbsp;'e&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3032' class='srclink' href='../src/clap/app/mod.rs.html#1587-1591' title='goto source code'>[src]</a></span></h3>
+</div></div><h3 class='impl'><span class='in-band'><code>impl&lt;'n,&nbsp;'e&gt; <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html' title='core::fmt::Display'>Display</a> for <a class='struct' href='../clap/struct.App.html' title='clap::App'>App</a>&lt;'n,&nbsp;'e&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3010' class='srclink' href='../src/clap/app/mod.rs.html#1586-1590' title='goto source code'>[src]</a></span></h3>
 <div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Display.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, f: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
 </div></div></section>
