@@ -13,7 +13,9 @@ pub fn verify(config_dir: &(String, PathBuf)) -> Result<(PathBuf, PathBuf), Erro
     let tokens = try!(verify_file("tokens.toml", true, config_dir, false, "init"));
     let feeds = try!(verify_file("feeds.toml", true, config_dir, true, ""));
 
-    File::create(&feeds).unwrap();
+    if !feeds.exists() {
+        File::create(&feeds).unwrap();
+    }
 
     Ok((tokens, feeds))
 }
