@@ -27,6 +27,8 @@ pub enum Subsystem {
     },
     /// Add feeds to post to servers
     AddFeeds,
+    /// Unsubscribe from selected followed feeds
+    UnfollowFeeds,
 }
 
 
@@ -55,6 +57,7 @@ impl Options {
                 .about("Initialise global app data")
                 .arg(Arg::from_usage("-f --force 'Override current app configuration'")))
             .subcommand(SubCommand::with_name("add-feeds").about("Add feeds to post to servers"))
+            .subcommand(SubCommand::with_name("unfollow-feeds").about("Unsubscribe from selected followed feeds"))
             .get_matches();
 
         Options {
@@ -83,6 +86,7 @@ impl Options {
             subsystem: match matches.subcommand() {
                 ("init", Some(init_matches)) => Subsystem::Init { force: init_matches.is_present("force") },
                 ("add-feeds", _) => Subsystem::AddFeeds,
+                ("unfollow-feeds", _) => Subsystem::UnfollowFeeds,
                 _ => panic!("No subcommand passed"),
             },
         }

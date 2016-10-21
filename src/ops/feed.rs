@@ -56,7 +56,7 @@ impl Feed {
 
     /// Read the application feeds from the specified file.
     pub fn read(p: &Path) -> Result<Vec<Feed>, Error> {
-        let feeds: Feeds = try!(read_toml_file(p, "App tokens"));
+        let feeds: Feeds = try!(read_toml_file(p, "Followed feeds"));
         Ok(feeds.feed.into_iter().map(FeedForSerialisation::into).collect())
     }
 

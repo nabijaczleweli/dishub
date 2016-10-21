@@ -26,6 +26,7 @@ fn result_main() -> Result<(), dishub::Error> {
     match opts.subsystem {
         dishub::options::Subsystem::Init { force } => init_main(opts, force),
         dishub::options::Subsystem::AddFeeds => add_feeds_main(opts),
+        dishub::options::Subsystem::UnfollowFeeds => unfollow_feeds_main(opts),
     }
 }
 
@@ -63,6 +64,27 @@ fn add_feeds_main(opts: dishub::options::Options) -> Result<(), dishub::Error> {
 
     let mut feeds = try!(dishub::ops::Feed::read(&feeds_path));
     feeds.push(dishub::ops::Feed::new(subject, server, channel));
+    dishub::ops::Feed::write(feeds, &feeds_path);
+
+    Ok(())
+}
+
+
+fn unfollow_feeds_main(opts: dishub::options::Options) -> Result<(), dishub::Error> {
+    let feeds_path = try!(dishub::ops::unfollow_feeds::verify(&opts.config_dir));
+
+    let stdin = stdin();
+    let mut lock = stdin.lock();
+
+    let mut feeds = try!(dishub::ops::Feed::read(&feeds_path));
+    dishub::ops::unfollow_feeds::print_feeds(&feeds, &mut stdout());
+    let to_remove = dishub::ops::unfollow_feeds::get_feeds_to_remove(&feeds, &mut lock, &mut stdout());
+
+    let idx_to_remove: Vec<_> = feeds.iter().enumerate().filter(|&(_, ref f)| to_remove.contains(&f.subject)).map(|(i, _)| i).collect();
+    for idx in idx_to_remove.into_iter() {
+        feeds.remove(idx);
+    }
+
     dishub::ops::Feed::write(feeds, &feeds_path);
 
     Ok(())
