@@ -3,6 +3,7 @@ use std::path::PathBuf;
 use std::env::temp_dir;
 
 mod init;
+mod feed;
 mod app_tokens;
 
 

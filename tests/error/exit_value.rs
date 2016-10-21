@@ -40,3 +40,8 @@ fn watched_does_not_exist() {
                    .exit_value(),
                5);
 }
+
+#[test]
+fn login_failed() {
+    assert_eq!(Error::LoginFailed("").exit_value(), 6);
+}

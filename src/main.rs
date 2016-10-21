@@ -55,5 +55,15 @@ fn add_feeds_main(opts: dishub::options::Options) -> Result<(), dishub::Error> {
 
     try!(dishub::ops::add_feeds::verify_subject(&subject, &tokens));
 
+    let servers = try!(dishub::ops::add_feeds::known_servers(&tokens));
+    let server = dishub::ops::add_feeds::get_valid_server(servers, &mut lock, &mut stdout());
+
+    let channels = try!(dishub::ops::add_feeds::channels_in_server(&tokens, server));
+    let channel = dishub::ops::add_feeds::get_valid_channel(channels, &mut lock, &mut stdout());
+
+    let mut feeds = try!(dishub::ops::Feed::read(&feeds_path));
+    feeds.push(dishub::ops::Feed::new(subject, server, channel));
+    dishub::ops::Feed::write(feeds, &feeds_path);
+
     Ok(())
 }

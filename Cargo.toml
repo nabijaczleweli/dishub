@@ -15,6 +15,8 @@ exclude = ["*.enc"]
 
 [dependencies]
 rustc-serialize = "0.3"
+discord = "0.6"
+chrono = "0.2"
 hyper = "0.9"
 clap = "2.14"
 toml = "0.2"

@@ -10,12 +10,14 @@ use self::super::Error;
 use std::fs::File;
 use std::io::Read;
 
+mod feed;
 mod app_tokens;
 
 pub mod init;
 pub mod github;
 pub mod add_feeds;
 
+pub use self::feed::Feed;
 pub use self::app_tokens::AppTokens;
 
 

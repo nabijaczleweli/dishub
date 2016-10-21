@@ -32,15 +32,15 @@ pub enum Error {
         /// This should be lowercase and imperative ("create", "open").
         op: &'static str,
     },
-    /// An I/O error occured.
-    ///
-    /// This includes higher-level I/O errors like FS ones.
+    /// A watched item does not exist.
     WatchedDoesNotExist {
         /// The type of nonexistant resource.
         tp: &'static str,
         /// The name of the nonexistant resource.
         name: String,
     },
+    /// Failed to log in to the specified service.
+    LoginFailed(&'static str),
 }
 
 impl Error {
@@ -84,6 +84,7 @@ impl Error {
                 writeln!(err_out, "{}ing {} failed.", op, desc).unwrap()
             }
             Error::WatchedDoesNotExist { tp, ref name } => writeln!(err_out, "The watched {} \"{}\" doesn't exist.", tp, name).unwrap(),
+            Error::LoginFailed(service) => writeln!(err_out, "Failed to log in to {}.", service).unwrap(),
         }
     }
 
@@ -105,6 +106,7 @@ impl Error {
             Error::FileParsingFailed { .. } => 3,
             Error::Io { .. } => 4,
             Error::WatchedDoesNotExist { .. } => 5,
+            Error::LoginFailed(_) => 6,
         }
     }
 }

@@ -45,5 +45,13 @@ fn watched_does_not_exist() {
             name: "nabijaczleweli".to_string(),
         }
         .print_error(&mut out);
-    assert_eq!(String::from_iter(out.iter().map(|&i| i as char)), "The watched user \"nabijaczleweli\" doesn't exist.\n".to_string());
+    assert_eq!(String::from_iter(out.iter().map(|&i| i as char)),
+               "The watched user \"nabijaczleweli\" doesn't exist.\n".to_string());
+}
+
+#[test]
+fn login_failed() {
+    let mut out = Vec::new();
+    Error::LoginFailed("GitHub").print_error(&mut out);
+    assert_eq!(String::from_iter(out.iter().map(|&i| i as char)), "Failed to log in to GitHub.\n".to_string());
 }
