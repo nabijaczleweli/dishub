@@ -6,7 +6,6 @@ use discord::{State, Discord};
 use discord::model::ServerId;
 use std::path::PathBuf;
 use std::str::FromStr;
-use std::fs::File;
 
 
 pub fn verify(config_dir: &(String, PathBuf)) -> Result<(PathBuf, PathBuf), Error> {
@@ -84,15 +83,15 @@ pub fn get_valid_channel<R: BufRead, W: Write>(channels: Vec<(u64, String)>, inp
 
 fn get_valid<R: BufRead, W: Write>(list_heading: &str, prompt: &str, instances: Vec<(u64, String)>, input: &mut R, output: &mut W) -> u64 {
     writeln!(output, "{}:", list_heading).unwrap();
-    for &(id, ref name) in instances.iter() {
-        writeln!(output, "  {}: {}", id, name).unwrap();
+    for (idx, &(_, ref name)) in instances.iter().enumerate() {
+        writeln!(output, "  {}. {}", idx + 1, name).unwrap();
     }
     writeln!(output, "").unwrap();
 
     let chosen = prompt_nonzero_len(input,
                                     output,
                                     prompt,
-                                    |s| u64::from_str(&s).map(|id| instances.iter().find(|id_name| id_name.0 == id).is_some()).unwrap_or(false))
+                                    |s| usize::from_str(&s).map(|idx| idx > 0 && idx <= instances.len()).unwrap_or(false))
         .unwrap();
-    u64::from_str(&chosen).unwrap()
+    instances[usize::from_str(&chosen).unwrap() - 1].0
 }
