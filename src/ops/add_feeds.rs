@@ -1,4 +1,4 @@
-use self::super::{AppTokens, github, verify_file};
+use self::super::{AppTokens, Feed, github, verify_file};
 use self::super::super::util::prompt_nonzero_len;
 use self::super::super::Error;
 use std::io::{BufRead, Write};
@@ -14,7 +14,7 @@ pub fn verify(config_dir: &(String, PathBuf)) -> Result<(PathBuf, PathBuf), Erro
     let feeds = try!(verify_file("feeds.toml", true, config_dir, true, ""));
 
     if !feeds.exists() {
-        File::create(&feeds).unwrap();
+        Feed::write(vec![], &feeds);
     }
 
     Ok((tokens, feeds))
