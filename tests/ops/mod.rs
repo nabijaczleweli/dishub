@@ -5,6 +5,7 @@ use std::env::temp_dir;
 mod init;
 mod feed;
 mod app_tokens;
+mod unfollow_feeds;
 
 
 fn make_dir(section: &str, function: &str) -> PathBuf {
