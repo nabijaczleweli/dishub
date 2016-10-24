@@ -1,6 +1,5 @@
 use dishub::ops::unfollow_feeds::get_feeds_to_remove;
 use dishub::util::mul_str;
-use dishub::ops::Feed;
 use self::super::feed;
 use std::io::Cursor;
 
