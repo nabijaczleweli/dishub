@@ -1,5 +1,5 @@
-use self::super::super::util::GITHUB_USER_AGENT;
 use hyper::header::{Authorization, UserAgent, Bearer};
+use self::super::super::util::GITHUB_USER_AGENT;
 use hyper::status::StatusCode;
 use self::super::super::Error;
 use self::super::AppTokens;
