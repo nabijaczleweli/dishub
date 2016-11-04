@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/clap-2.14.1/src/lib.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/clap-2.17.1/src/lib.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>lib.rs.html -- source</title>
@@ -489,16 +489,6 @@
 <span id="445">445</span>
 <span id="446">446</span>
 <span id="447">447</span>
-<span id="448">448</span>
-<span id="449">449</span>
-<span id="450">450</span>
-<span id="451">451</span>
-<span id="452">452</span>
-<span id="453">453</span>
-<span id="454">454</span>
-<span id="455">455</span>
-<span id="456">456</span>
-<span id="457">457</span>
 </pre><pre class='rust '>
 <span class='comment'>// Copyright ⓒ 2015-2016 Kevin B. Knapp and [`clap-rs` contributors](https://github.com/kbknapp/clap-rs/blob/master/CONTRIBUTORS.md).</span>
 <span class='comment'>// Licensed under the MIT license</span>
@@ -896,10 +886,11 @@
         <span class='ident'>missing_debug_implementations</span>,
         <span class='ident'>missing_copy_implementations</span>,
         <span class='ident'>trivial_casts</span>,
-<span class='comment'>// trivial_numeric_casts,       // While bitflags fails this lint</span>
         <span class='ident'>unused_import_braces</span>,
-        <span class='ident'>unused_allocation</span>,
-        <span class='ident'>unused_qualifications</span>)]</span>
+        <span class='ident'>unused_allocation</span>)]</span>
+<span class='comment'>// Lints we&#39;d like to deny but are currently failing for upstream crates</span>
+<span class='comment'>//      unused_qualifications       (bitflags, clippy)</span>
+<span class='comment'>//      trivial_numeric_casts       (bitflags)</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>not</span>(<span class='ident'>any</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;lints&quot;</span>, <span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;nightly&quot;</span>)), <span class='ident'>forbid</span>(<span class='ident'>unstable_features</span>))]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;lints&quot;</span>, <span class='ident'>feature</span>(<span class='ident'>plugin</span>))]</span>
 <span class='attribute'>#<span class='op'>!</span>[<span class='ident'>cfg_attr</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;lints&quot;</span>, <span class='ident'>plugin</span>(<span class='ident'>clippy</span>))]</span>
@@ -929,7 +920,7 @@
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>app</span>::{<span class='ident'>App</span>, <span class='ident'>AppSettings</span>};
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>fmt</span>::<span class='ident'>Format</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>errors</span>::{<span class='ident'>Error</span>, <span class='ident'>ErrorKind</span>, <span class='prelude-ty'>Result</span>};
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>shell</span>::<span class='ident'>Shell</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>completions</span>::<span class='ident'>Shell</span>;
 
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>mod</span> <span class='ident'>macros</span>;
@@ -945,19 +936,7 @@
 
 <span class='kw'>const</span> <span class='ident'>INTERNAL_ERROR_MSG</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;Fatal internal error. Please consider filing a bug \
                                           report at https://github.com/kbknapp/clap-rs/issues&quot;</span>;
-<span class='kw'>const</span> <span class='ident'>INVALID_UTF8</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;unexpected invalid UTF-8 code point&quot;</span>;
-
-<span class='kw'>mod</span> <span class='ident'>shell</span> {
-    <span class='doccomment'>/// Describes which shell to produce a completions file for</span>
-    <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Copy</span>, <span class='ident'>Clone</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Shell</span> {
-        <span class='doccomment'>/// Generates a .sh completion file for the Bourne Again SHell (BASH)</span>
-        <span class='ident'>Bash</span>,
-        <span class='doccomment'>/// Generates a .fish completion file for the friendly interactive shell (fish)</span>
-        <span class='ident'>Fish</span>,
-    }
-}
-</pre>
+<span class='kw'>const</span> <span class='ident'>INVALID_UTF8</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span> <span class='op'>=</span> <span class='string'>&quot;unexpected invalid UTF-8 code point&quot;</span>;</pre>
 </section>
     <section id='search' class="content hidden"></section>
 

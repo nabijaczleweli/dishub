@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <meta name="description" content="API documentation for the Rust `Discord` struct in crate `discord`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, Discord">
+
+    <title>discord::Discord - Rust</title>
+
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../main.css">
+    
+
+    
+    
+</head>
+<body class="rustdoc">
+    <!--[if lte IE 8]>
+    <div class="warning">
+        This old browser is unsupported and will most likely display funky
+        things.
+    </div>
+    <![endif]-->
+
+    
+
+    <nav class="sidebar">
+        
+        <p class='location'><a href='index.html'>discord</a></p><script>window.sidebarCurrent = {name: 'Discord', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+    </nav>
+
+    <nav class="sub">
+        <form class="search-form js-only">
+            <div class="search-container">
+                <input class="search-input" name="search"
+                       autocomplete="off"
+                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
+                       type="search">
+            </div>
+        </form>
+    </nav>
+
+    <section id='main' class="content struct">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>discord</a>::<wbr><a class='struct' href=''>Discord</a></span><span class='out-of-band'><span id='render-detail'>
+                   <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
+                       [<span class='inner'>&#x2212;</span>]
+                   </a>
+               </span><a id='src-5364' class='srclink' href='../src/discord/lib.rs.html#98-102' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Discord {
+    // some fields omitted
+}</pre><div class='docblock'><p>Client for the Discord REST API.</p>
+
+<p>Log in to the API with a user&#39;s email and password using <code>new()</code>. Call
+<code>connect()</code> to create a <code>Connection</code> on which to receive events. If desired,
+use <code>logout()</code> to invalidate the token when done. Other methods manipulate
+the Discord REST API.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../discord/struct.Discord.html' title='discord::Discord'>Discord</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-5368' class='srclink' href='../src/discord/lib.rs.html#104-982' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class='method'><code>fn <a href='#method.new' class='fnname'>new</a>(email: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, password: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/struct.Discord.html' title='discord::Discord'>Discord</a>&gt;</code></h4>
+<div class='docblock'><p>Log in to the Discord Rest API and acquire a token.</p>
+</div><h4 id='method.new_cache' class='method'><code>fn <a href='#method.new_cache' class='fnname'>new_cache</a>&lt;P:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html' title='core::convert::AsRef'>AsRef</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/std/path/struct.Path.html' title='std::path::Path'>Path</a>&gt;&gt;(path: P, email: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, password: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/struct.Discord.html' title='discord::Discord'>Discord</a>&gt;</code></h4>
+<div class='docblock'><p>Log in to the Discord Rest API, possibly using a cached login token.</p>
+
+<p>Cached login tokens are keyed to the email address and will be read from
+and written to the specified path. If no cached token was found and no
+password was specified, an error is returned.</p>
+</div><h4 id='method.from_bot_token' class='method'><code>fn <a href='#method.from_bot_token' class='fnname'>from_bot_token</a>(token: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/struct.Discord.html' title='discord::Discord'>Discord</a>&gt;</code></h4>
+<div class='docblock'><p>Log in as a bot account using the given authentication token.</p>
+</div><h4 id='method.logout' class='method'><code>fn <a href='#method.logout' class='fnname'>logout</a>(self) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Log out from the Discord API, invalidating this clients&#39;s token.</p>
+</div><h4 id='method.create_channel' class='method'><code>fn <a href='#method.create_channel' class='fnname'>create_channel</a>(&amp;self, server: &amp;<a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>, name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, kind: <a class='enum' href='../discord/model/enum.ChannelType.html' title='discord::model::ChannelType'>ChannelType</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='enum' href='../discord/model/enum.Channel.html' title='discord::model::Channel'>Channel</a>&gt;</code></h4>
+<div class='docblock'><p>Create a channel.</p>
+</div><h4 id='method.get_server_channels' class='method'><code>fn <a href='#method.get_server_channels' class='fnname'>get_server_channels</a>(&amp;self, server: <a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../discord/model/struct.PublicChannel.html' title='discord::model::PublicChannel'>PublicChannel</a>&gt;&gt;</code></h4>
+<div class='docblock'><p>Get the list of channels in a server.</p>
+</div><h4 id='method.get_channel' class='method'><code>fn <a href='#method.get_channel' class='fnname'>get_channel</a>(&amp;self, channel: <a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='enum' href='../discord/model/enum.Channel.html' title='discord::model::Channel'>Channel</a>&gt;</code></h4>
+<div class='docblock'><p>Get information about a channel.</p>
+</div><h4 id='method.edit_channel' class='method'><code>fn <a href='#method.edit_channel' class='fnname'>edit_channel</a>&lt;F:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>(<a class='struct' href='../discord/struct.EditChannel.html' title='discord::EditChannel'>EditChannel</a>) -&gt; <a class='struct' href='../discord/struct.EditChannel.html' title='discord::EditChannel'>EditChannel</a>&gt;(&amp;self, channel: <a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>, f: F) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.PublicChannel.html' title='discord::model::PublicChannel'>PublicChannel</a>&gt;</code></h4>
+<div class='docblock'><p>Edit a channel&#39;s details. See <code>EditChannel</code> for the editable fields.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='comment'>// Edit a channel&#39;s name and topic</span>
+<span class='ident'>discord</span>.<span class='ident'>edit_channel</span>(<span class='ident'>channel_id</span>, <span class='string'>&quot;general&quot;</span>, <span class='op'>|</span><span class='ident'>ch</span><span class='op'>|</span> <span class='ident'>ch</span>
+    .<span class='ident'>topic</span>(<span class='string'>&quot;Welcome to the general chat!&quot;</span>)
+);</pre>
+</div><h4 id='method.delete_channel' class='method'><code>fn <a href='#method.delete_channel' class='fnname'>delete_channel</a>(&amp;self, channel: &amp;<a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='enum' href='../discord/model/enum.Channel.html' title='discord::model::Channel'>Channel</a>&gt;</code></h4>
+<div class='docblock'><p>Delete a channel.</p>
+</div><h4 id='method.broadcast_typing' class='method'><code>fn <a href='#method.broadcast_typing' class='fnname'>broadcast_typing</a>(&amp;self, channel: &amp;<a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Indicate typing on a channel for the next 5 seconds.</p>
+</div><h4 id='method.get_message' class='method'><code>fn <a href='#method.get_message' class='fnname'>get_message</a>(&amp;self, channel: <a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>, message: <a class='struct' href='../discord/model/struct.MessageId.html' title='discord::model::MessageId'>MessageId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.Message.html' title='discord::model::Message'>Message</a>&gt;</code></h4>
+<div class='docblock'><p>Get a single message by ID from a given channel.</p>
+</div><h4 id='method.get_messages' class='method'><code>fn <a href='#method.get_messages' class='fnname'>get_messages</a>(&amp;self, channel: <a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>, what: <a class='enum' href='../discord/enum.GetMessages.html' title='discord::GetMessages'>GetMessages</a>, limit: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>&gt;) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../discord/model/struct.Message.html' title='discord::model::Message'>Message</a>&gt;&gt;</code></h4>
+<div class='docblock'><p>Get messages in the backlog for a given channel.</p>
+
+<p>The <code>what</code> argument should be one of the options in the <code>GetMessages</code>
+enum, and will determine which messages will be returned. A message
+limit can also be specified, and defaults to 50. More recent messages
+will appear first in the list.</p>
+</div><h4 id='method.get_pinned_messages' class='method'><code>fn <a href='#method.get_pinned_messages' class='fnname'>get_pinned_messages</a>(&amp;self, channel: <a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../discord/model/struct.Message.html' title='discord::model::Message'>Message</a>&gt;&gt;</code></h4>
+<div class='docblock'><p>Gets the pinned messages for a given channel.</p>
+</div><h4 id='method.pin_message' class='method'><code>fn <a href='#method.pin_message' class='fnname'>pin_message</a>(&amp;self, channel: <a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>, message: <a class='struct' href='../discord/model/struct.MessageId.html' title='discord::model::MessageId'>MessageId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Pin the given message to the given channel.</p>
+
+<p>Requires that the logged in account have the &quot;MANAGE_MESSAGES&quot; permission.</p>
+</div><h4 id='method.unpin_message' class='method'><code>fn <a href='#method.unpin_message' class='fnname'>unpin_message</a>(&amp;self, channel: <a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>, message: <a class='struct' href='../discord/model/struct.MessageId.html' title='discord::model::MessageId'>MessageId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Removes the given message from being pinned to the given channel.</p>
+
+<p>Requires that the logged in account have the &quot;MANAGE_MESSAGES&quot; permission.</p>
+</div><h4 id='method.send_message' class='method'><code>fn <a href='#method.send_message' class='fnname'>send_message</a>(&amp;self, channel: &amp;<a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>, text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, nonce: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, tts: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.Message.html' title='discord::model::Message'>Message</a>&gt;</code></h4>
+<div class='docblock'><p>Send a message to a given channel.</p>
+
+<p>The <code>nonce</code> will be returned in the result and also transmitted to other
+clients. The empty string is a good default if you don&#39;t care.</p>
+</div><h4 id='method.edit_message' class='method'><code>fn <a href='#method.edit_message' class='fnname'>edit_message</a>(&amp;self, channel: &amp;<a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>, message: &amp;<a class='struct' href='../discord/model/struct.MessageId.html' title='discord::model::MessageId'>MessageId</a>, text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.Message.html' title='discord::model::Message'>Message</a>&gt;</code></h4>
+<div class='docblock'><p>Edit a previously posted message.</p>
+
+<p>Requires that either the message was posted by this user, or this user
+has permission to manage other members&#39; messages.</p>
+</div><h4 id='method.delete_message' class='method'><code>fn <a href='#method.delete_message' class='fnname'>delete_message</a>(&amp;self, channel: &amp;<a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>, message: &amp;<a class='struct' href='../discord/model/struct.MessageId.html' title='discord::model::MessageId'>MessageId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Delete a previously posted message.</p>
+
+<p>Requires that either the message was posted by this user, or this user
+has permission to manage other members&#39; messages.</p>
+</div><h4 id='method.delete_messages' class='method'><code>fn <a href='#method.delete_messages' class='fnname'>delete_messages</a>(&amp;self, channel: <a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>, messages: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../discord/model/struct.MessageId.html' title='discord::model::MessageId'>MessageId</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Bulk deletes a list of <code>MessageId</code>s from a given channel.</p>
+
+<p>A minimum of 2 unique messages and a maximum of 100 unique messages may
+be supplied, otherwise an <code>Error::Other</code> will be returned.</p>
+
+<p>Each MessageId <em>should</em> be unique as duplicates will be removed from the
+array before being sent to the Discord API.</p>
+
+<p>Only bots can use this endpoint. Regular user accounts can not use this
+endpoint under any circumstance.</p>
+
+<p>Requires that either the message was posted by this user, or this user
+has permission to manage other members&#39; messages.</p>
+</div><h4 id='method.send_file' class='method'><code>fn <a href='#method.send_file' class='fnname'>send_file</a>&lt;R:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Read.html' title='std::io::Read'>Read</a>&gt;(&amp;self, channel: &amp;<a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>, text: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, file: R, filename: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.Message.html' title='discord::model::Message'>Message</a>&gt;</code></h4>
+<div class='docblock'><p>Send a file attached to a message on a given channel.</p>
+
+<p>The <code>text</code> is allowed to be empty, but the filename must always be specified.</p>
+</div><h4 id='method.ack_message' class='method'><code>fn <a href='#method.ack_message' class='fnname'>ack_message</a>(&amp;self, channel: &amp;<a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>, message: &amp;<a class='struct' href='../discord/model/struct.MessageId.html' title='discord::model::MessageId'>MessageId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Acknowledge this message as &quot;read&quot; by this client.</p>
+</div><h4 id='method.create_permission' class='method'><code>fn <a href='#method.create_permission' class='fnname'>create_permission</a>(&amp;self, channel: <a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>, target: <a class='struct' href='../discord/model/struct.PermissionOverwrite.html' title='discord::model::PermissionOverwrite'>PermissionOverwrite</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Create permissions for a <code>Channel</code> for a <code>Member</code> or <code>Role</code>.</p>
+
+<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<p>An example of creating channel role permissions for a <code>Member</code>:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>discord</span>::<span class='ident'>model</span>::{<span class='ident'>PermissionOverwriteType</span>, <span class='ident'>permissions</span>};
+
+<span class='comment'>// Assuming that a `Discord` instance, member, and channel have already</span>
+<span class='comment'>// been defined previously.</span>
+<span class='kw'>let</span> <span class='ident'>target</span> <span class='op'>=</span> <span class='ident'>PermissionOverwrite</span> {
+    <span class='ident'>kind</span>: <span class='ident'>PermissionOverwriteType</span>::<span class='ident'>Member</span>(<span class='ident'>member</span>.<span class='ident'>user</span>.<span class='ident'>id</span>),
+    <span class='ident'>allow</span>: <span class='ident'>permissions</span>::<span class='ident'>VOICE_CONNECT</span> <span class='op'>|</span> <span class='ident'>permissions</span>::<span class='ident'>VOICE_SPEAK</span>,
+    <span class='ident'>deny</span>: <span class='ident'>permissions</span>::<span class='ident'>VOICE_MUTE_MEMBERS</span> <span class='op'>|</span> <span class='ident'>permissions</span>::<span class='ident'>VOICE_MOVE_MEMBERS</span>,
+};
+<span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>discord</span>.<span class='ident'>create_permission</span>(<span class='ident'>channel</span>.<span class='ident'>id</span>, <span class='ident'>target</span>);</pre>
+
+<p>The same can similarly be accomplished for a <code>Role</code>:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>discord</span>::<span class='ident'>model</span>::{<span class='ident'>PermissionOverwriteType</span>, <span class='ident'>permissions</span>};
+
+<span class='comment'>// Assuming that a `Discord` instance, role, and channel have already</span>
+<span class='comment'>// been defined previously.</span>
+<span class='kw'>let</span> <span class='ident'>target</span> <span class='op'>=</span> <span class='ident'>PermissionOverwrite</span> {
+    <span class='ident'>kind</span>: <span class='ident'>PermissionOverwriteType</span>::<span class='ident'>Role</span>(<span class='ident'>role</span>.<span class='ident'>id</span>),
+    <span class='ident'>allow</span>: <span class='ident'>permissions</span>::<span class='ident'>VOICE_CONNECT</span> <span class='op'>|</span> <span class='ident'>permissions</span>::<span class='ident'>VOICE_SPEAK</span>,
+    <span class='ident'>deny</span>: <span class='ident'>permissions</span>::<span class='ident'>VOICE_MUTE_MEMBERS</span> <span class='op'>|</span> <span class='ident'>permissions</span>::<span class='ident'>VOICE_MOVE_MEMBERS</span>,
+};
+<span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>discord</span>.<span class='ident'>create_permission</span>(<span class='ident'>channel</span>.<span class='ident'>id</span>, <span class='ident'>target</span>);</pre>
+</div><h4 id='method.delete_permission' class='method'><code>fn <a href='#method.delete_permission' class='fnname'>delete_permission</a>(&amp;self, channel: <a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>, permission_type: <a class='enum' href='../discord/model/enum.PermissionOverwriteType.html' title='discord::model::PermissionOverwriteType'>PermissionOverwriteType</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Delete a <code>Member</code> or <code>Role</code>&#39;s permissions for a <code>Channel</code>.</p>
+
+<h1 id='examples-1' class='section-header'><a href='#examples-1'>Examples</a></h1>
+<p>Delete a <code>Member</code>&#39;s permissions for a <code>Channel</code>:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>discord</span>::<span class='ident'>model</span>::<span class='ident'>PermissionOverwriteType</span>;
+
+<span class='comment'>// Assuming that a `Discord` instance, channel, and member have already</span>
+<span class='comment'>// been previously defined.</span>
+<span class='kw'>let</span> <span class='ident'>target</span> <span class='op'>=</span> <span class='ident'>PermissionOverwriteType</span>::<span class='ident'>Member</span>(<span class='ident'>member</span>.<span class='ident'>user</span>.<span class='ident'>id</span>);
+<span class='kw'>let</span> <span class='ident'>response</span> <span class='op'>=</span> <span class='ident'>discord</span>.<span class='ident'>delete_permission</span>(<span class='ident'>channel</span>.<span class='ident'>id</span>, <span class='ident'>target</span>);</pre>
+
+<p>The same can be accomplished for a <code>Role</code> similarly:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='kw'>use</span> <span class='ident'>discord</span>::<span class='ident'>model</span>::<span class='ident'>PermissionOverwriteType</span>;
+
+<span class='comment'>// Assuming that a `Discord` instance, channel, and role have already</span>
+<span class='comment'>// been previously defined.</span>
+<span class='kw'>let</span> <span class='ident'>target</span> <span class='op'>=</span> <span class='ident'>PermissionOverwriteType</span>::<span class='ident'>Role</span>(<span class='ident'>role</span>.<span class='ident'>id</span>);
+<span class='kw'>let</span> <span class='ident'>response</span> <span class='op'>=</span> <span class='ident'>discord</span>.<span class='ident'>delete_permission</span>(<span class='ident'>channel</span>.<span class='ident'>id</span>, <span class='ident'>target</span>);</pre>
+</div><h4 id='method.add_reaction' class='method'><code>fn <a href='#method.add_reaction' class='fnname'>add_reaction</a>(&amp;self, channel: <a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>, message: <a class='struct' href='../discord/model/struct.MessageId.html' title='discord::model::MessageId'>MessageId</a>, emoji: <a class='enum' href='../discord/model/enum.ReactionEmoji.html' title='discord::model::ReactionEmoji'>ReactionEmoji</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Add a <code>Reaction</code> to a <code>Message</code>.</p>
+
+<h1 id='examples-2' class='section-header'><a href='#examples-2'>Examples</a></h1>
+<p>Add an unicode emoji to a <code>Message</code>:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='comment'>// Assuming that a `Discord` instance, channel, message have</span>
+<span class='comment'>// already been previously defined.</span>
+<span class='kw'>use</span> <span class='ident'>discord</span>::<span class='ident'>model</span>::<span class='ident'>ReactionEmoji</span>;
+
+<span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>discord</span>.<span class='ident'>add_reaction</span>(<span class='kw-2'>&amp;</span><span class='ident'>channel</span>.<span class='ident'>id</span>, <span class='ident'>message</span>.<span class='ident'>id</span>, <span class='ident'>ReactionEmoji</span>::<span class='ident'>Unicode</span>(<span class='string'>&quot;👌&quot;</span>.<span class='ident'>to_string</span>));</pre>
+
+<p>Add a custom emoji to a <code>Message</code>:</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='comment'>// Assuming that a `Discord` instance, channel, message have</span>
+<span class='comment'>// already been previously defined.</span>
+<span class='kw'>use</span> <span class='ident'>discord</span>::<span class='ident'>model</span>::{<span class='ident'>EmojiId</span>, <span class='ident'>ReactionEmoji</span>};
+
+<span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>discord</span>.<span class='ident'>add_reaction</span>(<span class='kw-2'>&amp;</span><span class='ident'>channel</span>.<span class='ident'>id</span>, <span class='ident'>message</span>.<span class='ident'>id</span>, <span class='ident'>ReactionEmoji</span>::<span class='ident'>Custom</span> {
+    <span class='ident'>name</span>: <span class='string'>&quot;ThisIsFine&quot;</span>,
+    <span class='ident'>id</span>: <span class='ident'>EmojiId</span>(<span class='number'>1234</span>)
+});</pre>
+
+<p>Requires the <code>ADD_REACTIONS</code> permission.</p>
+</div><h4 id='method.delete_reaction' class='method'><code>fn <a href='#method.delete_reaction' class='fnname'>delete_reaction</a>(&amp;self, channel: <a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>, message: <a class='struct' href='../discord/model/struct.MessageId.html' title='discord::model::MessageId'>MessageId</a>, user_id: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../discord/model/struct.UserId.html' title='discord::model::UserId'>UserId</a>&gt;, emoji: <a class='enum' href='../discord/model/enum.ReactionEmoji.html' title='discord::model::ReactionEmoji'>ReactionEmoji</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Delete a <code>Reaction</code> from a <code>Message</code>.</p>
+
+<h1 id='examples-3' class='section-header'><a href='#examples-3'>Examples</a></h1>
+<p>Delete a <code>Reaction</code> from a <code>Message</code> (unicode emoji):</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='comment'>// Assuming that a `Discord` instance, channel, message, state have</span>
+<span class='comment'>// already been previously defined.</span>
+<span class='kw'>use</span> <span class='ident'>discord</span>::<span class='ident'>model</span>::<span class='ident'>ReactionEmoji</span>;
+
+<span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>discord</span>.<span class='ident'>delete_reaction</span>(<span class='kw-2'>&amp;</span><span class='ident'>channel</span>.<span class='ident'>id</span>, <span class='ident'>message</span>.<span class='ident'>id</span>, <span class='prelude-val'>None</span>, <span class='ident'>ReactionEmoji</span>::<span class='ident'>Unicode</span>(<span class='string'>&quot;👌&quot;</span>.<span class='ident'>to_string</span>()));</pre>
+
+<p>Delete your <code>Reaction</code> from a <code>Message</code> (custom emoji):</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='comment'>// Assuming that a `Discord` instance, channel, message have</span>
+<span class='comment'>// already been previously defined.</span>
+<span class='kw'>use</span> <span class='ident'>discord</span>::<span class='ident'>model</span>::<span class='ident'>ReactionEmoji</span>;
+
+<span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>discord</span>.<span class='ident'>delete_reaction</span>(<span class='kw-2'>&amp;</span><span class='ident'>channel</span>.<span class='ident'>id</span>, <span class='ident'>message</span>.<span class='ident'>id</span>, <span class='prelude-val'>None</span>, <span class='ident'>ReactionEmoji</span>::<span class='ident'>Custom</span> {
+    <span class='ident'>name</span>: <span class='string'>&quot;ThisIsFine&quot;</span>,
+    <span class='ident'>id</span>: <span class='ident'>EmojiId</span>(<span class='number'>1234</span>)
+});</pre>
+
+<p>Delete someone else&#39;s <code>Reaction</code> from a <code>Message</code> (custom emoji):</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='comment'>// Assuming that a `Discord` instance, channel, message have</span>
+<span class='comment'>// already been previously defined.</span>
+<span class='kw'>use</span> <span class='ident'>discord</span>::<span class='ident'>model</span>::{<span class='ident'>EmojiId</span>, <span class='ident'>ReactionEmoji</span>};
+
+<span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>discord</span>.<span class='ident'>delete_reaction</span>(<span class='kw-2'>&amp;</span><span class='ident'>channel</span>.<span class='ident'>id</span>, <span class='ident'>message</span>.<span class='ident'>id</span>, <span class='prelude-val'>Some</span>(<span class='ident'>UserId</span>(<span class='number'>1234</span>)), <span class='ident'>ReactionEmoji</span>::<span class='ident'>Custom</span> {
+    <span class='ident'>name</span>: <span class='string'>&quot;ThisIsFine&quot;</span>,
+    <span class='ident'>id</span>: <span class='ident'>EmojiId</span>(<span class='number'>1234</span>)
+});</pre>
+
+<p>Requires <code>MANAGE_MESSAGES</code> if deleting someone else&#39;s <code>Reaction</code>.</p>
+</div><h4 id='method.get_reactions' class='method'><code>fn <a href='#method.get_reactions' class='fnname'>get_reactions</a>(&amp;self, channel: <a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>, message: <a class='struct' href='../discord/model/struct.MessageId.html' title='discord::model::MessageId'>MessageId</a>, emoji: <a class='enum' href='../discord/model/enum.ReactionEmoji.html' title='discord::model::ReactionEmoji'>ReactionEmoji</a>, limit: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.i32.html'>i32</a>&gt;) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../discord/model/struct.User.html' title='discord::model::User'>User</a>&gt;&gt;</code></h4>
+<div class='docblock'><p>Get reactors for the <code>Emoji</code> in a <code>Message</code>.</p>
+</div><h4 id='method.get_servers' class='method'><code>fn <a href='#method.get_servers' class='fnname'>get_servers</a>(&amp;self) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../discord/model/struct.ServerInfo.html' title='discord::model::ServerInfo'>ServerInfo</a>&gt;&gt;</code></h4>
+<div class='docblock'><p>Get the list of servers this user knows about.</p>
+</div><h4 id='method.create_server' class='method'><code>fn <a href='#method.create_server' class='fnname'>create_server</a>(&amp;self, name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, region: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, icon: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>&gt;) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.Server.html' title='discord::model::Server'>Server</a>&gt;</code></h4>
+<div class='docblock'><p>Create a new server with the given name.</p>
+</div><h4 id='method.edit_server' class='method'><code>fn <a href='#method.edit_server' class='fnname'>edit_server</a>&lt;F:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>(<a class='struct' href='../discord/struct.EditServer.html' title='discord::EditServer'>EditServer</a>) -&gt; <a class='struct' href='../discord/struct.EditServer.html' title='discord::EditServer'>EditServer</a>&gt;(&amp;self, server_id: <a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>, f: F) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.Server.html' title='discord::model::Server'>Server</a>&gt;</code></h4>
+<div class='docblock'><p>Edit a server&#39;s information. See <code>EditServer</code> for the editable fields.</p>
+
+<pre class='rust rust-example-rendered'>
+<span class='comment'>// Rename a server</span>
+<span class='ident'>discord</span>.<span class='ident'>edit_server</span>(<span class='ident'>server_id</span>, <span class='op'>|</span><span class='ident'>server</span><span class='op'>|</span> <span class='ident'>server</span>.<span class='ident'>name</span>(<span class='string'>&quot;My Cool Server&quot;</span>));
+<span class='comment'>// Edit many properties at once</span>
+<span class='ident'>discord</span>.<span class='ident'>edit_server</span>(<span class='ident'>server_id</span>, <span class='op'>|</span><span class='ident'>server</span><span class='op'>|</span> <span class='ident'>server</span>
+    .<span class='ident'>name</span>(<span class='string'>&quot;My Cool Server&quot;</span>)
+    .<span class='ident'>icon</span>(<span class='prelude-val'>Some</span>(<span class='string'>&quot;data:image/jpg;base64,...&quot;</span>))
+    .<span class='ident'>afk_timeout</span>(<span class='number'>300</span>)
+    .<span class='ident'>region</span>(<span class='string'>&quot;us-south&quot;</span>)
+);</pre>
+</div><h4 id='method.leave_server' class='method'><code>fn <a href='#method.leave_server' class='fnname'>leave_server</a>(&amp;self, server: &amp;<a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.Server.html' title='discord::model::Server'>Server</a>&gt;</code></h4>
+<div class='docblock'><p>Leave the given server.</p>
+</div><h4 id='method.delete_server' class='method'><code>fn <a href='#method.delete_server' class='fnname'>delete_server</a>(&amp;self, server: &amp;<a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.Server.html' title='discord::model::Server'>Server</a>&gt;</code></h4>
+<div class='docblock'><p>Delete the given server. Only available to the server owner.</p>
+</div><h4 id='method.create_emoji' class='method'><code>fn <a href='#method.create_emoji' class='fnname'>create_emoji</a>(&amp;self, server: <a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>, name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, image: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.Emoji.html' title='discord::model::Emoji'>Emoji</a>&gt;</code></h4>
+<div class='docblock'><p>Creates an emoji in a server.</p>
+
+<p><code>read_image</code> may be used to build an <code>image</code> string. Requires that the
+logged in account be a user and have the <code>ADMINISTRATOR</code> or
+<code>MANAGE_EMOJIS</code> permission.</p>
+</div><h4 id='method.edit_emoji' class='method'><code>fn <a href='#method.edit_emoji' class='fnname'>edit_emoji</a>(&amp;self, server: <a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>, emoji: <a class='struct' href='../discord/model/struct.EmojiId.html' title='discord::model::EmojiId'>EmojiId</a>, name: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.Emoji.html' title='discord::model::Emoji'>Emoji</a>&gt;</code></h4>
+<div class='docblock'><p>Edits a server&#39;s emoji.</p>
+
+<p>Requires that the logged in account be a user and have the
+<code>ADMINISTRATOR</code> or <code>MANAGE_EMOJIS</code> permission.</p>
+</div><h4 id='method.delete_emoji' class='method'><code>fn <a href='#method.delete_emoji' class='fnname'>delete_emoji</a>(&amp;self, server: <a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>, emoji: <a class='struct' href='../discord/model/struct.EmojiId.html' title='discord::model::EmojiId'>EmojiId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Delete an emoji in a server.</p>
+
+<p>Requires that the logged in account be a user and have the
+<code>ADMINISTRATOR</code> or <code>MANAGE_EMOJIS</code> permission.</p>
+</div><h4 id='method.get_bans' class='method'><code>fn <a href='#method.get_bans' class='fnname'>get_bans</a>(&amp;self, server: &amp;<a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../discord/model/struct.Ban.html' title='discord::model::Ban'>Ban</a>&gt;&gt;</code></h4>
+<div class='docblock'><p>Get the ban list for the given server.</p>
+</div><h4 id='method.add_ban' class='method'><code>fn <a href='#method.add_ban' class='fnname'>add_ban</a>(&amp;self, server: &amp;<a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>, user: &amp;<a class='struct' href='../discord/model/struct.UserId.html' title='discord::model::UserId'>UserId</a>, delete_message_days: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u32.html'>u32</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Ban a user from the server, optionally deleting their recent messages.</p>
+
+<p>Zero may be passed for <code>delete_message_days</code> if no deletion is desired.</p>
+</div><h4 id='method.remove_ban' class='method'><code>fn <a href='#method.remove_ban' class='fnname'>remove_ban</a>(&amp;self, server: &amp;<a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>, user: &amp;<a class='struct' href='../discord/model/struct.UserId.html' title='discord::model::UserId'>UserId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Unban a user from the server.</p>
+</div><h4 id='method.get_invite' class='method'><code>fn <a href='#method.get_invite' class='fnname'>get_invite</a>(&amp;self, invite: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.Invite.html' title='discord::model::Invite'>Invite</a>&gt;</code></h4>
+<div class='docblock'><p>Extract information from an invite.</p>
+
+<p>The invite should either be a URL of the form <code>http://discord.gg/CODE</code>,
+or a string containing just the <code>CODE</code>.</p>
+</div><h4 id='method.get_server_invites' class='method'><code>fn <a href='#method.get_server_invites' class='fnname'>get_server_invites</a>(&amp;self, server: <a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../discord/model/struct.RichInvite.html' title='discord::model::RichInvite'>RichInvite</a>&gt;&gt;</code></h4>
+<div class='docblock'><p>Get the active invites for a server.</p>
+</div><h4 id='method.get_channel_invites' class='method'><code>fn <a href='#method.get_channel_invites' class='fnname'>get_channel_invites</a>(&amp;self, channel: <a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../discord/model/struct.RichInvite.html' title='discord::model::RichInvite'>RichInvite</a>&gt;&gt;</code></h4>
+<div class='docblock'><p>Get the active invites for a channel.</p>
+</div><h4 id='method.accept_invite' class='method'><code>fn <a href='#method.accept_invite' class='fnname'>accept_invite</a>(&amp;self, invite: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.Invite.html' title='discord::model::Invite'>Invite</a>&gt;</code></h4>
+<div class='docblock'><p>Accept an invite. See <code>get_invite</code> for details.</p>
+</div><h4 id='method.create_invite' class='method'><code>fn <a href='#method.create_invite' class='fnname'>create_invite</a>(&amp;self, channel: <a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>, max_age: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>, max_uses: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>, temporary: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.RichInvite.html' title='discord::model::RichInvite'>RichInvite</a>&gt;</code></h4>
+<div class='docblock'><p>Create an invite to a channel.</p>
+
+<p>Passing 0 for <code>max_age</code> or <code>max_uses</code> means no limit. <code>max_age</code> should
+be specified in seconds.</p>
+</div><h4 id='method.delete_invite' class='method'><code>fn <a href='#method.delete_invite' class='fnname'>delete_invite</a>(&amp;self, invite: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.Invite.html' title='discord::model::Invite'>Invite</a>&gt;</code></h4>
+<div class='docblock'><p>Delete an invite. See <code>get_invite</code> for details.</p>
+</div><h4 id='method.get_member' class='method'><code>fn <a href='#method.get_member' class='fnname'>get_member</a>(&amp;self, server: <a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>, user: <a class='struct' href='../discord/model/struct.UserId.html' title='discord::model::UserId'>UserId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.Member.html' title='discord::model::Member'>Member</a>&gt;</code></h4>
+<div class='docblock'><p>Retrieve a member object for a server given the member&#39;s user id.</p>
+</div><h4 id='method.edit_member_roles' class='method'><code>fn <a href='#method.edit_member_roles' class='fnname'>edit_member_roles</a>(&amp;self, server: &amp;<a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>, user: &amp;<a class='struct' href='../discord/model/struct.UserId.html' title='discord::model::UserId'>UserId</a>, roles: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../discord/model/struct.RoleId.html' title='discord::model::RoleId'>RoleId</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Edit the list of roles assigned to a member of a server.</p>
+</div><h4 id='method.edit_member' class='method'><code>fn <a href='#method.edit_member' class='fnname'>edit_member</a>&lt;F:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>(<a class='struct' href='../discord/struct.EditMember.html' title='discord::EditMember'>EditMember</a>) -&gt; <a class='struct' href='../discord/struct.EditMember.html' title='discord::EditMember'>EditMember</a>&gt;(&amp;self, server: <a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>, user: <a class='struct' href='../discord/model/struct.UserId.html' title='discord::model::UserId'>UserId</a>, f: F) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Edit member information, including roles, nickname, and voice state.</p>
+
+<p>See the <code>EditMember</code> struct for the editable fields.</p>
+</div><h4 id='method.kick_member' class='method'><code>fn <a href='#method.kick_member' class='fnname'>kick_member</a>(&amp;self, server: &amp;<a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>, user: &amp;<a class='struct' href='../discord/model/struct.UserId.html' title='discord::model::UserId'>UserId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Kick a member from a server.</p>
+</div><h4 id='method.create_private_channel' class='method'><code>fn <a href='#method.create_private_channel' class='fnname'>create_private_channel</a>(&amp;self, recipient: &amp;<a class='struct' href='../discord/model/struct.UserId.html' title='discord::model::UserId'>UserId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.PrivateChannel.html' title='discord::model::PrivateChannel'>PrivateChannel</a>&gt;</code></h4>
+<div class='docblock'><p>Create a private channel with the given user, or return the existing
+one if it exists.</p>
+</div><h4 id='method.get_user_avatar_url' class='method'><code>fn <a href='#method.get_user_avatar_url' class='fnname'>get_user_avatar_url</a>(&amp;self, user: &amp;<a class='struct' href='../discord/model/struct.UserId.html' title='discord::model::UserId'>UserId</a>, avatar: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code></h4>
+<div class='docblock'><p>Get the URL at which a user&#39;s avatar is located.</p>
+</div><h4 id='method.get_user_avatar' class='method'><code>fn <a href='#method.get_user_avatar' class='fnname'>get_user_avatar</a>(&amp;self, user: &amp;<a class='struct' href='../discord/model/struct.UserId.html' title='discord::model::UserId'>UserId</a>, avatar: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>&gt;&gt;</code></h4>
+<div class='docblock'><p>Download a user&#39;s avatar.</p>
+</div><h4 id='method.edit_profile' class='method'><code>fn <a href='#method.edit_profile' class='fnname'>edit_profile</a>&lt;F:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/core/ops/trait.FnOnce.html' title='core::ops::FnOnce'>FnOnce</a>(<a class='struct' href='../discord/struct.EditProfile.html' title='discord::EditProfile'>EditProfile</a>) -&gt; <a class='struct' href='../discord/struct.EditProfile.html' title='discord::EditProfile'>EditProfile</a>&gt;(&amp;mut self, f: F) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.CurrentUser.html' title='discord::model::CurrentUser'>CurrentUser</a>&gt;</code></h4>
+<div class='docblock'><p>Edit the logged-in user&#39;s profile. See <code>EditProfile</code> for editable fields.</p>
+
+<p>This method requires mutable access because editing the profile generates a new token.</p>
+</div><h4 id='method.get_voice_regions' class='method'><code>fn <a href='#method.get_voice_regions' class='fnname'>get_voice_regions</a>(&amp;self) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../discord/model/struct.VoiceRegion.html' title='discord::model::VoiceRegion'>VoiceRegion</a>&gt;&gt;</code></h4>
+<div class='docblock'><p>Get the list of available voice regions for a server.</p>
+</div><h4 id='method.move_member_voice' class='method'><code>fn <a href='#method.move_member_voice' class='fnname'>move_member_voice</a>(&amp;self, server: &amp;<a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>, user: &amp;<a class='struct' href='../discord/model/struct.UserId.html' title='discord::model::UserId'>UserId</a>, channel: &amp;<a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Move a server member to another voice channel.</p>
+</div><h4 id='method.begin_server_prune' class='method'><code>fn <a href='#method.begin_server_prune' class='fnname'>begin_server_prune</a>(&amp;self, server: <a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>, days: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.ServerPrune.html' title='discord::model::ServerPrune'>ServerPrune</a>&gt;</code></h4>
+<div class='docblock'><p>Start a prune operation, kicking members who have been inactive for the
+specified number of days. Members with a role assigned will never be
+pruned.</p>
+</div><h4 id='method.get_server_prune_count' class='method'><code>fn <a href='#method.get_server_prune_count' class='fnname'>get_server_prune_count</a>(&amp;self, server: <a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>, days: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u16.html'>u16</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.ServerPrune.html' title='discord::model::ServerPrune'>ServerPrune</a>&gt;</code></h4>
+<div class='docblock'><p>Get the number of members who have been inactive for the specified
+number of days and would be pruned by a prune operation. Members with a
+role assigned will never be pruned.</p>
+</div><h4 id='method.edit_note' class='method'><code>fn <a href='#method.edit_note' class='fnname'>edit_note</a>(&amp;self, user: <a class='struct' href='../discord/model/struct.UserId.html' title='discord::model::UserId'>UserId</a>, note: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></h4>
+<div class='docblock'><p>Sets a note for the user that is readable only to the currently logged
+in user.</p>
+
+<p>This endpoint is only available for users, and so does not work for
+bots.</p>
+</div><h4 id='method.get_application_info' class='method'><code>fn <a href='#method.get_application_info' class='fnname'>get_application_info</a>(&amp;self) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../discord/model/struct.ApplicationInfo.html' title='discord::model::ApplicationInfo'>ApplicationInfo</a>&gt;</code></h4>
+<div class='docblock'><p>Retrieves information about the application and the owner.</p>
+</div><h4 id='method.suggested_shard_count' class='method'><code>fn <a href='#method.suggested_shard_count' class='fnname'>suggested_shard_count</a>(&amp;self) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>&gt;</code></h4>
+<div class='docblock'><p>Retrieves the number of guild shards Discord suggests to use based on
+the number of guilds.</p>
+
+<p>This endpoint is only available for bots.</p>
+</div><h4 id='method.connect' class='method'><code>fn <a href='#method.connect' class='fnname'>connect</a>(&amp;self) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='struct' href='../discord/struct.Connection.html' title='discord::Connection'>Connection</a>, <a class='struct' href='../discord/model/struct.ReadyEvent.html' title='discord::model::ReadyEvent'>ReadyEvent</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;</code></h4>
+<div class='docblock'><p>Establish a websocket connection over which events can be received.</p>
+
+<p>Also returns the <code>ReadyEvent</code> sent by Discord upon establishing the
+connection, which contains the initial state as seen by the client.</p>
+
+<p>See <code>connect_sharded</code> if you want to use guild sharding.</p>
+</div><h4 id='method.connect_sharded' class='method'><code>fn <a href='#method.connect_sharded' class='fnname'>connect_sharded</a>(&amp;self, shard_id: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>, total_shards: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='struct' href='../discord/struct.Connection.html' title='discord::Connection'>Connection</a>, <a class='struct' href='../discord/model/struct.ReadyEvent.html' title='discord::model::ReadyEvent'>ReadyEvent</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;</code></h4>
+<div class='docblock'><p>Establish a sharded websocket connection over which events can be
+received.</p>
+
+<p>The <code>shard_id</code> is indexed at 0 while <code>total_shards</code> is indexed at 1.</p>
+
+<p>Also returns the <code>ReadyEvent</code> sent by Discord upon establishing the
+connection, which contains the initial state as seen by the client.</p>
+
+<p>See <code>connect</code> if you do not want to use guild sharding.</p>
+</div></div></section>
+    <section id='search' class="content hidden"></section>
+
+    <section class="footer"></section>
+
+    <aside id="help" class="hidden">
+        <div>
+            <h1 class="hidden">Help</h1>
+
+            <div class="shortcuts">
+                <h2>Keyboard Shortcuts</h2>
+
+                <dl>
+                    <dt>?</dt>
+                    <dd>Show this help dialog</dd>
+                    <dt>S</dt>
+                    <dd>Focus the search field</dd>
+                    <dt>&larrb;</dt>
+                    <dd>Move up in search results</dd>
+                    <dt>&rarrb;</dt>
+                    <dd>Move down in search results</dd>
+                    <dt>&#9166;</dt>
+                    <dd>Go to active search result</dd>
+                    <dt>+</dt>
+                    <dd>Collapse/expand all sections</dd>
+                </dl>
+            </div>
+
+            <div class="infos">
+                <h2>Search Tricks</h2>
+
+                <p>
+                    Prefix searches with a type followed by a colon (e.g.
+                    <code>fn:</code>) to restrict the search to a given type.
+                </p>
+
+                <p>
+                    Accepted types are: <code>fn</code>, <code>mod</code>,
+                    <code>struct</code>, <code>enum</code>,
+                    <code>trait</code>, <code>type</code>, <code>macro</code>,
+                    and <code>const</code>.
+                </p>
+
+                <p>
+                    Search functions by type signature (e.g.
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
+                </p>
+            </div>
+        </div>
+    </aside>
+
+    
+
+    <script>
+        window.rootPath = "../";
+        window.currentCrate = "discord";
+        window.playgroundUrl = "";
+    </script>
+    <script src="../jquery.js"></script>
+    <script src="../main.js"></script>
+    
+    <script defer src="../search-index.js"></script>
+</body>
+</html>

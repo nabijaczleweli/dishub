@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors["regex_syntax"] = [];
+implementors["openssl"] = [];implementors["serde"] = [];implementors["websocket"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

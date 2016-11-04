@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Request","Represents a WebSocket request."],["Url","A parsed URL record."]]});

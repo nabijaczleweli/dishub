@@ -152,6 +152,8 @@
 <span id="108">108</span>
 <span id="109">109</span>
 <span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='self'>self</span>::<span class='kw'>super</span>::<span class='ident'>util</span>::<span class='ident'>uppercase_first</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Write</span>;
@@ -187,15 +189,15 @@
         <span class='doccomment'>/// This should be lowercase and imperative (&quot;create&quot;, &quot;open&quot;).</span>
         <span class='ident'>op</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
     },
-    <span class='doccomment'>/// An I/O error occured.</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// This includes higher-level I/O errors like FS ones.</span>
+    <span class='doccomment'>/// A watched item does not exist.</span>
     <span class='ident'>WatchedDoesNotExist</span> {
         <span class='doccomment'>/// The type of nonexistant resource.</span>
         <span class='ident'>tp</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>,
         <span class='doccomment'>/// The name of the nonexistant resource.</span>
         <span class='ident'>name</span>: <span class='ident'>String</span>,
     },
+    <span class='doccomment'>/// Failed to log in to the specified service.</span>
+    <span class='ident'>LoginFailed</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>),
 }
 
 <span class='kw'>impl</span> <span class='ident'>Error</span> {
@@ -239,6 +241,7 @@
                 <span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>err_out</span>, <span class='string'>&quot;{}ing {} failed.&quot;</span>, <span class='ident'>op</span>, <span class='ident'>desc</span>).<span class='ident'>unwrap</span>()
             }
             <span class='ident'>Error</span>::<span class='ident'>WatchedDoesNotExist</span> { <span class='ident'>tp</span>, <span class='kw-2'>ref</span> <span class='ident'>name</span> } <span class='op'>=&gt;</span> <span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>err_out</span>, <span class='string'>&quot;The watched {} \&quot;{}\&quot; doesn&#39;t exist.&quot;</span>, <span class='ident'>tp</span>, <span class='ident'>name</span>).<span class='ident'>unwrap</span>(),
+            <span class='ident'>Error</span>::<span class='ident'>LoginFailed</span>(<span class='ident'>service</span>) <span class='op'>=&gt;</span> <span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>err_out</span>, <span class='string'>&quot;Failed to log in to {}.&quot;</span>, <span class='ident'>service</span>).<span class='ident'>unwrap</span>(),
         }
     }
 
@@ -260,6 +263,7 @@
             <span class='ident'>Error</span>::<span class='ident'>FileParsingFailed</span> { .. } <span class='op'>=&gt;</span> <span class='number'>3</span>,
             <span class='ident'>Error</span>::<span class='ident'>Io</span> { .. } <span class='op'>=&gt;</span> <span class='number'>4</span>,
             <span class='ident'>Error</span>::<span class='ident'>WatchedDoesNotExist</span> { .. } <span class='op'>=&gt;</span> <span class='number'>5</span>,
+            <span class='ident'>Error</span>::<span class='ident'>LoginFailed</span>(_) <span class='op'>=&gt;</span> <span class='number'>6</span>,
         }
     }
 }

@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["get_watch_subject",""],["verify",""],["verify_subject",""]]});
+initSidebarItems({"fn":[["channels_in_server",""],["get_valid_channel",""],["get_valid_server",""],["get_watch_subject",""],["known_servers",""],["verify",""],["verify_subject",""]]});

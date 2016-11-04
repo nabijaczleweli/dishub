@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/clap-2.14.1/src/app/help.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/clap-2.17.1/src/app/help.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>help.rs.html -- source</title>
@@ -983,6 +983,12 @@
 <span id="939">939</span>
 <span id="940">940</span>
 <span id="941">941</span>
+<span id="942">942</span>
+<span id="943">943</span>
+<span id="944">944</span>
+<span id="945">945</span>
+<span id="946">946</span>
+<span id="947">947</span>
 </pre><pre class='rust '>
 <span class='comment'>// Std</span>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>cmp</span>;
@@ -1293,8 +1299,14 @@
                         <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>writer</span>, <span class='string'>&quot; &quot;</span>));
                     }
                 }
+                <span class='kw'>if</span> <span class='ident'>arg</span>.<span class='ident'>is_set</span>(<span class='ident'>ArgSettings</span>::<span class='ident'>Multiple</span>) <span class='op'>&amp;&amp;</span> <span class='ident'>num</span> <span class='op'>==</span> <span class='number'>1</span> {
+                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>color</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='string'>&quot;...&quot;</span>, <span class='ident'>good</span>));
+                }
             } <span class='kw'>else</span> <span class='kw'>if</span> <span class='ident'>arg</span>.<span class='ident'>has_switch</span>() {
                 <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>color</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='string'>&quot;&lt;{}&gt;&quot;</span>, <span class='ident'>arg</span>.<span class='ident'>name</span>(), <span class='ident'>good</span>));
+                <span class='kw'>if</span> <span class='ident'>arg</span>.<span class='ident'>is_set</span>(<span class='ident'>ArgSettings</span>::<span class='ident'>Multiple</span>) {
+                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>color</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='string'>&quot;...&quot;</span>, <span class='ident'>good</span>));
+                }
             } <span class='kw'>else</span> {
                 <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>color</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='string'>&quot;{}&quot;</span>, <span class='ident'>arg</span>, <span class='ident'>good</span>));
             }
@@ -1494,7 +1506,7 @@
             }));
         } 
         <span class='kw'>if</span> <span class='op'>!</span><span class='self'>self</span>.<span class='ident'>hide_pv</span> <span class='op'>&amp;&amp;</span> <span class='op'>!</span><span class='ident'>a</span>.<span class='ident'>is_set</span>(<span class='ident'>ArgSettings</span>::<span class='ident'>HidePossibleValues</span>) {
-            <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>pv</span>) <span class='op'>=</span> <span class='ident'>a</span>.<span class='ident'>possible_vals</span>() {
+            <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>pv</span>) <span class='op'>=</span> <span class='ident'>a</span>.<span class='ident'>possible_vals</span>() {
                 <span class='macro'>debugln</span><span class='macro'>!</span>(<span class='string'>&quot;Found possible vals...{:?}&quot;</span>, <span class='ident'>pv</span>);
                 <span class='ident'>spec_vals</span>.<span class='ident'>push</span>(<span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>color</span> {
                     <span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot; [values: {}]&quot;</span>,
@@ -1529,16 +1541,16 @@
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>first</span> <span class='op'>=</span> <span class='bool-val'>true</span>;
 
         <span class='kw'>if</span> <span class='ident'>unified_help</span> <span class='op'>&amp;&amp;</span> (<span class='ident'>flags</span> <span class='op'>||</span> <span class='ident'>opts</span>) {
-            <span class='kw'>let</span> <span class='ident'>opts_flags</span> <span class='op'>=</span> <span class='ident'>parser</span>.<span class='ident'>iter_flags</span>()
+            <span class='kw'>let</span> <span class='ident'>opts_flags</span> <span class='op'>=</span> <span class='ident'>parser</span>.<span class='ident'>flags</span>()
                 .<span class='ident'>map</span>(<span class='ident'>as_arg_trait</span>)
-                .<span class='ident'>chain</span>(<span class='ident'>parser</span>.<span class='ident'>iter_opts</span>().<span class='ident'>map</span>(<span class='ident'>as_arg_trait</span>));
+                .<span class='ident'>chain</span>(<span class='ident'>parser</span>.<span class='ident'>opts</span>().<span class='ident'>map</span>(<span class='ident'>as_arg_trait</span>));
             <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>color</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='string'>&quot;OPTIONS:\n&quot;</span>, <span class='ident'>warning</span>));
             <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>write_args</span>(<span class='ident'>opts_flags</span>));
             <span class='ident'>first</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
         } <span class='kw'>else</span> {
             <span class='kw'>if</span> <span class='ident'>flags</span> {
                 <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>color</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='string'>&quot;FLAGS:\n&quot;</span>, <span class='ident'>warning</span>));
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>write_args</span>(<span class='ident'>parser</span>.<span class='ident'>iter_flags</span>()
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>write_args</span>(<span class='ident'>parser</span>.<span class='ident'>flags</span>()
                     .<span class='ident'>map</span>(<span class='ident'>as_arg_trait</span>)));
                 <span class='ident'>first</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
             }
@@ -1547,7 +1559,7 @@
                     <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='string'>b&quot;\n\n&quot;</span>));
                 }
                 <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>color</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='string'>&quot;OPTIONS:\n&quot;</span>, <span class='ident'>warning</span>));
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>write_args</span>(<span class='ident'>parser</span>.<span class='ident'>iter_opts</span>().<span class='ident'>map</span>(<span class='ident'>as_arg_trait</span>)));
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>write_args</span>(<span class='ident'>parser</span>.<span class='ident'>opts</span>().<span class='ident'>map</span>(<span class='ident'>as_arg_trait</span>)));
                 <span class='ident'>first</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
             }
         }
@@ -1557,7 +1569,7 @@
                 <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>writer</span>.<span class='ident'>write</span>(<span class='string'>b&quot;\n\n&quot;</span>));
             }
             <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>color</span><span class='macro'>!</span>(<span class='self'>self</span>, <span class='string'>&quot;ARGS:\n&quot;</span>, <span class='ident'>warning</span>));
-            <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>write_args_unsorted</span>(<span class='ident'>parser</span>.<span class='ident'>iter_positionals</span>().<span class='ident'>map</span>(<span class='ident'>as_arg_trait</span>)));
+            <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>write_args_unsorted</span>(<span class='ident'>parser</span>.<span class='ident'>positionals</span>().<span class='ident'>map</span>(<span class='ident'>as_arg_trait</span>)));
             <span class='ident'>first</span> <span class='op'>=</span> <span class='bool-val'>false</span>;
         }
 
@@ -1844,21 +1856,21 @@
                     <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>write_all_args</span>(<span class='kw-2'>&amp;</span><span class='ident'>parser</span>));
                 }
                 <span class='string'>b&quot;unified&quot;</span> <span class='op'>=&gt;</span> {
-                    <span class='kw'>let</span> <span class='ident'>opts_flags</span> <span class='op'>=</span> <span class='ident'>parser</span>.<span class='ident'>iter_flags</span>()
+                    <span class='kw'>let</span> <span class='ident'>opts_flags</span> <span class='op'>=</span> <span class='ident'>parser</span>.<span class='ident'>flags</span>()
                         .<span class='ident'>map</span>(<span class='ident'>as_arg_trait</span>)
-                        .<span class='ident'>chain</span>(<span class='ident'>parser</span>.<span class='ident'>iter_opts</span>().<span class='ident'>map</span>(<span class='ident'>as_arg_trait</span>));
+                        .<span class='ident'>chain</span>(<span class='ident'>parser</span>.<span class='ident'>opts</span>().<span class='ident'>map</span>(<span class='ident'>as_arg_trait</span>));
                     <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>write_args</span>(<span class='ident'>opts_flags</span>));
                 }
                 <span class='string'>b&quot;flags&quot;</span> <span class='op'>=&gt;</span> {
-                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>write_args</span>(<span class='ident'>parser</span>.<span class='ident'>iter_flags</span>()
+                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>write_args</span>(<span class='ident'>parser</span>.<span class='ident'>flags</span>()
                         .<span class='ident'>map</span>(<span class='ident'>as_arg_trait</span>)));
                 }
                 <span class='string'>b&quot;options&quot;</span> <span class='op'>=&gt;</span> {
-                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>write_args</span>(<span class='ident'>parser</span>.<span class='ident'>iter_opts</span>()
+                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>write_args</span>(<span class='ident'>parser</span>.<span class='ident'>opts</span>()
                         .<span class='ident'>map</span>(<span class='ident'>as_arg_trait</span>)));
                 }
                 <span class='string'>b&quot;positionals&quot;</span> <span class='op'>=&gt;</span> {
-                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>write_args</span>(<span class='ident'>parser</span>.<span class='ident'>iter_positionals</span>()
+                    <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>write_args</span>(<span class='ident'>parser</span>.<span class='ident'>positionals</span>()
                         .<span class='ident'>map</span>(<span class='ident'>as_arg_trait</span>)));
                 }
                 <span class='string'>b&quot;subcommands&quot;</span> <span class='op'>=&gt;</span> {
