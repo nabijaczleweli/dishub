@@ -1,11 +1,11 @@
 use self::super::{AppTokens, Feed, github, verify_file};
 use self::super::super::util::prompt_nonzero_len;
+use discord::model::{ChannelType, ServerId};
 use self::super::super::Error;
 use std::io::{BufRead, Write};
-use discord::{State, Discord};
-use discord::model::ServerId;
 use std::path::PathBuf;
 use std::str::FromStr;
+use discord::Discord;
 
 
 pub fn verify(config_dir: &(String, PathBuf)) -> Result<(PathBuf, PathBuf), Error> {
@@ -64,17 +64,14 @@ pub fn get_valid_server<R: BufRead, W: Write>(servers: Vec<(u64, String)>, input
 pub fn channels_in_server(tokens: &AppTokens, server_id: u64) -> Result<Vec<(u64, String)>, Error> {
     let discord = try!(Discord::from_bot_token(&tokens.discord).map_err(|_| Error::LoginFailed("Discord")));
 
-    // TODO: uncomment once discord v0.9.0 gets released
-    // discord.get_server_channels(ServerId(server_id))
-    //     .map_err(|_| {
-    //         Error::Io {
-    //             desc: "Discord channels",
-    //             op: "list",
-    //         }
-    //     })
-    //     .map(|channels| channels.into_iter().map(|c| (c.id.0, c.name)).collect())
-
-    Ok(vec![(0, "#general".to_string())])
+    discord.get_server_channels(ServerId(server_id))
+        .map_err(|_| {
+            Error::Io {
+                desc: "Discord channels",
+                op: "list",
+            }
+        })
+        .map(|channels| channels.into_iter().filter(|c| c.kind == ChannelType::Text).map(|c| (c.id.0, format!("#{}", c.name))).collect())
 }
 
 pub fn get_valid_channel<R: BufRead, W: Write>(channels: Vec<(u64, String)>, input: &mut R, output: &mut W) -> u64 {
