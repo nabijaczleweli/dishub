@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors["serde"] = [];implementors["websocket"] = [];
+implementors["regex_syntax"] = [];implementors["serde"] = [];implementors["websocket"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

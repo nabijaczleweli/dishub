@@ -109,6 +109,9 @@
 <span id="65">65</span>
 <span id="66">66</span>
 <span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! Main functions doing actual work.</span>
 <span class='doccomment'>//!</span>
@@ -123,15 +126,18 @@
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Read</span>;
 
 <span class='kw'>mod</span> <span class='ident'>feed</span>;
+<span class='kw'>mod</span> <span class='ident'>event</span>;
 <span class='kw'>mod</span> <span class='ident'>app_tokens</span>;
 
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>init</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>github</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>add_feeds</span>;
+<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>start_daemon</span>;
 <span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>unfollow_feeds</span>;
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>feed</span>::<span class='ident'>Feed</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>app_tokens</span>::<span class='ident'>AppTokens</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>event</span>::{<span class='ident'>EventPayload</span>, <span class='ident'>Event</span>};
 
 
 <span class='kw'>fn</span> <span class='ident'>verify_file</span>(<span class='ident'>fname</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>should_exist</span>: <span class='ident'>bool</span>, <span class='ident'>config_dir</span>: <span class='kw-2'>&amp;</span>(<span class='ident'>String</span>, <span class='ident'>PathBuf</span>), <span class='ident'>force</span>: <span class='ident'>bool</span>, <span class='ident'>producing_subsystem</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>PathBuf</span>, <span class='ident'>Error</span><span class='op'>&gt;</span> {

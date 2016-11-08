@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["repo_exists",""],["user_exists",""]]});
+initSidebarItems({"fn":[["poll_repo_events_new",""],["poll_repo_events_update",""],["poll_user_events_new",""],["poll_user_events_update",""],["repo_exists",""],["user_exists",""]],"struct":[["XPollInterval",""]]});
