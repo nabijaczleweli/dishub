@@ -42,6 +42,7 @@ fn polled() {
                     channel = 105\n\
                     e_tag = \"a18c3bded88eb5dbb5c849a489412bf3\"\n\
                     latest = \"2000-07-01T15:12:57-08:00\"\n\
+                    next_min = \"2000-07-01T15:14:00-08:00\"\n\
                     server = 1056\n\
                     subject = \"nabijaczleweli\"\n")
         .unwrap();
@@ -53,5 +54,6 @@ fn polled() {
                            channel: 105,
                            e_tag: Some("a18c3bded88eb5dbb5c849a489412bf3".to_string()),
                            latest: Some(DateTime::parse_from_rfc2822("Sat, 1 Jul 2000 15:12:57 -0800").unwrap()),
+                           next_min: Some(DateTime::parse_from_rfc2822("Sat, 1 Jul 2000 15:14:00 -0800").unwrap()),
                        }]));
 }

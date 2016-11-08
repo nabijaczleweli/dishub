@@ -1,7 +1,8 @@
 extern crate dishub;
 
-
+use std::thread;
 use std::process::exit;
+use std::time::Duration;
 use std::io::{stderr, stdout, stdin};
 
 
@@ -27,6 +28,7 @@ fn result_main() -> Result<(), dishub::Error> {
         dishub::options::Subsystem::Init { force } => init_main(opts, force),
         dishub::options::Subsystem::AddFeeds => add_feeds_main(opts),
         dishub::options::Subsystem::UnfollowFeeds => unfollow_feeds_main(opts),
+        dishub::options::Subsystem::StartDaemon { sleep } => start_daemon_main(opts, sleep),
     }
 }
 
@@ -69,7 +71,6 @@ fn add_feeds_main(opts: dishub::options::Options) -> Result<(), dishub::Error> {
     Ok(())
 }
 
-
 fn unfollow_feeds_main(opts: dishub::options::Options) -> Result<(), dishub::Error> {
     let feeds_path = try!(dishub::ops::unfollow_feeds::verify(&opts.config_dir));
 
@@ -88,4 +89,22 @@ fn unfollow_feeds_main(opts: dishub::options::Options) -> Result<(), dishub::Err
     dishub::ops::Feed::write(feeds, &feeds_path);
 
     Ok(())
+}
+
+fn start_daemon_main(opts: dishub::options::Options, sleep: Duration) -> Result<(), dishub::Error> {
+    let (tokens_path, feeds_path) = try!(dishub::ops::start_daemon::verify(&opts.config_dir));
+    let tokens = try!(dishub::ops::AppTokens::read(&tokens_path));
+
+    loop {
+        let mut feeds = try!(dishub::ops::Feed::read(&feeds_path));
+        println!("{:#?}", feeds);
+
+        for feed in feeds.iter_mut().filter(|ref f| dishub::ops::start_daemon::feeds_filter(&mut stdout(), f)) {
+            print!("{}: ", feed.subject);
+            println!("{:#?}", feed.poll(&tokens));
+        }
+
+        dishub::ops::Feed::write(feeds, &feeds_path);
+        thread::sleep(sleep);
+    }
 }

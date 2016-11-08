@@ -13,5 +13,6 @@ fn new() {
                    channel: 1056,
                    e_tag: None,
                    latest: None,
+                   next_min: None,
                });
 }

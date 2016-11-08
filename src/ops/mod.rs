@@ -11,15 +11,18 @@ use std::fs::File;
 use std::io::Read;
 
 mod feed;
+mod event;
 mod app_tokens;
 
 pub mod init;
 pub mod github;
 pub mod add_feeds;
+pub mod start_daemon;
 pub mod unfollow_feeds;
 
 pub use self::feed::Feed;
 pub use self::app_tokens::AppTokens;
+pub use self::event::{EventPayload, Event};
 
 
 fn verify_file(fname: &str, should_exist: bool, config_dir: &(String, PathBuf), force: bool, producing_subsystem: &'static str) -> Result<PathBuf, Error> {

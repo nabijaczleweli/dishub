@@ -1,5 +1,5 @@
-use chrono::{DateTime, FixedOffset};
-use self::super::read_toml_file;
+use self::super::{AppTokens, Event, read_toml_file, github};
+use chrono::{FixedOffset, Duration, DateTime, Local};
 use self::super::super::Error;
 use toml::encode_str;
 use std::path::Path;
@@ -24,6 +24,8 @@ pub struct Feed {
     pub e_tag: Option<String>,
     /// The time of the last received event pack.
     pub latest: Option<DateTime<FixedOffset>>,
+    /// The minimal time the next poll is allowed.
+    pub next_min: Option<DateTime<FixedOffset>>,
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Eq, RustcEncodable, RustcDecodable)]
@@ -35,6 +37,7 @@ pub struct FeedForSerialisation {
 
     pub e_tag: Option<String>,
     pub latest: Option<String>,
+    pub next_min: Option<String>,
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Eq, RustcEncodable, RustcDecodable)]
@@ -51,6 +54,7 @@ impl Feed {
             channel: channel_id,
             e_tag: None,
             latest: None,
+            next_min: None,
         }
     }
 
@@ -64,6 +68,41 @@ impl Feed {
     pub fn write(feeds: Vec<Feed>, p: &Path) {
         File::create(p).unwrap().write_all(encode_str(&Feeds { feed: feeds.into_iter().map(FeedForSerialisation::from).collect() }).as_bytes()).unwrap();
     }
+
+    pub fn poll(&mut self, tkn: &AppTokens) -> Result<Vec<Event>, Error> {
+        let (events, next) = if self.e_tag.is_none() {
+            let (ctnt, etag, next) = try!(if !self.subject.contains('/') {
+                github::poll_user_events_new(&self.subject, tkn)
+            } else {
+                github::poll_repo_events_new(&self.subject, tkn)
+            });
+
+            self.e_tag = Some(etag);
+            (Event::parse(&ctnt), next)
+        } else {
+            let (ctnt_etag, next) = try!(if !self.subject.contains('/') {
+                github::poll_user_events_update(&self.subject, self.e_tag.as_ref().unwrap(), tkn)
+            } else {
+                github::poll_repo_events_update(&self.subject, self.e_tag.as_ref().unwrap(), tkn)
+            });
+
+            match ctnt_etag {
+                Some((ctnt, etag)) => {
+                    self.e_tag = Some(etag);
+                    (Event::parse(&ctnt), next)
+                }
+                None => (vec![], next),
+            }
+        };
+
+        let now = Local::now();
+        let now = now.with_timezone(now.offset());
+
+        self.latest = Some(now.clone());
+        self.next_min = Some(now + Duration::seconds(next as i64));
+
+        Ok(events)
+    }
 }
 
 impl From<Feed> for FeedForSerialisation {
@@ -74,6 +113,7 @@ impl From<Feed> for FeedForSerialisation {
             channel: f.channel,
             e_tag: f.e_tag,
             latest: f.latest.map(|dt| dt.to_rfc3339()),
+            next_min: f.next_min.map(|dt| dt.to_rfc3339()),
         }
     }
 }
@@ -86,6 +126,7 @@ impl Into<Feed> for FeedForSerialisation {
             channel: self.channel,
             e_tag: self.e_tag,
             latest: self.latest.map(|dts| DateTime::parse_from_rfc3339(&dts).unwrap()),
+            next_min: self.next_min.map(|dts| DateTime::parse_from_rfc3339(&dts).unwrap()),
         }
     }
 }

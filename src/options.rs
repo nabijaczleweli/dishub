@@ -12,9 +12,17 @@
 
 
 use clap::{self, App, SubCommand, Arg, AppSettings};
+use std::time::Duration;
 use std::path::PathBuf;
 use std::env::home_dir;
+use std::str::FromStr;
+use regex::Regex;
 use std::fs;
+
+
+lazy_static! {
+    static ref SLEEP_RGX: Regex = Regex::new(r"(\d+)s").unwrap();
+}
 
 
 /// All possible subsystems, think `cargo`'s or `git`'s.
@@ -29,6 +37,11 @@ pub enum Subsystem {
     AddFeeds,
     /// Unsubscribe from selected followed feeds
     UnfollowFeeds,
+    /// Run the activity-posting daemon
+    StartDaemon {
+        /// How long to sleep between each iteration. Default: 5 minutes
+        sleep: Duration,
+    },
 }
 
 
@@ -58,6 +71,11 @@ impl Options {
                 .arg(Arg::from_usage("-f --force 'Override current app configuration'")))
             .subcommand(SubCommand::with_name("add-feeds").about("Add feeds to post to servers"))
             .subcommand(SubCommand::with_name("unfollow-feeds").about("Unsubscribe from selected followed feeds"))
+            .subcommand(SubCommand::with_name("start-daemon")
+                .about("Run the activity-posting daemon")
+                .arg(Arg::from_usage("-s --sleep=[SLEEP_TIME] 'Time to sleep between each iteration'")
+                    .default_value("300s")
+                    .validator(Options::sleep_validator)))
             .get_matches();
 
         Options {
@@ -87,12 +105,26 @@ impl Options {
                 ("init", Some(init_matches)) => Subsystem::Init { force: init_matches.is_present("force") },
                 ("add-feeds", _) => Subsystem::AddFeeds,
                 ("unfollow-feeds", _) => Subsystem::UnfollowFeeds,
+                ("start-daemon", Some(start_daemon_matches)) => {
+                    Subsystem::StartDaemon { sleep: Duration::from_secs(Options::parse_sleep(start_daemon_matches.value_of("sleep").unwrap()).unwrap()) }
+                }
                 _ => panic!("No subcommand passed"),
             },
         }
     }
 
+    fn parse_sleep(s: &str) -> Option<u64> {
+        SLEEP_RGX.captures(s).map(|c| u64::from_str(c.at(1).unwrap()).unwrap())
+    }
+
     fn config_dir_validator(s: String) -> Result<(), String> {
         fs::canonicalize(&s).map(|_| ()).map_err(|_| format!("Configuration directory \"{}\" not found", s))
+    }
+
+    fn sleep_validator(s: String) -> Result<(), String> {
+        match Options::parse_sleep(&s) {
+            None => Err(format!("\"{}\" is not a valid sleep duration (in format \"NNNs\")", s)),
+            Some(_) => Ok(()),
+        }
     }
 }
