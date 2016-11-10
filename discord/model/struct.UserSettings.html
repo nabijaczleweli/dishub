@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-3958' class='srclink' href='../../src/discord/model.rs.html#1489-1506' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-3898' class='srclink' href='../../src/discord/model.rs.html#1489-1506' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct UserSettings {
     pub detect_platform_accounts: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
     pub developer_mode: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
@@ -65,32 +65,62 @@
     pub friend_source_flags: <a class='struct' href='../../discord/model/struct.FriendSourceFlags.html' title='discord::model::FriendSourceFlags'>FriendSourceFlags</a>,
     pub restricted_servers: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>&gt;,
 }</pre><div class='docblock'><p>User settings usually used to influence client behavior</p>
-</div><h2 class='fields'>Fields</h2><span id='structfield.detect_platform_accounts' class='structfield'><code>detect_platform_accounts: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span><span class='stab '></span><span id='structfield.developer_mode' class='structfield'><code>developer_mode: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span><span class='stab '></span><span id='structfield.enable_tts_command' class='structfield'><code>enable_tts_command: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span><span class='stab '></span><span id='structfield.inline_attachment_media' class='structfield'><code>inline_attachment_media: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span><span class='stab '></span><span id='structfield.inline_embed_media' class='structfield'><code>inline_embed_media: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span><span class='stab '></span><span id='structfield.locale' class='structfield'><code>locale: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code>
-                           </span><span class='stab '></span><span id='structfield.message_display_compact' class='structfield'><code>message_display_compact: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span><span class='stab '></span><span id='structfield.render_embeds' class='structfield'><code>render_embeds: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span><span class='stab '></span><span id='structfield.server_positions' class='structfield'><code>server_positions: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>&gt;</code>
-                           </span><span class='stab '></span><span id='structfield.show_current_game' class='structfield'><code>show_current_game: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span><span class='stab '></span><span id='structfield.status' class='structfield'><code>status: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code>
-                           </span><span class='stab '></span><span id='structfield.theme' class='structfield'><code>theme: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code>
-                           </span><span class='stab '></span><span id='structfield.convert_emoticons' class='structfield'><code>convert_emoticons: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span><span class='stab '></span><span id='structfield.friend_source_flags' class='structfield'><code>friend_source_flags: <a class='struct' href='../../discord/model/struct.FriendSourceFlags.html' title='discord::model::FriendSourceFlags'>FriendSourceFlags</a></code>
-                           </span><span class='stab '></span><span id='structfield.restricted_servers' class='structfield'><code>restricted_servers: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>&gt;</code>
-                           </span><span class='stab '></span><div class='docblock'><p>Servers whose members cannot private message this user.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../discord/model/struct.UserSettings.html' title='discord::model::UserSettings'>UserSettings</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3974' class='srclink' href='../../src/discord/model.rs.html#1508-1532' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.decode' class='method'><code>fn <a href='#method.decode' class='fnname'>decode</a>(value: <a class='enum' href='../../serde_json/value/enum.Value.html' title='serde_json::value::Value'>Value</a>) -&gt; <a class='type' href='../../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../discord/model/struct.UserSettings.html' title='discord::model::UserSettings'>UserSettings</a>&gt;&gt;</code></h4>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../discord/model/struct.UserSettings.html' title='discord::model::UserSettings'>UserSettings</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3920' class='srclink' href='../../src/discord/model.rs.html#1488' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../discord/model/struct.UserSettings.html' title='discord::model::UserSettings'>UserSettings</a></code></h4>
-<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
-<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../discord/model/struct.UserSettings.html' title='discord::model::UserSettings'>UserSettings</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3938' class='srclink' href='../../src/discord/model.rs.html#1488' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+</div><h2 class='fields'>Fields</h2><span id='structfield.detect_platform_accounts' class='structfield'>
+                           <span id='detect_platform_accounts.v' class='invisible'>
+                           <code>detect_platform_accounts: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.developer_mode' class='structfield'>
+                           <span id='developer_mode.v' class='invisible'>
+                           <code>developer_mode: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.enable_tts_command' class='structfield'>
+                           <span id='enable_tts_command.v' class='invisible'>
+                           <code>enable_tts_command: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.inline_attachment_media' class='structfield'>
+                           <span id='inline_attachment_media.v' class='invisible'>
+                           <code>inline_attachment_media: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.inline_embed_media' class='structfield'>
+                           <span id='inline_embed_media.v' class='invisible'>
+                           <code>inline_embed_media: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.locale' class='structfield'>
+                           <span id='locale.v' class='invisible'>
+                           <code>locale: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.message_display_compact' class='structfield'>
+                           <span id='message_display_compact.v' class='invisible'>
+                           <code>message_display_compact: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.render_embeds' class='structfield'>
+                           <span id='render_embeds.v' class='invisible'>
+                           <code>render_embeds: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.server_positions' class='structfield'>
+                           <span id='server_positions.v' class='invisible'>
+                           <code>server_positions: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>&gt;</code>
+                           </span></span><span class='stab '></span><span id='structfield.show_current_game' class='structfield'>
+                           <span id='show_current_game.v' class='invisible'>
+                           <code>show_current_game: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.status' class='structfield'>
+                           <span id='status.v' class='invisible'>
+                           <code>status: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.theme' class='structfield'>
+                           <span id='theme.v' class='invisible'>
+                           <code>theme: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.convert_emoticons' class='structfield'>
+                           <span id='convert_emoticons.v' class='invisible'>
+                           <code>convert_emoticons: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.friend_source_flags' class='structfield'>
+                           <span id='friend_source_flags.v' class='invisible'>
+                           <code>friend_source_flags: <a class='struct' href='../../discord/model/struct.FriendSourceFlags.html' title='discord::model::FriendSourceFlags'>FriendSourceFlags</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.restricted_servers' class='structfield'>
+                           <span id='restricted_servers.v' class='invisible'>
+                           <code>restricted_servers: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>&gt;</code>
+                           </span></span><span class='stab '></span><div class='docblock'><p>Servers whose members cannot private message this user.</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../discord/model/struct.UserSettings.html' title='discord::model::UserSettings'>UserSettings</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3952' class='srclink' href='../../src/discord/model.rs.html#1508-1532' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.decode' class='method'><span id='decode.v' class='invisible'><code>fn <a href='#method.decode' class='fnname'>decode</a>(value: <a class='enum' href='../../serde_json/value/enum.Value.html' title='serde_json::value::Value'>Value</a>) -&gt; <a class='type' href='../../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../../discord/model/struct.UserSettings.html' title='discord::model::UserSettings'>UserSettings</a>&gt;&gt;</code></span></h4>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../discord/model/struct.UserSettings.html' title='discord::model::UserSettings'>UserSettings</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3914' class='srclink' href='../../src/discord/model.rs.html#1488' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../discord/model/struct.UserSettings.html' title='discord::model::UserSettings'>UserSettings</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-3934' class='srclink' href='../../src/discord/model.rs.html#1488' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../discord/model/struct.UserSettings.html' title='discord::model::UserSettings'>UserSettings</a></code></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
 

@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["write",""]],"macro":[["diyfp!",""],["dtoa!",""]],"trait":[["Floating",""]]});
+initSidebarItems({"fn":[["write",""]],"macro":[["diyfp",""],["dtoa",""]],"trait":[["Floating",""]]});

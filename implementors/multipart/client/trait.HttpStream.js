@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors["multipart"] = [];
+implementors["multipart"] = [];implementors["dishub"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

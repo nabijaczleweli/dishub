@@ -47,7 +47,7 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-2701' class='srclink' href='../../src/discord/model.rs.html#753-772' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-2641' class='srclink' href='../../src/discord/model.rs.html#753-772' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Message {
     pub id: <a class='struct' href='../../discord/model/struct.MessageId.html' title='discord::model::MessageId'>MessageId</a>,
     pub channel_id: <a class='struct' href='../../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>,
@@ -65,32 +65,62 @@
     pub attachments: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../discord/model/struct.Attachment.html' title='discord::model::Attachment'>Attachment</a>&gt;,
     pub embeds: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='enum' href='../../serde_json/value/enum.Value.html' title='serde_json::value::Value'>Value</a>&gt;,
 }</pre><div class='docblock'><p>Message transmitted over a text channel</p>
-</div><h2 class='fields'>Fields</h2><span id='structfield.id' class='structfield'><code>id: <a class='struct' href='../../discord/model/struct.MessageId.html' title='discord::model::MessageId'>MessageId</a></code>
-                           </span><span class='stab '></span><span id='structfield.channel_id' class='structfield'><code>channel_id: <a class='struct' href='../../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a></code>
-                           </span><span class='stab '></span><span id='structfield.content' class='structfield'><code>content: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code>
-                           </span><span class='stab '></span><span id='structfield.nonce' class='structfield'><code>nonce: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code>
-                           </span><span class='stab '></span><span id='structfield.tts' class='structfield'><code>tts: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span><span class='stab '></span><span id='structfield.timestamp' class='structfield'><code>timestamp: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code>
-                           </span><span class='stab '></span><span id='structfield.edited_timestamp' class='structfield'><code>edited_timestamp: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code>
-                           </span><span class='stab '></span><span id='structfield.pinned' class='structfield'><code>pinned: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span><span class='stab '></span><span id='structfield.kind' class='structfield'><code>kind: <a class='enum' href='../../discord/model/enum.MessageType.html' title='discord::model::MessageType'>MessageType</a></code>
-                           </span><span class='stab '></span><span id='structfield.author' class='structfield'><code>author: <a class='struct' href='../../discord/model/struct.User.html' title='discord::model::User'>User</a></code>
-                           </span><span class='stab '></span><span id='structfield.mention_everyone' class='structfield'><code>mention_everyone: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span><span class='stab '></span><span id='structfield.mentions' class='structfield'><code>mentions: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../discord/model/struct.User.html' title='discord::model::User'>User</a>&gt;</code>
-                           </span><span class='stab '></span><span id='structfield.mention_roles' class='structfield'><code>mention_roles: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../discord/model/struct.RoleId.html' title='discord::model::RoleId'>RoleId</a>&gt;</code>
-                           </span><span class='stab '></span><span id='structfield.attachments' class='structfield'><code>attachments: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../discord/model/struct.Attachment.html' title='discord::model::Attachment'>Attachment</a>&gt;</code>
-                           </span><span class='stab '></span><span id='structfield.embeds' class='structfield'><code>embeds: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='enum' href='../../serde_json/value/enum.Value.html' title='serde_json::value::Value'>Value</a>&gt;</code>
-                           </span><span class='stab '></span><div class='docblock'><p>Follows OEmbed standard</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../discord/model/struct.Message.html' title='discord::model::Message'>Message</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2717' class='srclink' href='../../src/discord/model.rs.html#774-795' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.decode' class='method'><code>fn <a href='#method.decode' class='fnname'>decode</a>(value: <a class='enum' href='../../serde_json/value/enum.Value.html' title='serde_json::value::Value'>Value</a>) -&gt; <a class='type' href='../../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../../discord/model/struct.Message.html' title='discord::model::Message'>Message</a>&gt;</code></h4>
-</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../discord/model/struct.Message.html' title='discord::model::Message'>Message</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2663' class='srclink' href='../../src/discord/model.rs.html#752' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.clone' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../discord/model/struct.Message.html' title='discord::model::Message'>Message</a></code></h4>
-<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></h4>
-<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../discord/model/struct.Message.html' title='discord::model::Message'>Message</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2681' class='srclink' href='../../src/discord/model.rs.html#752' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class='method'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></h4>
+</div><h2 class='fields'>Fields</h2><span id='structfield.id' class='structfield'>
+                           <span id='id.v' class='invisible'>
+                           <code>id: <a class='struct' href='../../discord/model/struct.MessageId.html' title='discord::model::MessageId'>MessageId</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.channel_id' class='structfield'>
+                           <span id='channel_id.v' class='invisible'>
+                           <code>channel_id: <a class='struct' href='../../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.content' class='structfield'>
+                           <span id='content.v' class='invisible'>
+                           <code>content: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.nonce' class='structfield'>
+                           <span id='nonce.v' class='invisible'>
+                           <code>nonce: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code>
+                           </span></span><span class='stab '></span><span id='structfield.tts' class='structfield'>
+                           <span id='tts.v' class='invisible'>
+                           <code>tts: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.timestamp' class='structfield'>
+                           <span id='timestamp.v' class='invisible'>
+                           <code>timestamp: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.edited_timestamp' class='structfield'>
+                           <span id='edited_timestamp.v' class='invisible'>
+                           <code>edited_timestamp: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code>
+                           </span></span><span class='stab '></span><span id='structfield.pinned' class='structfield'>
+                           <span id='pinned.v' class='invisible'>
+                           <code>pinned: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.kind' class='structfield'>
+                           <span id='kind.v' class='invisible'>
+                           <code>kind: <a class='enum' href='../../discord/model/enum.MessageType.html' title='discord::model::MessageType'>MessageType</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.author' class='structfield'>
+                           <span id='author.v' class='invisible'>
+                           <code>author: <a class='struct' href='../../discord/model/struct.User.html' title='discord::model::User'>User</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.mention_everyone' class='structfield'>
+                           <span id='mention_everyone.v' class='invisible'>
+                           <code>mention_everyone: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
+                           </span></span><span class='stab '></span><span id='structfield.mentions' class='structfield'>
+                           <span id='mentions.v' class='invisible'>
+                           <code>mentions: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../discord/model/struct.User.html' title='discord::model::User'>User</a>&gt;</code>
+                           </span></span><span class='stab '></span><span id='structfield.mention_roles' class='structfield'>
+                           <span id='mention_roles.v' class='invisible'>
+                           <code>mention_roles: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../discord/model/struct.RoleId.html' title='discord::model::RoleId'>RoleId</a>&gt;</code>
+                           </span></span><span class='stab '></span><span id='structfield.attachments' class='structfield'>
+                           <span id='attachments.v' class='invisible'>
+                           <code>attachments: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../../discord/model/struct.Attachment.html' title='discord::model::Attachment'>Attachment</a>&gt;</code>
+                           </span></span><span class='stab '></span><span id='structfield.embeds' class='structfield'>
+                           <span id='embeds.v' class='invisible'>
+                           <code>embeds: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='enum' href='../../serde_json/value/enum.Value.html' title='serde_json::value::Value'>Value</a>&gt;</code>
+                           </span></span><span class='stab '></span><div class='docblock'><p>Follows OEmbed standard</p>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../discord/model/struct.Message.html' title='discord::model::Message'>Message</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2695' class='srclink' href='../../src/discord/model.rs.html#774-795' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.decode' class='method'><span id='decode.v' class='invisible'><code>fn <a href='#method.decode' class='fnname'>decode</a>(value: <a class='enum' href='../../serde_json/value/enum.Value.html' title='serde_json::value::Value'>Value</a>) -&gt; <a class='type' href='../../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='struct' href='../../discord/model/struct.Message.html' title='discord::model::Message'>Message</a>&gt;</code></span></h4>
+</div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../discord/model/struct.Message.html' title='discord::model::Message'>Message</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2657' class='srclink' href='../../src/discord/model.rs.html#752' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
 <div class='docblock'><p>Formats the value using the given formatter.</p>
+</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../discord/model/struct.Message.html' title='discord::model::Message'>Message</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-2677' class='srclink' href='../../src/discord/model.rs.html#752' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../discord/model/struct.Message.html' title='discord::model::Message'>Message</a></code></span></h4>
+<div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
+</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+<div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
 
