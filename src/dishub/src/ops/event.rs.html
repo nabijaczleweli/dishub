@@ -369,6 +369,41 @@
 <span id="325">325</span>
 <span id="326">326</span>
 <span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
+<span id="353">353</span>
+<span id="354">354</span>
+<span id="355">355</span>
+<span id="356">356</span>
+<span id="357">357</span>
+<span id="358">358</span>
+<span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>chrono</span>::{<span class='ident'>FixedOffset</span>, <span class='ident'>DateTime</span>};
 <span class='kw'>use</span> <span class='ident'>json</span>::{<span class='self'>self</span>, <span class='ident'>JsonValue</span>};
@@ -385,7 +420,11 @@
 
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Debug</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>EventPayload</span> {
-    <span class='ident'>CommitComment</span> { <span class='ident'>content</span>: <span class='ident'>String</span>, <span class='ident'>commit_id</span>: <span class='ident'>String</span>, },
+    <span class='ident'>CommitComment</span> {
+        <span class='ident'>content</span>: <span class='ident'>String</span>,
+        <span class='ident'>commit_id</span>: <span class='ident'>String</span>,
+        <span class='ident'>id</span>: <span class='ident'>u64</span>,
+    },
     <span class='ident'>Create</span> {
         <span class='ident'>ref_type</span>: <span class='ident'>String</span>,
         <span class='ident'>ref_name</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,
@@ -399,6 +438,7 @@
         <span class='ident'>action</span>: <span class='ident'>String</span>,
         <span class='ident'>issue</span>: <span class='ident'>u64</span>,
         <span class='ident'>body</span>: <span class='ident'>String</span>,
+        <span class='ident'>id</span>: <span class='ident'>u64</span>,
     },
     <span class='ident'>Issues</span> {
         <span class='ident'>action</span>: <span class='ident'>String</span>,
@@ -420,15 +460,18 @@
         <span class='ident'>pr</span>: <span class='ident'>u64</span>,
         <span class='ident'>state</span>: <span class='ident'>String</span>,
         <span class='ident'>body</span>: <span class='ident'>String</span>,
+        <span class='ident'>id</span>: <span class='ident'>u64</span>,
     },
     <span class='ident'>PullRequestReviewComment</span> {
         <span class='ident'>action</span>: <span class='ident'>String</span>,
         <span class='ident'>pr</span>: <span class='ident'>u64</span>,
         <span class='ident'>body</span>: <span class='ident'>String</span>,
+        <span class='ident'>id</span>: <span class='ident'>u64</span>,
     },
     <span class='ident'>Push</span> {
         <span class='ident'>pushed_ref</span>: <span class='ident'>String</span>,
-        <span class='ident'>prev_ref</span>: <span class='ident'>String</span>,
+        <span class='ident'>prev_head</span>: <span class='ident'>String</span>,
+        <span class='ident'>new_head</span>: <span class='ident'>String</span>,
         <span class='ident'>size</span>: <span class='ident'>u64</span>,
         <span class='ident'>distinct_size</span>: <span class='ident'>u64</span>,
         <span class='ident'>commits</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Commit</span><span class='op'>&gt;</span>,
@@ -442,7 +485,6 @@
         <span class='ident'>name</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,
         <span class='ident'>body</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,
     },
-    <span class='ident'>Repository</span> { <span class='ident'>action</span>: <span class='ident'>String</span>, <span class='ident'>slug</span>: <span class='ident'>String</span>, },
     <span class='ident'>Watch</span> { <span class='ident'>action</span>: <span class='ident'>String</span>, },
     <span class='ident'>Other</span>(<span class='ident'>JsonValue</span>),
 }
@@ -481,6 +523,37 @@
             })
             .<span class='ident'>collect</span>()
     }
+
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>urls</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
+        <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>payload</span> {
+            <span class='ident'>EventPayload</span>::<span class='ident'>CommitComment</span> { <span class='kw-2'>ref</span> <span class='ident'>commit_id</span>, <span class='ident'>id</span>, .. } <span class='op'>=&gt;</span> {
+                <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}/commit/{}#commitcomment-{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>repo</span>, <span class='ident'>commit_id</span>, <span class='ident'>id</span>)]
+            }
+            <span class='ident'>EventPayload</span>::<span class='ident'>Create</span> { <span class='kw-2'>ref</span> <span class='ident'>ref_name</span>, .. } <span class='op'>=&gt;</span> {
+                <span class='kw'>match</span> <span class='op'>*</span><span class='ident'>ref_name</span> {
+                    <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>ref_name</span>) <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}/compare/{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>repo</span>, <span class='ident'>ref_name</span>)],
+                    <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>repo</span>)],
+                }
+            }
+            <span class='ident'>EventPayload</span>::<span class='ident'>Delete</span> { .. } <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[],
+            <span class='ident'>EventPayload</span>::<span class='ident'>Fork</span> { <span class='kw-2'>ref</span> <span class='ident'>new_slug</span> } <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}&quot;</span>, <span class='ident'>new_slug</span>)],
+            <span class='ident'>EventPayload</span>::<span class='ident'>Gollum</span> { <span class='kw-2'>ref</span> <span class='ident'>pages</span> } <span class='op'>=&gt;</span> <span class='ident'>pages</span>.<span class='ident'>iter</span>().<span class='ident'>map</span>(<span class='op'>|</span><span class='ident'>p</span><span class='op'>|</span> <span class='ident'>p</span>.<span class='ident'>html_url</span>.<span class='ident'>clone</span>()).<span class='ident'>collect</span>(),
+            <span class='ident'>EventPayload</span>::<span class='ident'>IssueComment</span> { <span class='ident'>issue</span>, <span class='ident'>id</span>, .. } <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}/issues/{}#issuecomment-{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>repo</span>, <span class='ident'>issue</span>, <span class='ident'>id</span>)],
+            <span class='ident'>EventPayload</span>::<span class='ident'>Issues</span> { <span class='ident'>number</span>, .. } <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}/issues/{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>repo</span>, <span class='ident'>number</span>)],
+            <span class='ident'>EventPayload</span>::<span class='ident'>Member</span> { .. } <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[],
+            <span class='ident'>EventPayload</span>::<span class='ident'>Public</span> <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>repo</span>)],
+            <span class='ident'>EventPayload</span>::<span class='ident'>PullRequest</span> { <span class='ident'>number</span>, .. } <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}/pull/{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>repo</span>, <span class='ident'>number</span>)],
+            <span class='ident'>EventPayload</span>::<span class='ident'>PullRequestReview</span> { <span class='ident'>pr</span>, <span class='ident'>id</span>, .. } <span class='op'>=&gt;</span> {
+                <span class='comment'>// TODO: is this the correct URL for the review au general?</span>
+                <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}/pull/{}#discussion_r{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>repo</span>, <span class='ident'>pr</span>, <span class='ident'>id</span>)]
+            }
+            <span class='ident'>EventPayload</span>::<span class='ident'>PullRequestReviewComment</span> { <span class='ident'>pr</span>, <span class='ident'>id</span>, .. } <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}/pull/{}#discussion_r{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>repo</span>, <span class='ident'>pr</span>, <span class='ident'>id</span>)],
+            <span class='ident'>EventPayload</span>::<span class='ident'>Push</span> { <span class='kw-2'>ref</span> <span class='ident'>prev_head</span>, <span class='kw-2'>ref</span> <span class='ident'>new_head</span>, .. } <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}/compare/{}...{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>repo</span>, <span class='ident'>prev_head</span>, <span class='ident'>new_head</span>)],
+            <span class='ident'>EventPayload</span>::<span class='ident'>Release</span> { <span class='kw-2'>ref</span> <span class='ident'>tag_name</span>, .. } <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}/releases/tag/{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>repo</span>, <span class='ident'>tag_name</span>)],
+            <span class='ident'>EventPayload</span>::<span class='ident'>Watch</span> { .. } <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}/stargazers&quot;</span>, <span class='self'>self</span>.<span class='ident'>repo</span>)],
+            <span class='ident'>EventPayload</span>::<span class='ident'>Other</span>(_) <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[],
+        }
+    }
 }
 
 <span class='kw'>impl</span> <span class='ident'>EventPayload</span> {
@@ -490,6 +563,7 @@
                 <span class='ident'>EventPayload</span>::<span class='ident'>CommitComment</span> {
                     <span class='ident'>content</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;comment&quot;</span>][<span class='string'>&quot;body&quot;</span>].<span class='ident'>as_str</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_string</span>(),
                     <span class='ident'>commit_id</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;comment&quot;</span>][<span class='string'>&quot;commit_id&quot;</span>].<span class='ident'>as_str</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_string</span>(),
+                    <span class='ident'>id</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;comment&quot;</span>][<span class='string'>&quot;id&quot;</span>].<span class='ident'>as_number</span>().<span class='ident'>unwrap</span>().<span class='ident'>into</span>(),
                 }
             }
             <span class='string'>&quot;CreateEvent&quot;</span> <span class='op'>=&gt;</span> {
@@ -528,6 +602,7 @@
                     <span class='ident'>action</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;action&quot;</span>].<span class='ident'>as_str</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_string</span>(),
                     <span class='ident'>issue</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;issue&quot;</span>][<span class='string'>&quot;number&quot;</span>].<span class='ident'>as_number</span>().<span class='ident'>unwrap</span>().<span class='ident'>into</span>(),
                     <span class='ident'>body</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;comment&quot;</span>][<span class='string'>&quot;body&quot;</span>].<span class='ident'>as_str</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_string</span>(),
+                    <span class='ident'>id</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;comment&quot;</span>][<span class='string'>&quot;id&quot;</span>].<span class='ident'>as_number</span>().<span class='ident'>unwrap</span>().<span class='ident'>into</span>(),
                 }
             }
             <span class='string'>&quot;IssuesEvent&quot;</span> <span class='op'>=&gt;</span> {
@@ -560,6 +635,7 @@
                     <span class='ident'>pr</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;pull_request&quot;</span>][<span class='string'>&quot;number&quot;</span>].<span class='ident'>as_number</span>().<span class='ident'>unwrap</span>().<span class='ident'>into</span>(),
                     <span class='ident'>state</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;review&quot;</span>][<span class='string'>&quot;state&quot;</span>].<span class='ident'>as_str</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_string</span>(),
                     <span class='ident'>body</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;review&quot;</span>][<span class='string'>&quot;body&quot;</span>].<span class='ident'>as_str</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_string</span>(),
+                    <span class='ident'>id</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;review&quot;</span>][<span class='string'>&quot;id&quot;</span>].<span class='ident'>as_number</span>().<span class='ident'>unwrap</span>().<span class='ident'>into</span>(),
                 }
             }
             <span class='string'>&quot;PullRequestReviewCommentEvent&quot;</span> <span class='op'>=&gt;</span> {
@@ -567,12 +643,14 @@
                     <span class='ident'>action</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;action&quot;</span>].<span class='ident'>as_str</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_string</span>(),
                     <span class='ident'>pr</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;pull_request&quot;</span>][<span class='string'>&quot;number&quot;</span>].<span class='ident'>as_number</span>().<span class='ident'>unwrap</span>().<span class='ident'>into</span>(),
                     <span class='ident'>body</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;comment&quot;</span>][<span class='string'>&quot;body&quot;</span>].<span class='ident'>as_str</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_string</span>(),
+                    <span class='ident'>id</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;comment&quot;</span>][<span class='string'>&quot;id&quot;</span>].<span class='ident'>as_number</span>().<span class='ident'>unwrap</span>().<span class='ident'>into</span>(),
                 }
             }
             <span class='string'>&quot;PushEvent&quot;</span> <span class='op'>=&gt;</span> {
                 <span class='ident'>EventPayload</span>::<span class='ident'>Push</span> {
                     <span class='ident'>pushed_ref</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;ref&quot;</span>].<span class='ident'>as_str</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_string</span>(),
-                    <span class='ident'>prev_ref</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;before&quot;</span>].<span class='ident'>as_str</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_string</span>(),
+                    <span class='ident'>prev_head</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;before&quot;</span>].<span class='ident'>as_str</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_string</span>(),
+                    <span class='ident'>new_head</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;head&quot;</span>].<span class='ident'>as_str</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_string</span>(),
                     <span class='ident'>size</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;size&quot;</span>].<span class='ident'>as_number</span>().<span class='ident'>unwrap</span>().<span class='ident'>into</span>(),
                     <span class='ident'>distinct_size</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;distinct_size&quot;</span>].<span class='ident'>as_number</span>().<span class='ident'>unwrap</span>().<span class='ident'>into</span>(),
                     <span class='ident'>commits</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;commits&quot;</span>]
@@ -598,12 +676,6 @@
                     <span class='ident'>prerelease</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;release&quot;</span>][<span class='string'>&quot;prerelease&quot;</span>].<span class='ident'>as_bool</span>().<span class='ident'>unwrap</span>(),
                     <span class='ident'>name</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;release&quot;</span>][<span class='string'>&quot;name&quot;</span>].<span class='ident'>as_str</span>().<span class='ident'>map</span>(<span class='ident'>str</span>::<span class='ident'>to_string</span>),
                     <span class='ident'>body</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;release&quot;</span>][<span class='string'>&quot;body&quot;</span>].<span class='ident'>as_str</span>().<span class='ident'>map</span>(<span class='ident'>str</span>::<span class='ident'>to_string</span>),
-                }
-            }
-            <span class='string'>&quot;RepositoryEvent&quot;</span> <span class='op'>=&gt;</span> {
-                <span class='ident'>EventPayload</span>::<span class='ident'>Repository</span> {
-                    <span class='ident'>action</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;action&quot;</span>].<span class='ident'>as_str</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_string</span>(),
-                    <span class='ident'>slug</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;repository&quot;</span>][<span class='string'>&quot;full_name&quot;</span>].<span class='ident'>as_str</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_string</span>(),
                 }
             }
             <span class='string'>&quot;WatchEvent&quot;</span> <span class='op'>=&gt;</span> <span class='ident'>EventPayload</span>::<span class='ident'>Watch</span> { <span class='ident'>action</span>: <span class='ident'>ev</span>[<span class='string'>&quot;payload&quot;</span>][<span class='string'>&quot;action&quot;</span>].<span class='ident'>as_str</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_string</span>() },
@@ -664,12 +736,13 @@
             <span class='ident'>EventPayload</span>::<span class='ident'>PullRequestReviewComment</span> { <span class='kw-2'>ref</span> <span class='ident'>action</span>, <span class='ident'>pr</span>, .. } <span class='op'>=&gt;</span> {
                 <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{} {} #{} on {}&quot;</span>, <span class='self'>self</span>.<span class='ident'>actor</span>, <span class='ident'>action</span>, <span class='ident'>pr</span>, <span class='self'>self</span>.<span class='ident'>repo</span>));
             }
-            <span class='ident'>EventPayload</span>::<span class='ident'>Push</span> { <span class='ident'>distinct_size</span>, .. } <span class='op'>=&gt;</span> {
+            <span class='ident'>EventPayload</span>::<span class='ident'>Push</span> { <span class='kw-2'>ref</span> <span class='ident'>pushed_ref</span>, <span class='ident'>distinct_size</span>, .. } <span class='op'>=&gt;</span> {
                 <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>,
-                            <span class='string'>&quot;{} pushed {} commit{} to {}&quot;</span>,
+                            <span class='string'>&quot;{} pushed {} commit{} to {} in {}&quot;</span>,
                             <span class='self'>self</span>.<span class='ident'>actor</span>,
                             <span class='ident'>distinct_size</span>,
                             <span class='kw'>if</span> <span class='ident'>distinct_size</span> <span class='op'>!=</span> <span class='number'>1</span> { <span class='string'>&quot;s&quot;</span> } <span class='kw'>else</span> { <span class='string'>&quot;&quot;</span> },
+                            <span class='ident'>pushed_ref</span>.<span class='ident'>split</span>(<span class='string'>&#39;/&#39;</span>).<span class='ident'>last</span>().<span class='ident'>unwrap</span>(),
                             <span class='self'>self</span>.<span class='ident'>repo</span>));
             }
             <span class='ident'>EventPayload</span>::<span class='ident'>Release</span> { <span class='kw-2'>ref</span> <span class='ident'>action</span>, <span class='kw-2'>ref</span> <span class='ident'>tag_name</span>, <span class='kw-2'>ref</span> <span class='ident'>target</span>, <span class='ident'>draft</span>, <span class='ident'>prerelease</span>, <span class='kw-2'>ref</span> <span class='ident'>name</span>, .. } <span class='op'>=&gt;</span> {
@@ -682,9 +755,6 @@
                 <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>ref</span> <span class='ident'>name</span>) <span class='op'>=</span> <span class='op'>*</span><span class='ident'>name</span> {
                     <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot; named {}&quot;</span>, <span class='ident'>name</span>));
                 }
-            }
-            <span class='ident'>EventPayload</span>::<span class='ident'>Repository</span> { <span class='kw-2'>ref</span> <span class='ident'>action</span>, <span class='kw-2'>ref</span> <span class='ident'>slug</span> } <span class='op'>=&gt;</span> {
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{} {} {}&quot;</span>, <span class='self'>self</span>.<span class='ident'>actor</span>, <span class='ident'>action</span>, <span class='ident'>slug</span>));
             }
             <span class='ident'>EventPayload</span>::<span class='ident'>Watch</span> { .. } <span class='op'>=&gt;</span> {
                 <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{} starred {}&quot;</span>, <span class='self'>self</span>.<span class='ident'>actor</span>, <span class='self'>self</span>.<span class='ident'>repo</span>));
