@@ -1,8 +1,11 @@
-use self::super::{Event, Feed, verify_file};
+use self::super::{AppTokens, Event, Feed, verify_file};
+use discord::{Discord, Error as DisErr};
+use discord::model::ChannelId;
 use self::super::super::Error;
+use chrono::{Duration, Local};
 use std::path::PathBuf;
 use std::io::Write;
-use chrono::Local;
+use std::thread;
 
 
 pub fn verify(config_dir: &(String, PathBuf)) -> Result<(PathBuf, PathBuf), Error> {
@@ -28,13 +31,34 @@ pub fn post_text(ev: &Event) -> String {
     let urls = ev.urls();
     let mut txt = Vec::new();
 
-    writeln!(txt, "{}", ev).unwrap();
+    write!(txt, "{}", ev).unwrap();
     if !urls.is_empty() {
         for url in urls {
             writeln!(txt, "").unwrap();
-            write!(txt, "{}", url).unwrap();
+            write!(txt, "<{}>", url).unwrap();
         }
     }
 
     String::from_utf8(txt).unwrap()
+}
+
+pub fn send_messages(tokens: &AppTokens, txts: Vec<String>, channel: u64) -> Result<(), Error> {
+    let discord = try!(Discord::from_bot_token(&tokens.discord).map_err(|_| Error::LoginFailed("Discord")));
+
+    for txt in txts {
+        loop {
+            match discord.send_message(&ChannelId(channel), &txt, "", false) {
+                Err(DisErr::RateLimited(ms)) => thread::sleep(Duration::milliseconds(ms as i64).to_std().unwrap()),
+                Err(_) => {
+                    return Err(Error::Io {
+                        desc: "event message",
+                        op: "post",
+                    })
+                }
+                Ok(_) => break,
+            }
+        }
+    }
+
+    Ok(())
 }
