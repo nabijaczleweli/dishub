@@ -96,6 +96,6 @@ fn poll_events_update(url: String, etag: &str, tokens: &AppTokens, desc: &'stati
                 let etag: &ETag = r.headers.get().unwrap();
                 Some((buf, etag.tag().to_string()))
             },
-             **r.headers.get::<XPollInterval>().unwrap())
+             r.headers.get::<XPollInterval>().map(|r| **r).unwrap_or(60))
         })
 }

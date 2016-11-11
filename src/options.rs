@@ -74,7 +74,7 @@ impl Options {
             .subcommand(SubCommand::with_name("start-daemon")
                 .about("Run the activity-posting daemon")
                 .arg(Arg::from_usage("-s --sleep=[SLEEP_TIME] 'Time to sleep between each iteration'")
-                    .default_value("300s")
+                    .default_value("60s")
                     .validator(Options::sleep_validator)))
             .get_matches();
 

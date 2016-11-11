@@ -97,11 +97,17 @@ fn start_daemon_main(opts: dishub::options::Options, sleep: Duration) -> Result<
 
     loop {
         let mut feeds = try!(dishub::ops::Feed::read(&feeds_path));
-        println!("{:#?}", feeds);
 
         for feed in feeds.iter_mut().filter(|ref f| dishub::ops::start_daemon::feeds_filter(&mut stdout(), f)) {
-            print!("{}: ", feed.subject);
-            println!("{:#?}", feed.poll(&tokens));
+            println!("{}:", feed.subject);
+            let events = try!(feed.poll(&tokens));
+            if events.is_empty() {
+                println!("No new events");
+            } else {
+                for event in &events {
+                    println!("{}", event);
+                }
+            }
         }
 
         dishub::ops::Feed::write(feeds, &feeds_path);

@@ -1,5 +1,6 @@
 use chrono::{FixedOffset, DateTime};
 use json::{self, JsonValue};
+use std::fmt;
 
 
 #[derive(Clone, Debug)]
@@ -12,11 +13,7 @@ pub struct Event {
 
 #[derive(Clone, Debug)]
 pub enum EventPayload {
-    CommitComment {
-        user: String,
-        content: String,
-        commit_id: String,
-    },
+    CommitComment { content: String, commit_id: String, },
     Create {
         ref_type: String,
         ref_name: Option<String>,
@@ -24,11 +21,6 @@ pub enum EventPayload {
         repo_description: String,
     },
     Delete { ref_type: String, ref_name: String, },
-    Deployment {
-        sha: String,
-        payload: String,
-        description: String,
-    },
     Fork { new_slug: String, },
     Gollum { pages: Vec<GollumPayload>, },
     IssueComment {
@@ -36,7 +28,7 @@ pub enum EventPayload {
         issue: u64,
         body: String,
     },
-    Issue {
+    Issues {
         action: String,
         number: u64,
         title: String,
@@ -79,7 +71,7 @@ pub enum EventPayload {
         body: Option<String>,
     },
     Repository { action: String, slug: String, },
-    Watch { action: String, slug: String, },
+    Watch { action: String, },
     Other(JsonValue),
 }
 
@@ -124,9 +116,8 @@ impl EventPayload {
         match ev["type"].as_str().unwrap() {
             "CommitCommentEvent" => {
                 EventPayload::CommitComment {
-                    user: ev["payload"]["user"]["login"].as_str().unwrap().to_string(),
-                    content: ev["payload"]["body"].as_str().unwrap().to_string(),
-                    commit_id: ev["payload"]["commit_id"].as_str().unwrap().to_string(),
+                    content: ev["payload"]["comment"]["body"].as_str().unwrap().to_string(),
+                    commit_id: ev["payload"]["comment"]["commit_id"].as_str().unwrap().to_string(),
                 }
             }
             "CreateEvent" => {
@@ -141,13 +132,6 @@ impl EventPayload {
                 EventPayload::Delete {
                     ref_type: ev["payload"]["ref_type"].as_str().unwrap().to_string(),
                     ref_name: ev["payload"]["ref"].as_str().unwrap().to_string(),
-                }
-            }
-            "DeploymentEvent" => {
-                EventPayload::Deployment {
-                    sha: ev["payload"]["deployment"]["sha"].as_str().unwrap().to_string(),
-                    payload: ev["payload"]["deployment"]["payload"].as_str().unwrap().to_string(),
-                    description: ev["payload"]["deployment"]["deployment"].as_str().unwrap().to_string(),
                 }
             }
             "ForkEvent" => EventPayload::Fork { new_slug: ev["payload"]["forkee"]["full_name"].as_str().unwrap().to_string() },
@@ -174,8 +158,8 @@ impl EventPayload {
                     body: ev["payload"]["comment"]["body"].as_str().unwrap().to_string(),
                 }
             }
-            "IssueEvent" => {
-                EventPayload::Issue {
+            "IssuesEvent" => {
+                EventPayload::Issues {
                     action: ev["payload"]["action"].as_str().unwrap().to_string(),
                     number: ev["payload"]["issue"]["number"].as_number().unwrap().into(),
                     title: ev["payload"]["issue"]["title"].as_str().unwrap().to_string(),
@@ -236,12 +220,12 @@ impl EventPayload {
             "ReleaseEvent" => {
                 EventPayload::Release {
                     action: ev["payload"]["action"].as_str().unwrap().to_string(),
-                    tag_name: ev["payload"]["tag_name"].as_str().unwrap().to_string(),
-                    target: ev["payload"]["target_commitish"].as_str().unwrap().to_string(),
-                    draft: ev["payload"]["draft"].as_bool().unwrap(),
-                    prerelease: ev["payload"]["prerelease"].as_bool().unwrap(),
-                    name: ev["payload"]["name"].as_str().map(str::to_string),
-                    body: ev["payload"]["body"].as_str().map(str::to_string),
+                    tag_name: ev["payload"]["release"]["tag_name"].as_str().unwrap().to_string(),
+                    target: ev["payload"]["release"]["target_commitish"].as_str().unwrap().to_string(),
+                    draft: ev["payload"]["release"]["draft"].as_bool().unwrap(),
+                    prerelease: ev["payload"]["release"]["prerelease"].as_bool().unwrap(),
+                    name: ev["payload"]["release"]["name"].as_str().map(str::to_string),
+                    body: ev["payload"]["release"]["body"].as_str().map(str::to_string),
                 }
             }
             "RepositoryEvent" => {
@@ -250,13 +234,94 @@ impl EventPayload {
                     slug: ev["payload"]["repository"]["full_name"].as_str().unwrap().to_string(),
                 }
             }
-            "WatchEvent" => {
-                EventPayload::Watch {
-                    action: ev["payload"]["action"].as_str().unwrap().to_string(),
-                    slug: ev["payload"]["repository"]["full_name"].as_str().unwrap().to_string(),
-                }
-            }
+            "WatchEvent" => EventPayload::Watch { action: ev["payload"]["action"].as_str().unwrap().to_string() },
             _ => EventPayload::Other(ev.clone()),
         }
+    }
+}
+
+impl fmt::Display for Event {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        try!(write!(f, "{}: ", self.created_at.format("%d.%m.%y %r")));
+
+        match self.payload {
+            EventPayload::CommitComment { ref commit_id, .. } => {
+                try!(write!(f, "{} commented on {} in {}", self.actor, commit_id, self.repo));
+            }
+            EventPayload::Create { ref ref_type, ref ref_name, ref repo_description, .. } => {
+                try!(write!(f, "{} created {}", self.actor, ref_type));
+                if let Some(ref ref_name) = *ref_name {
+                    try!(write!(f, " {}", ref_name));
+                } else {
+                    try!(write!(f, " \"{}\"", repo_description));
+                }
+            }
+            EventPayload::Delete { ref ref_type, ref ref_name } => {
+                try!(write!(f, "{} deleted {} {}", self.actor, ref_type, ref_name));
+            }
+            EventPayload::Fork { ref new_slug } => {
+                try!(write!(f, "{} forked {} to {}", self.actor, self.repo, new_slug));
+            }
+            EventPayload::Gollum { ref pages } => {
+                try!(write!(f, "{} changed wiki on {}:", self.actor, self.repo));
+                for (i, &GollumPayload { ref title, ref action, .. }) in pages.iter().enumerate() {
+                    if i != pages.len() - 1 {
+                        try!(writeln!(f, ""));
+                    }
+                    try!(write!(f, "  {} \"{}\"", action, title));
+                }
+            }
+            EventPayload::IssueComment { ref action, issue, .. } => {
+                try!(write!(f, "{} {} comment to #{} on {}", self.actor, action, issue, self.repo));
+            }
+            EventPayload::Issues { ref action, number, ref title, .. } => {
+                try!(write!(f, "{} {} #{} on {}: \"{}\"", self.actor, action, number, self.repo, title));
+            }
+            EventPayload::Member { ref action, ref user } => {
+                try!(write!(f, "{} {} {} to {}", self.actor, action, user, self.repo));
+            }
+            EventPayload::Public => {
+                try!(write!(f, "{} made {} public", self.actor, self.repo));
+            }
+            EventPayload::PullRequest { ref action, number, ref title, .. } => {
+                try!(write!(f, "{} {} #{} on {}: \"{}\"", self.actor, action, number, self.repo, title));
+            }
+            EventPayload::PullRequestReview { ref action, pr, ref state, .. } => {
+                try!(write!(f, "{} {} as {} #{} on {}", self.actor, action, state, pr, self.repo));
+            }
+            EventPayload::PullRequestReviewComment { ref action, pr, .. } => {
+                try!(write!(f, "{} {} #{} on {}", self.actor, action, pr, self.repo));
+            }
+            EventPayload::Push { distinct_size, .. } => {
+                try!(write!(f,
+                            "{} pushed {} commit{} to {}",
+                            self.actor,
+                            distinct_size,
+                            if distinct_size != 1 { "s" } else { "" },
+                            self.repo));
+            }
+            EventPayload::Release { ref action, ref tag_name, ref target, draft, prerelease, ref name, .. } => {
+                try!(write!(f, "{} {} {} from {}", self.actor, action, tag_name, target));
+                if draft {
+                    try!(write!(f, " as a draft"));
+                } else if prerelease {
+                    try!(write!(f, " as a prerelease"));
+                }
+                if let Some(ref name) = *name {
+                    try!(write!(f, " named {}", name));
+                }
+            }
+            EventPayload::Repository { ref action, ref slug } => {
+                try!(write!(f, "{} {} {}", self.actor, action, slug));
+            }
+            EventPayload::Watch { .. } => {
+                try!(write!(f, "{} starred {}", self.actor, self.repo));
+            }
+            EventPayload::Other(ref ev) => {
+                try!(write!(f, "unsupported event: {}", ev["type"]));
+            }
+        }
+
+        Ok(())
     }
 }
