@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["feeds_filter",""],["post_text",""],["verify",""]]});
+initSidebarItems({"fn":[["feeds_filter",""],["post_text",""],["send_messages",""],["verify",""]]});
