@@ -13,7 +13,11 @@ pub struct Event {
 
 #[derive(Clone, Debug)]
 pub enum EventPayload {
-    CommitComment { content: String, commit_id: String, },
+    CommitComment {
+        content: String,
+        commit_id: String,
+        id: u64,
+    },
     Create {
         ref_type: String,
         ref_name: Option<String>,
@@ -27,6 +31,7 @@ pub enum EventPayload {
         action: String,
         issue: u64,
         body: String,
+        id: u64,
     },
     Issues {
         action: String,
@@ -48,15 +53,18 @@ pub enum EventPayload {
         pr: u64,
         state: String,
         body: String,
+        id: u64,
     },
     PullRequestReviewComment {
         action: String,
         pr: u64,
         body: String,
+        id: u64,
     },
     Push {
         pushed_ref: String,
-        prev_ref: String,
+        prev_head: String,
+        new_head: String,
         size: u64,
         distinct_size: u64,
         commits: Vec<Commit>,
@@ -70,7 +78,6 @@ pub enum EventPayload {
         name: Option<String>,
         body: Option<String>,
     },
-    Repository { action: String, slug: String, },
     Watch { action: String, },
     Other(JsonValue),
 }
@@ -109,6 +116,37 @@ impl Event {
             })
             .collect()
     }
+
+    pub fn urls(&self) -> Vec<String> {
+        match self.payload {
+            EventPayload::CommitComment { ref commit_id, id, .. } => {
+                vec![format!("https://github.com/{}/commit/{}#commitcomment-{}", self.repo, commit_id, id)]
+            }
+            EventPayload::Create { ref ref_name, .. } => {
+                match *ref_name {
+                    Some(ref ref_name) => vec![format!("https://github.com/{}/compare/{}", self.repo, ref_name)],
+                    None => vec![format!("https://github.com/{}", self.repo)],
+                }
+            }
+            EventPayload::Delete { .. } => vec![],
+            EventPayload::Fork { ref new_slug } => vec![format!("https://github.com/{}", new_slug)],
+            EventPayload::Gollum { ref pages } => pages.iter().map(|p| p.html_url.clone()).collect(),
+            EventPayload::IssueComment { issue, id, .. } => vec![format!("https://github.com/{}/issues/{}#issuecomment-{}", self.repo, issue, id)],
+            EventPayload::Issues { number, .. } => vec![format!("https://github.com/{}/issues/{}", self.repo, number)],
+            EventPayload::Member { .. } => vec![],
+            EventPayload::Public => vec![format!("https://github.com/{}", self.repo)],
+            EventPayload::PullRequest { number, .. } => vec![format!("https://github.com/{}/pull/{}", self.repo, number)],
+            EventPayload::PullRequestReview { pr, id, .. } => {
+                // TODO: is this the correct URL for the review au general?
+                vec![format!("https://github.com/{}/pull/{}#discussion_r{}", self.repo, pr, id)]
+            }
+            EventPayload::PullRequestReviewComment { pr, id, .. } => vec![format!("https://github.com/{}/pull/{}#discussion_r{}", self.repo, pr, id)],
+            EventPayload::Push { ref prev_head, ref new_head, .. } => vec![format!("https://github.com/{}/compare/{}...{}", self.repo, prev_head, new_head)],
+            EventPayload::Release { ref tag_name, .. } => vec![format!("https://github.com/{}/releases/tag/{}", self.repo, tag_name)],
+            EventPayload::Watch { .. } => vec![format!("https://github.com/{}/stargazers", self.repo)],
+            EventPayload::Other(_) => vec![],
+        }
+    }
 }
 
 impl EventPayload {
@@ -118,6 +156,7 @@ impl EventPayload {
                 EventPayload::CommitComment {
                     content: ev["payload"]["comment"]["body"].as_str().unwrap().to_string(),
                     commit_id: ev["payload"]["comment"]["commit_id"].as_str().unwrap().to_string(),
+                    id: ev["payload"]["comment"]["id"].as_number().unwrap().into(),
                 }
             }
             "CreateEvent" => {
@@ -156,6 +195,7 @@ impl EventPayload {
                     action: ev["payload"]["action"].as_str().unwrap().to_string(),
                     issue: ev["payload"]["issue"]["number"].as_number().unwrap().into(),
                     body: ev["payload"]["comment"]["body"].as_str().unwrap().to_string(),
+                    id: ev["payload"]["comment"]["id"].as_number().unwrap().into(),
                 }
             }
             "IssuesEvent" => {
@@ -188,6 +228,7 @@ impl EventPayload {
                     pr: ev["payload"]["pull_request"]["number"].as_number().unwrap().into(),
                     state: ev["payload"]["review"]["state"].as_str().unwrap().to_string(),
                     body: ev["payload"]["review"]["body"].as_str().unwrap().to_string(),
+                    id: ev["payload"]["review"]["id"].as_number().unwrap().into(),
                 }
             }
             "PullRequestReviewCommentEvent" => {
@@ -195,12 +236,14 @@ impl EventPayload {
                     action: ev["payload"]["action"].as_str().unwrap().to_string(),
                     pr: ev["payload"]["pull_request"]["number"].as_number().unwrap().into(),
                     body: ev["payload"]["comment"]["body"].as_str().unwrap().to_string(),
+                    id: ev["payload"]["comment"]["id"].as_number().unwrap().into(),
                 }
             }
             "PushEvent" => {
                 EventPayload::Push {
                     pushed_ref: ev["payload"]["ref"].as_str().unwrap().to_string(),
-                    prev_ref: ev["payload"]["before"].as_str().unwrap().to_string(),
+                    prev_head: ev["payload"]["before"].as_str().unwrap().to_string(),
+                    new_head: ev["payload"]["head"].as_str().unwrap().to_string(),
                     size: ev["payload"]["size"].as_number().unwrap().into(),
                     distinct_size: ev["payload"]["distinct_size"].as_number().unwrap().into(),
                     commits: ev["payload"]["commits"]
@@ -226,12 +269,6 @@ impl EventPayload {
                     prerelease: ev["payload"]["release"]["prerelease"].as_bool().unwrap(),
                     name: ev["payload"]["release"]["name"].as_str().map(str::to_string),
                     body: ev["payload"]["release"]["body"].as_str().map(str::to_string),
-                }
-            }
-            "RepositoryEvent" => {
-                EventPayload::Repository {
-                    action: ev["payload"]["action"].as_str().unwrap().to_string(),
-                    slug: ev["payload"]["repository"]["full_name"].as_str().unwrap().to_string(),
                 }
             }
             "WatchEvent" => EventPayload::Watch { action: ev["payload"]["action"].as_str().unwrap().to_string() },
@@ -292,12 +329,13 @@ impl fmt::Display for Event {
             EventPayload::PullRequestReviewComment { ref action, pr, .. } => {
                 try!(write!(f, "{} {} #{} on {}", self.actor, action, pr, self.repo));
             }
-            EventPayload::Push { distinct_size, .. } => {
+            EventPayload::Push { ref pushed_ref, distinct_size, .. } => {
                 try!(write!(f,
-                            "{} pushed {} commit{} to {}",
+                            "{} pushed {} commit{} to {} in {}",
                             self.actor,
                             distinct_size,
                             if distinct_size != 1 { "s" } else { "" },
+                            pushed_ref.split('/').last().unwrap(),
                             self.repo));
             }
             EventPayload::Release { ref action, ref tag_name, ref target, draft, prerelease, ref name, .. } => {
@@ -310,9 +348,6 @@ impl fmt::Display for Event {
                 if let Some(ref name) = *name {
                     try!(write!(f, " named {}", name));
                 }
-            }
-            EventPayload::Repository { ref action, ref slug } => {
-                try!(write!(f, "{} {} {}", self.actor, action, slug));
             }
             EventPayload::Watch { .. } => {
                 try!(write!(f, "{} starred {}", self.actor, self.repo));

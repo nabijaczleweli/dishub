@@ -1,4 +1,4 @@
-use self::super::{Feed, verify_file};
+use self::super::{Event, Feed, verify_file};
 use self::super::super::Error;
 use std::path::PathBuf;
 use std::io::Write;
@@ -22,4 +22,19 @@ pub fn feeds_filter<W: Write>(output: &mut W, f: &Feed) -> bool {
     } else {
         true
     }
+}
+
+pub fn post_text(ev: &Event) -> String {
+    let urls = ev.urls();
+    let mut txt = Vec::new();
+
+    writeln!(txt, "{}", ev).unwrap();
+    if !urls.is_empty() {
+        for url in urls {
+            writeln!(txt, "").unwrap();
+            write!(txt, "{}", url).unwrap();
+        }
+    }
+
+    String::from_utf8(txt).unwrap()
 }

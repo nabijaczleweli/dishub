@@ -105,7 +105,7 @@ fn start_daemon_main(opts: dishub::options::Options, sleep: Duration) -> Result<
                 println!("No new events");
             } else {
                 for event in &events {
-                    println!("{}", event);
+                    println!("{}", dishub::ops::start_daemon::post_text(event));
                 }
             }
         }
