@@ -249,7 +249,7 @@
             .<span class='ident'>subcommand</span>(<span class='ident'>SubCommand</span>::<span class='ident'>with_name</span>(<span class='string'>&quot;start-daemon&quot;</span>)
                 .<span class='ident'>about</span>(<span class='string'>&quot;Run the activity-posting daemon&quot;</span>)
                 .<span class='ident'>arg</span>(<span class='ident'>Arg</span>::<span class='ident'>from_usage</span>(<span class='string'>&quot;-s --sleep=[SLEEP_TIME] &#39;Time to sleep between each iteration&#39;&quot;</span>)
-                    .<span class='ident'>default_value</span>(<span class='string'>&quot;300s&quot;</span>)
+                    .<span class='ident'>default_value</span>(<span class='string'>&quot;60s&quot;</span>)
                     .<span class='ident'>validator</span>(<span class='ident'>Options</span>::<span class='ident'>sleep_validator</span>)))
             .<span class='ident'>get_matches</span>();
 
