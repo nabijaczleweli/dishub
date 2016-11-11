@@ -279,7 +279,7 @@ impl EventPayload {
 
 impl fmt::Display for Event {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        try!(write!(f, "{}: ", self.created_at.format("%d.%m.%y %r")));
+        try!(write!(f, "{}: ", self.created_at.format("%d.%m.%Y %r")));
 
         match self.payload {
             EventPayload::CommitComment { ref commit_id, .. } => {

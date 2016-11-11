@@ -70,7 +70,7 @@ impl Feed {
     }
 
     pub fn poll(&mut self, tkn: &AppTokens) -> Result<Vec<Event>, Error> {
-        let (events, next) = if self.e_tag.is_none() {
+        let (mut events, next) = if self.e_tag.is_none() {
             let (ctnt, etag, next) = try!(if !self.subject.contains('/') {
                 github::poll_user_events_new(&self.subject, tkn)
             } else {
@@ -101,6 +101,7 @@ impl Feed {
         self.latest = Some(now.clone());
         self.next_min = Some(now + Duration::seconds(next as i64));
 
+        events.sort_by_key(|e| e.created_at);
         Ok(events)
     }
 }
