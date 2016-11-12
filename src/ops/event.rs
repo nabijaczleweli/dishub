@@ -384,10 +384,7 @@ impl Event {
             EventPayload::Member { .. } => vec![],
             EventPayload::Public => vec![format!("https://github.com/{}", self.repo)],
             EventPayload::PullRequest { number, .. } => vec![format!("https://github.com/{}/pull/{}", self.repo, number)],
-            EventPayload::PullRequestReview { pr, id, .. } => {
-                // TODO: is this the correct URL for the review au general?
-                vec![format!("https://github.com/{}/pull/{}#discussion_r{}", self.repo, pr, id)]
-            }
+            EventPayload::PullRequestReview { pr, id, .. } => vec![format!("https://github.com/{}/pull/{}#pullrequestreview-{}", self.repo, pr, id)],
             EventPayload::PullRequestReviewComment { pr, id, .. } => vec![format!("https://github.com/{}/pull/{}#discussion_r{}", self.repo, pr, id)],
             EventPayload::Push { ref prev_head, ref new_head, .. } => vec![format!("https://github.com/{}/compare/{}...{}", self.repo, prev_head, new_head)],
             EventPayload::Release { ref tag_name, .. } => vec![format!("https://github.com/{}/releases/tag/{}", self.repo, tag_name)],
