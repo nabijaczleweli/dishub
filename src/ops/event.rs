@@ -4,106 +4,329 @@ use std::str::FromStr;
 use std::fmt;
 
 
-#[derive(Clone, Debug)]
+/// A representation of the [GitHub Event API's](https://developer.github.com/v3/activity/events) event.
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub struct Event {
+    /// The time this event was generated.
+    ///
+    /// Corresponds to `created_at` in the event JSON.
     pub created_at: DateTime<FixedOffset>,
+    /// The person who triggered the event.
+    ///
+    /// Corresponds to `actor.display_login` in the event JSON.
     pub actor: String,
+    /// The repository slug where the event is triggered.
+    ///
+    /// Corresponds to `repo.name` in the event JSON.
     pub repo: String,
+    /// The event ID.
+    ///
+    /// Corresponds to `id` in the event JSON (except it's a string there).
     pub id: u64,
+    /// The event's payload.
+    ///
+    /// Corresponds to `payload` in the event JSON, determined by `type`.
     pub payload: EventPayload,
 }
 
-#[derive(Clone, Debug)]
+/// A representation of the GitHub Event API's [event payload](https://developer.github.com/v3/activity/events/types).
+///
+/// We only represent the event types that are visible in timelines and haven't been phased out yet.
+#[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum EventPayload {
+    /// A [CommitCommentEvent](https://developer.github.com/v3/activity/events/types#commitcommentevent).
     CommitComment {
+        /// The comment's body.
         content: String,
+        /// The commit SHA.
         commit_id: String,
+        /// The comment's ID.
         id: u64,
     },
+    /// A [CreateEvent](https://developer.github.com/v3/activity/events/types#createevent).
     Create {
+        /// The ref's type.
+        ///
+        /// Can be "repository", "branch", or "tag".
         ref_type: String,
+        /// The ref's name.
+        ///
+        /// `None` if only a repository was created.
         ref_name: Option<String>,
+        /// The master branch of the repository.
         master_branch: String,
+        /// The repository's description (the text right under the tab list).
         repo_description: String,
     },
-    Delete { ref_type: String, ref_name: String, },
-    Fork { new_slug: String, },
-    Gollum { pages: Vec<GollumPayload>, },
+    /// A [DeleteEvent](https://developer.github.com/v3/activity/events/types#deleteevent).
+    Delete {
+        /// The deleted ref's type.
+        ///
+        /// Can be "branch" or "tag".
+        ref_type: String,
+        /// The deleted ref's name.
+        ref_name: String,
+    },
+    /// A [ForkEvent](https://developer.github.com/v3/activity/events/types#forkevent).
+    Fork {
+        /// The fork's slug.
+        new_slug: String,
+    },
+    /// A [GollumEvent](https://developer.github.com/v3/activity/events/types#gollumevent) (a.k.a. a WikiEvent).
+    Gollum {
+        /// The affected Wiki pages.
+        pages: Vec<GollumPayload>,
+    },
+    /// An [IssueCommentEvent](https://developer.github.com/v3/activity/events/types#issuecommentevent).
     IssueComment {
+        /// The action executed upon a comment.
+        ///
+        /// Can be "created", "edited", or "deleted".
         action: String,
+        /// The issue number.
         issue: u64,
+        /// The issue comment's body text.
         body: String,
+        /// The issue comment's ID.
         id: u64,
     },
+    /// An [IssuesEvent](https://developer.github.com/v3/activity/events/types#issuesevent).
     Issues {
+        /// The action executed upon an issue.
+        ///
+        /// Can be "assigned", "unassigned", "labeled", "unlabeled", "opened", "edited", "milestoned", "demilestoned",
+        /// "closed", or "reopened".
         action: String,
+        /// The issue number.
         number: u64,
+        /// The issue's title.
         title: String,
+        /// The issue body's text.
         body: String,
+        /// The labels the issue has upon it.
         labels: Vec<String>,
     },
-    Member { action: String, user: String, },
+    /// A [MemberEvent](https://developer.github.com/v3/activity/events/types#memberevent).
+    Member {
+        /// The action executed upon a user.
+        ///
+        /// Can be only "added".
+        action: String,
+        /// The user the action was performed upon.
+        user: String,
+    },
+    /// A [PublicEvent](https://developer.github.com/v3/activity/events/types#publicevent).
+    ///
+    /// A repository was made public.
     Public,
+    /// A [PullRequestEvent](https://developer.github.com/v3/activity/events/types#pullrequestevent).
     PullRequest {
+        /// The action executed upon a PR.
+        ///
+        /// Can be "assigned", "unassigned", "labeled", "unlabeled", "opened", "edited", "closed", or "reopened".
+        ///
+        /// If the action is "closed" and the `merged` is `false`, the pull request was closed with
+        /// unmerged commits. If the action is "closed" and `merged` is `true`, the pull request was merged.
         action: String,
+        /// The PR number.
         number: u64,
+        /// The PR's title.
         title: String,
+        /// The PR body's content.
         body: String,
+        /// Whether the PR was merged.
+        ///
+        /// If the action is "closed" and the `merged` is `false`, the pull request was closed with
+        /// unmerged commits. If the action is "closed" and `merged` is `true`, the pull request was merged.
+        merged: bool,
     },
+    /// A [PullRequestReviewEvent](https://developer.github.com/v3/activity/events/types#pullrequestreviewevent).
     PullRequestReview {
+        /// The action executed upon a PR review.
+        ///
+        /// Can be only "submitted".
         action: String,
+        /// The PR number.
         pr: u64,
+        /// The PR review's state.
+        ///
+        /// Something like "approved".
         state: String,
+        /// The PR review's body.
         body: String,
+        /// The PR review's ID.
         id: u64,
     },
+    /// A [PullRequestReviewCommentEvent](https://developer.github.com/v3/activity/events/types#pullrequestreviewcommentevent).
     PullRequestReviewComment {
+        /// The action executed upon a PR review comment.
+        ///
+        /// Can be "created", "edited", or "deleted".
         action: String,
+        /// The PR number.
         pr: u64,
+        /// The PR review comment's body.
         body: String,
+        /// The PR review comment's ID.
         id: u64,
     },
+    /// A [PushEvent](https://developer.github.com/v3/activity/events/types#pushevent).
     Push {
+        /// The full Git ref pushed to.
         pushed_ref: String,
+        /// The previous HEAD's SHA.
         prev_head: String,
+        /// The new HEAD's SHA.
         new_head: String,
+        /// The amount of commits pushed.
         size: u64,
+        /// The amount of distinct commits pushed.
         distinct_size: u64,
+        /// The commits pushed.
         commits: Vec<Commit>,
     },
+    /// A [ReleaseEvent](https://developer.github.com/v3/activity/events/types#releaseevent).
     Release {
+        /// The action executed upon a release.
+        ///
+        /// Can be only "published".
         action: String,
+        /// The released tag's name.
         tag_name: String,
+        /// The released branch's name.
         target: String,
+        /// Whether the release is a draft.
         draft: bool,
+        /// Whether the release is a prerelease.
         prerelease: bool,
+        /// The release's custom name.
+        ///
+        /// This is `None` if the release is just a tag and not edited through the GitHub release editor.
         name: Option<String>,
+        /// The release's custom body.
+        ///
+        /// This is `None` if the release is just a tag and not edited through the GitHub release editor.
         body: Option<String>,
     },
-    Watch { action: String, },
-    Other(JsonValue),
+    /// A [WatchEvent](https://developer.github.com/v3/activity/events/types#watchevent), or, more aptly, a StarEvent.
+    Watch {
+        /// The action executed upon a repository star.
+        ///
+        /// Can only be "started".
+        action: String,
+    },
+    /// An unhandled event.
+    Other {
+        /// The event type.
+        event_type: String,
+    },
 }
 
+/// A Wiki page affected by a [GollumEvent](https://developer.github.com/v3/activity/events/types#gollumevent).
 #[derive(Clone, Debug, Hash, PartialEq, Eq)]
 pub struct GollumPayload {
-    page_name: String,
-    title: String,
-    action: String,
-    sha: String,
-    html_url: String,
+    /// The Wiki page's name.
+    pub page_name: String,
+    /// The Wiki page's current title.
+    pub title: String,
+    /// The action executed upon a Wiki page.
+    ///
+    /// Can be "created" or "edited".
+    pub action: String,
+    /// The latest commit SHA of the Wiki page.
+    pub sha: String,
+    /// The URL to the Wiki page.
+    ///
+    /// Can be used straight as a user-facing URL.
+    pub html_url: String,
 }
 
+/// A Git commit pushed in a [PushEvent](https://developer.github.com/v3/activity/events/types#pushevent).
 #[derive(Clone, Debug, Hash, PartialEq, Eq)]
 pub struct Commit {
-    sha: String,
-    message: String,
-    author_name: String,
-    author_email: String,
-    distinct: bool,
+    /// The commit's SHA.
+    pub sha: String,
+    /// The commit message.
+    pub message: String,
+    /// The commit author's name.
+    ///
+    /// GitHub Event API doesn't give us the committer data.
+    pub author_name: String,
+    /// The commit author's e-mail.
+    ///
+    /// GitHub Event API doesn't give us the committer data.
+    pub author_email: String,
+    /// Whether the commit is distinct.
+    pub distinct: bool,
 }
 
 
 impl Event {
+    /// Parse a raw JSON GitHub Events API response.
+    ///
+    /// The JSON is not checked for correctness, so be wary.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # extern crate chrono;
+    /// # extern crate dishub;
+    /// # use dishub::ops::{EventPayload, Event};
+    /// # use chrono::DateTime;
+    /// # fn main() {
+    /// // Shaved to minimum for brevity
+    /// let response = r#"[
+    ///                     {
+    ///                       "id": "4831774905",
+    ///                       "type": "WatchEvent",
+    ///                       "actor": {
+    ///                         "display_login": "carllhw"
+    ///                       },
+    ///                       "repo": {
+    ///                         "name": "nabijaczleweli/cargo-update"
+    ///                       },
+    ///                       "payload": {
+    ///                         "action": "started"
+    ///                       },
+    ///                       "created_at": "2016-11-08T03:10:26Z"
+    ///                     },
+    ///                     {
+    ///                       "id": "4831775201",
+    ///                       "type": "WatchEvent",
+    ///                       "actor": {
+    ///                         "display_login": "Byron-TW"
+    ///                       },
+    ///                       "repo": {
+    ///                         "name": "nabijaczleweli/cargo-update"
+    ///                       },
+    ///                       "payload": {
+    ///                         "action": "started"
+    ///                       },
+    ///                       "created_at": "2016-11-09T06:12:26Z"
+    ///                     }
+    ///                   ]"#;
+    /// assert_eq!(Event::parse(response), vec![
+    ///            Event {
+    ///                created_at: DateTime::parse_from_rfc2822("Tue, 8 Nov 2016 03:10:26 +0000").unwrap(),
+    ///                actor: "carllhw".to_string(),
+    ///                repo: "nabijaczleweli/cargo-update".to_string(),
+    ///                id: 4831774905,
+    ///                payload: EventPayload::Watch {
+    ///                    action: "started".to_string(),
+    ///                },
+    ///            },
+    ///            Event {
+    ///                created_at: DateTime::parse_from_rfc2822("Wed, 9 Nov 2016 06:12:26 +0000").unwrap(),
+    ///                actor: "Byron-TW".to_string(),
+    ///                repo: "nabijaczleweli/cargo-update".to_string(),
+    ///                id: 4831775201,
+    ///                payload: EventPayload::Watch {
+    ///                    action: "started".to_string(),
+    ///                },
+    ///            }
+    ///        ]);
+    /// # }
+    /// ```
     pub fn parse(what: &str) -> Vec<Event> {
         json::parse(what)
             .unwrap()
@@ -120,6 +343,28 @@ impl Event {
             .collect()
     }
 
+    /// Get the reference URLs for an event.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # extern crate chrono;
+    /// # extern crate dishub;
+    /// # use dishub::ops::{EventPayload, Event};
+    /// # use chrono::DateTime;
+    /// # fn main() {
+    /// // Shaved to minimum for brevity
+    /// let response = r#"[{
+    ///                     "id": "4831774905",
+    ///                     "type": "WatchEvent",
+    ///                     "actor": { "display_login": "carllhw" },
+    ///                     "repo": { "name": "nabijaczleweli/cargo-update" },
+    ///                     "payload": { "action": "started" },
+    ///                     "created_at": "2016-11-08T03:10:26Z"
+    ///                   }]"#;
+    /// assert_eq!(Event::parse(response)[0].urls(),
+    ///            vec!["https://github.com/nabijaczleweli/cargo-update/stargazers".to_string()]);
+    /// # }
     pub fn urls(&self) -> Vec<String> {
         match self.payload {
             EventPayload::CommitComment { ref commit_id, id, .. } => {
@@ -147,12 +392,15 @@ impl Event {
             EventPayload::Push { ref prev_head, ref new_head, .. } => vec![format!("https://github.com/{}/compare/{}...{}", self.repo, prev_head, new_head)],
             EventPayload::Release { ref tag_name, .. } => vec![format!("https://github.com/{}/releases/tag/{}", self.repo, tag_name)],
             EventPayload::Watch { .. } => vec![format!("https://github.com/{}/stargazers", self.repo)],
-            EventPayload::Other(_) => vec![],
+            EventPayload::Other { .. } => vec![],
         }
     }
 }
 
 impl EventPayload {
+    /// Parse the payload from the *whole* event.
+    ///
+    /// Not meant to be used directly, use `Event::parse()` instead.
     pub fn from(ev: &JsonValue) -> EventPayload {
         match ev["type"].as_str().unwrap() {
             "CommitCommentEvent" => {
@@ -223,6 +471,7 @@ impl EventPayload {
                     number: ev["payload"]["number"].as_number().unwrap().into(),
                     title: ev["payload"]["pull_request"]["title"].as_str().unwrap().to_string(),
                     body: ev["payload"]["pull_request"]["body"].as_str().unwrap().to_string(),
+                    merged: ev["payload"]["pull_request"]["merged"].as_bool().unwrap(),
                 }
             }
             "PullRequestReviewEvent" => {
@@ -275,7 +524,7 @@ impl EventPayload {
                 }
             }
             "WatchEvent" => EventPayload::Watch { action: ev["payload"]["action"].as_str().unwrap().to_string() },
-            _ => EventPayload::Other(ev.clone()),
+            t => EventPayload::Other { event_type: t.to_string() },
         }
     }
 }
@@ -323,8 +572,18 @@ impl fmt::Display for Event {
             EventPayload::Public => {
                 try!(write!(f, "{} made {} public", self.actor, self.repo));
             }
-            EventPayload::PullRequest { ref action, number, ref title, .. } => {
-                try!(write!(f, "{} {} #{} on {}: \"{}\"", self.actor, action, number, self.repo, title));
+            EventPayload::PullRequest { ref action, number, ref title, merged, .. } => {
+                try!(write!(f,
+                            "{} {} #{} on {}: \"{}\"",
+                            self.actor,
+                            if merged && action == "closed" {
+                                "merged"
+                            } else {
+                                action
+                            },
+                            number,
+                            self.repo,
+                            title));
             }
             EventPayload::PullRequestReview { ref action, pr, ref state, .. } => {
                 try!(write!(f, "{} {} as {} #{} on {}", self.actor, action, state, pr, self.repo));
@@ -355,8 +614,8 @@ impl fmt::Display for Event {
             EventPayload::Watch { .. } => {
                 try!(write!(f, "{} starred {}", self.actor, self.repo));
             }
-            EventPayload::Other(ref ev) => {
-                try!(write!(f, "unsupported event: {}", ev["type"]));
+            EventPayload::Other { ref event_type } => {
+                try!(write!(f, "unsupported event: {}", event_type));
             }
         }
 

@@ -28,18 +28,7 @@ pub fn feeds_filter<W: Write>(output: &mut W, f: &Feed) -> bool {
 }
 
 pub fn post_text(ev: &Event) -> String {
-    let urls = ev.urls();
-    let mut txt = Vec::new();
-
-    write!(txt, "{}", ev).unwrap();
-    if !urls.is_empty() {
-        for url in urls {
-            writeln!(txt, "").unwrap();
-            write!(txt, "<{}>", url).unwrap();
-        }
-    }
-
-    String::from_utf8(txt).unwrap()
+    ev.urls().into_iter().fold(ev.to_string(), |t, u| t + "\n<" + &u + ">")
 }
 
 pub fn send_messages(tokens: &AppTokens, txts: Vec<String>, channel: u64) -> Result<(), Error> {
