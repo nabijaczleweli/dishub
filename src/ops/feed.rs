@@ -102,7 +102,7 @@ impl Feed {
         let now = Local::now();
         let now = now.with_timezone(now.offset());
 
-        self.latest = Some(now.clone());
+        self.latest = Some(now);
         self.next_min = Some(now + Duration::seconds(next as i64));
 
         events.reverse();

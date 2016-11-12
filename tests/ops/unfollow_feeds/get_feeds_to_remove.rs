@@ -7,7 +7,7 @@ use std::io::Cursor;
 #[test]
 fn empty() {
     let mut out = Vec::new();
-    let result = get_feeds_to_remove(&vec![feed("nabijaczleweli"), feed("sehe/opus")], &mut Cursor::new(b"\n"), &mut out);
+    let result = get_feeds_to_remove(&[feed("nabijaczleweli"), feed("sehe/opus")], &mut Cursor::new(b"\n"), &mut out);
 
     assert!(result.is_empty());
     assert_eq!(&out[..], &b"The feed to unsubscribe from (or empty to end): "[..]);
@@ -16,9 +16,7 @@ fn empty() {
 #[test]
 fn single() {
     let mut out = Vec::new();
-    let result = get_feeds_to_remove(&vec![feed("nabijaczleweli"), feed("sehe/opus")],
-                                     &mut Cursor::new(b"nabijaczleweli\n\n"),
-                                     &mut out);
+    let result = get_feeds_to_remove(&[feed("nabijaczleweli"), feed("sehe/opus")], &mut Cursor::new(b"nabijaczleweli\n\n"), &mut out);
 
     assert_eq!(result, vec!["nabijaczleweli".to_string()]);
     assert_eq!(&out[..],
@@ -28,7 +26,7 @@ fn single() {
 #[test]
 fn multi() {
     let mut out = Vec::new();
-    let result = get_feeds_to_remove(&vec![feed("nabijaczleweli"), feed("sehe/opus"), feed("shepmaster/jetscii")],
+    let result = get_feeds_to_remove(&[feed("nabijaczleweli"), feed("sehe/opus"), feed("shepmaster/jetscii")],
                                      &mut Cursor::new(&b"nabijaczleweli\nsehe/opus\nshepmaster/jetscii\n\n"[..]),
                                      &mut out);
 

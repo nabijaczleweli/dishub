@@ -256,7 +256,7 @@ pub fn prompt_multiline<R, W, F>(input: &mut R, output: &mut W, prompt_s: &str, 
     while buf.is_empty() {
         buf = try!(prompt_nonzero_len(input, output, prompt_s, |_| true));
 
-        while buf.ends_with(r"\") && !buf.ends_with(r"\\") {
+        while buf.ends_with('\\') && !buf.ends_with(r"\\") {
             buf.pop();
             buf.push('\n');
 

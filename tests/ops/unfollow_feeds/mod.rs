@@ -8,7 +8,7 @@ mod get_feeds_to_remove;
 #[test]
 fn print_feeds() {
     let mut out = Vec::new();
-    unfollow_feeds::print_feeds(&vec![feed("nabijaczleweli"), feed("sehe/opus")], &mut out);
+    unfollow_feeds::print_feeds(&[feed("nabijaczleweli"), feed("sehe/opus")], &mut out);
 
     assert_eq!(&out[..],
                &b"The feeds currently subscribed to:\n\

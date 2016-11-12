@@ -81,8 +81,8 @@ fn unfollow_feeds_main(opts: dishub::options::Options) -> Result<(), dishub::Err
     dishub::ops::unfollow_feeds::print_feeds(&feeds, &mut stdout());
     let to_remove = dishub::ops::unfollow_feeds::get_feeds_to_remove(&feeds, &mut lock, &mut stdout());
 
-    let idx_to_remove: Vec<_> = feeds.iter().enumerate().filter(|&(_, ref f)| to_remove.contains(&f.subject)).map(|(i, _)| i).collect();
-    for idx in idx_to_remove.into_iter() {
+    let idx_to_remove: Vec<_> = feeds.iter().enumerate().filter(|&(_, f)| to_remove.contains(&f.subject)).map(|(i, _)| i).collect();
+    for idx in idx_to_remove {
         feeds.remove(idx);
     }
 
@@ -98,7 +98,7 @@ fn start_daemon_main(opts: dishub::options::Options, sleep: Duration) -> Result<
     loop {
         let mut feeds = try!(dishub::ops::Feed::read(&feeds_path));
 
-        for feed in feeds.iter_mut().filter(|ref f| dishub::ops::start_daemon::feeds_filter(&mut stdout(), f)) {
+        for feed in feeds.iter_mut().filter(|f| dishub::ops::start_daemon::feeds_filter(&mut stdout(), f)) {
             let events = try!(feed.poll(&tokens));
             if events.is_empty() {
                 println!("No new events in {}", feed.subject);

@@ -28,7 +28,8 @@ pub fn get_watch_subject<R: BufRead, W: Write>(input: &mut R, output: &mut W) ->
 }
 
 pub fn verify_subject(subject: &str, tokens: &AppTokens) -> Result<(), Error> {
-    let (check_fn, tp): (fn(&str, &AppTokens) -> Result<bool, Error>, &'static str) = if subject.contains('/') {
+    type ExistCheck = fn(&str, &AppTokens) -> Result<bool, Error>;
+    let (check_fn, tp): (ExistCheck, &str) = if subject.contains('/') {
         (github::repo_exists, "repository")
     } else {
         (github::user_exists, "user")
@@ -88,7 +89,7 @@ fn get_valid<R: BufRead, W: Write>(list_heading: &str, prompt: &str, instances: 
     let chosen = prompt_nonzero_len(input,
                                     output,
                                     prompt,
-                                    |s| usize::from_str(&s).map(|idx| idx > 0 && idx <= instances.len()).unwrap_or(false))
+                                    |s| usize::from_str(s).map(|idx| idx > 0 && idx <= instances.len()).unwrap_or(false))
         .unwrap();
     instances[usize::from_str(&chosen).unwrap() - 1].0
 }

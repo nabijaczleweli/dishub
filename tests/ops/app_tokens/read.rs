@@ -41,7 +41,7 @@ fn incorrect() {
 #[test]
 fn nonexistant() {
     // Linux makes this read rather than open
-    if let Err(Error::Io { desc: "App tokens", op: _ }) = AppTokens::read(&make_dir("app-tokens-read", "nonexistant")) {} else {
+    if let Err(Error::Io { desc: "App tokens", .. }) = AppTokens::read(&make_dir("app-tokens-read", "nonexistant")) {} else {
         assert!(false);
     }
 }
