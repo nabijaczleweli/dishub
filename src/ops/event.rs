@@ -1,5 +1,6 @@
 use chrono::{FixedOffset, DateTime};
 use json::{self, JsonValue};
+use std::str::FromStr;
 use std::fmt;
 
 
@@ -8,6 +9,7 @@ pub struct Event {
     pub created_at: DateTime<FixedOffset>,
     pub actor: String,
     pub repo: String,
+    pub id: u64,
     pub payload: EventPayload,
 }
 
@@ -111,6 +113,7 @@ impl Event {
                     created_at: DateTime::parse_from_rfc3339(j["created_at"].as_str().unwrap()).unwrap(),
                     actor: j["actor"]["display_login"].as_str().unwrap().to_string(),
                     repo: j["repo"]["name"].as_str().unwrap().to_string(),
+                    id: u64::from_str(j["id"].as_str().unwrap()).unwrap(),
                     payload: EventPayload::from(j),
                 }
             })

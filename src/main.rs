@@ -104,7 +104,10 @@ fn start_daemon_main(opts: dishub::options::Options, sleep: Duration) -> Result<
                 println!("No new events in {}", feed.subject);
             } else {
                 try!(dishub::ops::start_daemon::send_messages(&tokens, events.iter().map(dishub::ops::start_daemon::post_text).collect(), feed.channel));
-                println!("Successfully sent {} events from {}", events.len(), feed.subject);
+                println!("Successfully sent {} event{} from {}",
+                         events.len(),
+                         if events.len() != 1 { "s" } else { "" },
+                         feed.subject);
             }
         }
 

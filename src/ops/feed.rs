@@ -26,6 +26,8 @@ pub struct Feed {
     pub latest: Option<DateTime<FixedOffset>>,
     /// The minimal time the next poll is allowed.
     pub next_min: Option<DateTime<FixedOffset>>,
+    /// Latest event's ID, this is required because GH API returns *all* events despite passing an ETag.
+    pub latest_event: Option<u64>,
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Eq, RustcEncodable, RustcDecodable)]
@@ -38,6 +40,7 @@ pub struct FeedForSerialisation {
     pub e_tag: Option<String>,
     pub latest: Option<String>,
     pub next_min: Option<String>,
+    pub latest_event: Option<u64>,
 }
 
 #[derive(Debug, Clone, Hash, PartialEq, Eq, RustcEncodable, RustcDecodable)]
@@ -55,6 +58,7 @@ impl Feed {
             e_tag: None,
             latest: None,
             next_min: None,
+            latest_event: None,
         }
     }
 
@@ -101,7 +105,13 @@ impl Feed {
         self.latest = Some(now.clone());
         self.next_min = Some(now + Duration::seconds(next as i64));
 
-        events.sort_by_key(|e| e.created_at);
+        events.reverse();
+        if let Some(latest_event_id) = self.latest_event {
+            events = events.into_iter().skip_while(|ev| ev.id != latest_event_id).skip(1).collect();
+        }
+        if !events.is_empty() {
+            self.latest_event = Some(events[events.len() - 1].id);
+        }
         Ok(events)
     }
 }
@@ -115,6 +125,7 @@ impl From<Feed> for FeedForSerialisation {
             e_tag: f.e_tag,
             latest: f.latest.map(|dt| dt.to_rfc3339()),
             next_min: f.next_min.map(|dt| dt.to_rfc3339()),
+            latest_event: f.latest_event,
         }
     }
 }
@@ -128,6 +139,7 @@ impl Into<Feed> for FeedForSerialisation {
             e_tag: self.e_tag,
             latest: self.latest.map(|dts| DateTime::parse_from_rfc3339(&dts).unwrap()),
             next_min: self.next_min.map(|dts| DateTime::parse_from_rfc3339(&dts).unwrap()),
+            latest_event: self.latest_event,
         }
     }
 }
