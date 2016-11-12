@@ -47,8 +47,20 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1509' class='srclink' href='../../../src/dishub/src/ops/init.rs.html#12-17' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn get_data&lt;R:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html' title='std::io::BufRead'>BufRead</a>,&nbsp;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>&gt;(input: &amp;mut R, output: &amp;mut W) -&gt; <a class='struct' href='../../../dishub/ops/struct.AppTokens.html' title='dishub::ops::AppTokens'>AppTokens</a></pre></section>
+               </span><a id='src-1509' class='srclink' href='../../../src/dishub/src/ops/init.rs.html#71-76' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn get_data&lt;R:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html' title='std::io::BufRead'>BufRead</a>,&nbsp;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>&gt;(input: &amp;mut R, output: &amp;mut W) -&gt; <a class='struct' href='../../../dishub/ops/struct.AppTokens.html' title='dishub::ops::AppTokens'>AppTokens</a></pre><div class='docblock'><p>Prompt the user for application data.</p>
+
+<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>init</span>::<span class='ident'>get_data</span>(
+    <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BufReader</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='string'>b&quot;994c365aec1700f5783bac697e2347ffd2268e1e\n\
+                           a8233f2465e4e27b36c3e9a9.5ec9ab.e8fe135112b5f4d678bd1d221f8\n&quot;</span>[..]),
+    <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>()),
+    <span class='ident'>AppTokens</span> {
+        <span class='ident'>github</span>: <span class='string'>&quot;994c365aec1700f5783bac697e2347ffd2268e1e&quot;</span>.<span class='ident'>to_string</span>(),
+        <span class='ident'>discord</span>: <span class='string'>&quot;a8233f2465e4e27b36c3e9a9.5ec9ab.e8fe135112b5f4d678bd1d221f8&quot;</span>.<span class='ident'>to_string</span>(),
+    });<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>
