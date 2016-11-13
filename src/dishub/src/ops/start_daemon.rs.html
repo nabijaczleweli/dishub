@@ -408,7 +408,7 @@
     <span class='kw'>let</span> <span class='ident'>now</span> <span class='op'>=</span> <span class='ident'>now</span>.<span class='ident'>with_timezone</span>(<span class='ident'>now</span>.<span class='ident'>offset</span>());
 
     <span class='kw'>if</span> <span class='ident'>f</span>.<span class='ident'>next_min</span>.<span class='ident'>is_some</span>() <span class='op'>&amp;&amp;</span> <span class='op'>*</span><span class='ident'>f</span>.<span class='ident'>next_min</span>.<span class='ident'>as_ref</span>().<span class='ident'>unwrap</span>() <span class='op'>&gt;</span> <span class='ident'>now</span> {
-        <span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>output</span>, <span class='string'>&quot;Too early to re-poll {}.&quot;</span>, <span class='ident'>f</span>.<span class='ident'>subject</span>).<span class='ident'>unwrap</span>();
+        <span class='macro'>writeln</span><span class='macro'>!</span>(<span class='ident'>output</span>, <span class='string'>&quot;Too early to re-poll {}&quot;</span>, <span class='ident'>f</span>.<span class='ident'>subject</span>).<span class='ident'>unwrap</span>();
         <span class='bool-val'>false</span>
     } <span class='kw'>else</span> {
         <span class='bool-val'>true</span>
