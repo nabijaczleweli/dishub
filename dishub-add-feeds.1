@@ -1,0 +1,88 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "DISHUB\-ADD\-FEEDS" "1" "November 2016" "dishub developers" ""
+.
+.SH "NAME"
+\fBdishub\-add\-feeds\fR \- Posting GitHub activity on Discord \- following
+.
+.SH "SYNOPSIS"
+\fBdishub\fR \fIOPTIONS\fR \fBadd\-feeds\fR
+.
+.SH "DESCRIPTION"
+Follow a user or a repository and specify the channel and server to post the events to\.
+.
+.P
+Requires tokens to be set, so be sure to run dishub\-init(1) beforehand\.
+.
+.P
+For description of \fBdishub\fR itself see dishub(1)\.
+.
+.SH "OPTIONS"
+See dishub(1)\.
+.
+.SH "EXAMPLES"
+\fBdishub add\-feeds\fR
+.
+.IP "" 4
+.
+.nf
+
+Existing user/repository and tokens set:
+
+  What to watch (repo slug or user): nabijaczleweli/dishub
+  Servers the bot is invited to:
+    1\. Dishub Test
+
+  The server to post the feed in: 1
+  Channels in the chosen server:
+    1\. #all
+    2\. #dishub
+    3\. #cargo\-update
+    4\. #safe\-transmute
+
+  The channel to post the feed in: 2
+.
+.fi
+.
+.IP "" 0
+.
+.P
+\fBdishub add\-feeds\fR
+.
+.IP "" 4
+.
+.nf
+
+Non\-existant user/repository but tokens set:
+
+  What to watch (repo slug or user): 3f0ada6056fe3fc67a6682230bf1cb6d
+  The watched user "3f0ada6056fe3fc67a6682230bf1cb6d" doesn\'t exist\.
+.
+.fi
+.
+.IP "" 0
+.
+.P
+\fBdishub add\-feeds\fR
+.
+.IP "" 4
+.
+.nf
+
+Tokens not set\.
+
+  Run the init subsystem first to produce "$HOME/\.dishub/tokens\.toml"\.
+.
+.fi
+.
+.IP "" 0
+.
+.SH "AUTHOR"
+Written by nabijaczleweli <\fInabijaczleweli@gmail\.com\fR>
+.
+.SH "REPORTING BUGS"
+<\fIhttps://github\.com/nabijaczleweli/dishub/issues\fR>
+.
+.SH "SEE ALSO"
+<\fIhttps://github\.com/nabijaczleweli/dishub\fR>

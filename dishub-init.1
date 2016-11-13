@@ -1,0 +1,80 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "DISHUB\-INIT" "1" "November 2016" "dishub developers" ""
+.
+.SH "NAME"
+\fBdishub\-init\fR \- Posting GitHub activity on Discord \- authorisation
+.
+.SH "SYNOPSIS"
+\fBdishub\fR \fIOPTIONS\fR \fBinit\fR \fIINIT_OPTIONS\fR
+.
+.SH "DESCRIPTION"
+Set the GitHub and Discord tokens to use to authorise to the services\.
+.
+.P
+A discord bot token can be acquired from https://discordapp\.com/developers/applications/me\.
+.
+.P
+For description of \fBdishub\fR itself see dishub(1)\.
+.
+.SH "OPTIONS"
+See dishub(1)\.
+.
+.SH "INIT_OPTIONS"
+\-f \-\-force
+.
+.IP "" 4
+.
+.nf
+
+By default this will error out if the tokens have already been set\.
+
+Use this flag to change the tokens\.
+.
+.fi
+.
+.IP "" 0
+.
+.SH "EXAMPLES"
+\fBdishub init\fR
+.
+.IP "" 4
+.
+.nf
+
+On a fresh install or with a `\-f` otherwise
+
+  GitHub OAuth token: 994c365aec1700f5783bac697e2347ffd2268e1e
+  Discord bot token: A8233f2465E4E27B36c3e9a9\.5eC9Ab\.e8FE135112B5f4d678BD1D221f8
+
+  Remember to invite the bot to the servers you want it to post in!
+.
+.fi
+.
+.IP "" 0
+.
+.P
+\fBdishub init\fR
+.
+.IP "" 4
+.
+.nf
+
+With tokens already set
+
+  File "$HOME/\.dishub/tokens\.toml" was not overriden to prevent data loss\.
+  Pass \-\-force to override it\.
+.
+.fi
+.
+.IP "" 0
+.
+.SH "AUTHOR"
+Written by nabijaczleweli <\fInabijaczleweli@gmail\.com\fR>
+.
+.SH "REPORTING BUGS"
+<\fIhttps://github\.com/nabijaczleweli/dishub/issues\fR>
+.
+.SH "SEE ALSO"
+<\fIhttps://github\.com/nabijaczleweli/dishub\fR>
