@@ -47,8 +47,24 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1647' class='srclink' href='../../../src/dishub/src/ops/add_feeds.rs.html#22-28' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn get_watch_subject&lt;R:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html' title='std::io::BufRead'>BufRead</a>,&nbsp;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>&gt;(input: &amp;mut R, output: &amp;mut W) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></pre></section>
+               </span><a id='src-1649' class='srclink' href='../../../src/dishub/src/ops/add_feeds.rs.html#106-112' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn get_watch_subject&lt;R:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html' title='std::io::BufRead'>BufRead</a>,&nbsp;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>&gt;(input: &amp;mut R, output: &amp;mut W) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></pre><div class='docblock'><p>Prompt the user for the subject to watch.</p>
+
+<p>This can be either a username (0 slashes) or a repo slug (1 slash), will reprompt if given more slashes.</p>
+
+<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>add_feeds</span>::<span class='ident'>get_watch_subject</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BufReader</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='string'>b&quot;nabijaczleweli\n&quot;</span>[..]),
+                                        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>()),
+           <span class='string'>&quot;nabijaczleweli&quot;</span>.<span class='ident'>to_string</span>());
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>add_feeds</span>::<span class='ident'>get_watch_subject</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BufReader</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='string'>b&quot;nabijaczleweli/dishub\n&quot;</span>[..]),
+                                        <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>()),
+           <span class='string'>&quot;nabijaczleweli/dishub&quot;</span>.<span class='ident'>to_string</span>());
+
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>add_feeds</span>::<span class='ident'>get_watch_subject</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BufReader</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='string'>b&quot;nabijaczleweli/dishub/gargage\n\
+                                                              sehe\n&quot;</span>[..]), <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>()),
+           <span class='string'>&quot;sehe&quot;</span>.<span class='ident'>to_string</span>());<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>

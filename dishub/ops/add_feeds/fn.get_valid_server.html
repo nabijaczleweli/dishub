@@ -47,8 +47,20 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1677' class='srclink' href='../../../src/dishub/src/ops/add_feeds.rs.html#61-63' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn get_valid_server&lt;R:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html' title='std::io::BufRead'>BufRead</a>,&nbsp;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>&gt;(servers: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>, <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;, input: &amp;mut R, output: &amp;mut W) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></pre></section>
+               </span><a id='src-1679' class='srclink' href='../../../src/dishub/src/ops/add_feeds.rs.html#218-220' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn get_valid_server&lt;R:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.BufRead.html' title='std::io::BufRead'>BufRead</a>,&nbsp;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>&gt;(servers: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a>, <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;, input: &amp;mut R, output: &amp;mut W) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></pre><div class='docblock'><p>Prompt the user to choose a server to post in, given a list of servers.</p>
+
+<p>Get the server list from <code>known_servers()</code>.</p>
+
+<p>The returned number is the chosen server&#39;s ID.</p>
+
+<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
+<pre class='rust rust-example-rendered'>
+<span class='kw'>let</span> <span class='ident'>servers</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[(<span class='number'>1000</span>, <span class='string'>&quot;Babby&#39;s first server&quot;</span>.<span class='ident'>to_string</span>()),
+                   (<span class='number'>1001</span>, <span class='string'>&quot;Helo am server plz gib credentials&quot;</span>.<span class='ident'>to_string</span>())];
+<span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>add_feeds</span>::<span class='ident'>get_valid_server</span>(<span class='ident'>servers</span>, <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BufReader</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='string'>b&quot;2\n&quot;</span>[..]), <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>()),
+           <span class='number'>1001</span>);<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+</div></section>
     <section id='search' class="content hidden"></section>
 
     <section class="footer"></section>

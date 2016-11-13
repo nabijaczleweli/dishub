@@ -47,28 +47,40 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1766' class='srclink' href='../../../src/dishub/src/ops/unfollow_feeds.rs.html#1-30' title='goto source code'>[src]</a></span></h1>
-<h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+               </span><a id='src-1768' class='srclink' href='../../../src/dishub/src/ops/unfollow_feeds.rs.html#1-114' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>This module contains the functions used only by the <code>unfollow_feeds</code> subsystem.</p>
+
+<p>The flow of the <code>unfollow_feeds</code> subsystem is as follows:</p>
+
+<pre><code class="language-plaintext">Options::parse()
+|&gt; ops::unfollow_feeds::verify()
+|&gt; ops::Feed::read()
+|&gt; ops::unfollow_feeds::print_feeds()
+|&gt; ops::unfollow_feeds::get_feeds_to_remove()
+|&gt; ops::Feed::write()
+</code></pre>
+</div><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.get_feeds_to_remove.html'
                                   title='dishub::ops::unfollow_feeds::get_feeds_to_remove'>get_feeds_to_remove</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Prompt the user for the feed subjects to sunsubscribe from.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.print_feeds.html'
                                   title='dishub::ops::unfollow_feeds::print_feeds'>print_feeds</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Print the subscribed-to feeds in a human-readable format.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.verify.html'
                                   title='dishub::ops::unfollow_feeds::verify'>verify</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Verify if, given the current configuration, it&#39;s permitted to continue with the subsequent steps of the <code>unfollow_feeds</code>
+subsystem.</p>
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>

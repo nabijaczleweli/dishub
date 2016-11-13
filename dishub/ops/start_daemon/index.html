@@ -47,35 +47,54 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1726' class='srclink' href='../../../src/dishub/src/ops/start_daemon.rs.html#1-53' title='goto source code'>[src]</a></span></h1>
-<h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+               </span><a id='src-1728' class='srclink' href='../../../src/dishub/src/ops/start_daemon.rs.html#1-224' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>This module contains the functions used only by the <code>start_daemon</code> subsystem.</p>
+
+<p>The flow of the <code>start_daemon</code> subsystem is as follows:</p>
+
+<pre><code class="language-plaintext">Options::parse()
+|&gt; ops::start_daemon::verify()
+|&gt; ops::AppTokens::read()
+</code></pre>
+
+<p>Then, repeatedly</p>
+
+<pre><code class="language-plaintext">ops::Feed::read()
+|&gt; ops::start_daemon::feeds_filter()
+|&gt; ops::Feed::poll()
+|&gt; ops::start_daemon::post_text()
+|&gt; ops::start_daemon::send_messages()
+|&gt; ops::Feed::write()
+</code></pre>
+</div><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.feeds_filter.html'
                                   title='dishub::ops::start_daemon::feeds_filter'>feeds_filter</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>A filter function to use upon feeds to be polled.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.post_text.html'
                                   title='dishub::ops::start_daemon::post_text'>post_text</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Create a Discord message body from an event.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.send_messages.html'
                                   title='dishub::ops::start_daemon::send_messages'>send_messages</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Post the specified messages to a Discord channel.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.verify.html'
                                   title='dishub::ops::start_daemon::verify'>verify</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Verify if, given the current configuration, it&#39;s permitted to continue with the subsequent steps of the <code>start_daemon</code>
+subsystem.</p>
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>

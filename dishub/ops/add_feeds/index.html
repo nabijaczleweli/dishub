@@ -47,56 +47,79 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1630' class='srclink' href='../../../src/dishub/src/ops/add_feeds.rs.html#1-95' title='goto source code'>[src]</a></span></h1>
-<h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
+               </span><a id='src-1632' class='srclink' href='../../../src/dishub/src/ops/add_feeds.rs.html#1-295' title='goto source code'>[src]</a></span></h1>
+<div class='docblock'><p>This module contains the functions used only by the <code>add_feeds</code> subsystem.</p>
+
+<p>The flow of the <code>add_feeds</code> subsystem is as follows:</p>
+
+<pre><code class="language-plaintext">Options::parse()
+|&gt; ops::add_feeds::verify()
+// Read the subject
+|&gt; ops::add_feeds::get_watch_subject()
+|&gt; ops::AppTokens::read()
+// Check if the subject exists
+|&gt; ops::add_feeds::verify_subject()
+// Check which servers the bot&#39;s invited to and ask the user which one to post in.
+|&gt; ops::add_feeds::known_servers()
+|&gt; ops::add_feeds::get_valid_server()
+// List channels in the specified server and ask the user which one to post in.
+|&gt; ops::add_feeds::channels_in_server()
+|&gt; ops::add_feeds::get_valid_channel()
+// Update the feed list
+|&gt; ops::Feed::read()
+|&gt; ops::Feed::new()
+|&gt; ops::Feed::write()
+</code></pre>
+</div><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.channels_in_server.html'
                                   title='dishub::ops::add_feeds::channels_in_server'>channels_in_server</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>List the channels in the specified server.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.get_valid_channel.html'
                                   title='dishub::ops::add_feeds::get_valid_channel'>get_valid_channel</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Prompt the user to choose a channel to post in, given a list of channels.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.get_valid_server.html'
                                   title='dishub::ops::add_feeds::get_valid_server'>get_valid_server</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Prompt the user to choose a server to post in, given a list of servers.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.get_watch_subject.html'
                                   title='dishub::ops::add_feeds::get_watch_subject'>get_watch_subject</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Prompt the user for the subject to watch.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.known_servers.html'
                                   title='dishub::ops::add_feeds::known_servers'>known_servers</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Get all servers the bot is invited to.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.verify.html'
                                   title='dishub::ops::add_feeds::verify'>verify</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Verify if, given the current configuration, it&#39;s permitted to continue with the subsequent steps of the <code>add_feeds</code>
+subsystem.</p>
                            </td>
                        </tr>
                        <tr class=' module-item'>
                            <td><a class='fn' href='fn.verify_subject.html'
                                   title='dishub::ops::add_feeds::verify_subject'>verify_subject</a></td>
                            <td class='docblock-short'>
-                                
+                                <p>Verify, whether the subject exists.</p>
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>

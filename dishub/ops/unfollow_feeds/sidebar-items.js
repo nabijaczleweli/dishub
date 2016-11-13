@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["get_feeds_to_remove",""],["print_feeds",""],["verify",""]]});
+initSidebarItems({"fn":[["get_feeds_to_remove","Prompt the user for the feed subjects to sunsubscribe from."],["print_feeds","Print the subscribed-to feeds in a human-readable format."],["verify","Verify if, given the current configuration, it's permitted to continue with the subsequent steps of the `unfollow_feeds` subsystem."]]});

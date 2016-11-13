@@ -663,9 +663,6 @@
 <span id="619">619</span>
 <span id="620">620</span>
 <span id="621">621</span>
-<span id="622">622</span>
-<span id="623">623</span>
-<span id="624">624</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>chrono</span>::{<span class='ident'>FixedOffset</span>, <span class='ident'>DateTime</span>};
 <span class='kw'>use</span> <span class='ident'>json</span>::{<span class='self'>self</span>, <span class='ident'>JsonValue</span>};
@@ -1053,10 +1050,7 @@
             <span class='ident'>EventPayload</span>::<span class='ident'>Member</span> { .. } <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[],
             <span class='ident'>EventPayload</span>::<span class='ident'>Public</span> <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>repo</span>)],
             <span class='ident'>EventPayload</span>::<span class='ident'>PullRequest</span> { <span class='ident'>number</span>, .. } <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}/pull/{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>repo</span>, <span class='ident'>number</span>)],
-            <span class='ident'>EventPayload</span>::<span class='ident'>PullRequestReview</span> { <span class='ident'>pr</span>, <span class='ident'>id</span>, .. } <span class='op'>=&gt;</span> {
-                <span class='comment'>// TODO: is this the correct URL for the review au general?</span>
-                <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}/pull/{}#discussion_r{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>repo</span>, <span class='ident'>pr</span>, <span class='ident'>id</span>)]
-            }
+            <span class='ident'>EventPayload</span>::<span class='ident'>PullRequestReview</span> { <span class='ident'>pr</span>, <span class='ident'>id</span>, .. } <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}/pull/{}#pullrequestreview-{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>repo</span>, <span class='ident'>pr</span>, <span class='ident'>id</span>)],
             <span class='ident'>EventPayload</span>::<span class='ident'>PullRequestReviewComment</span> { <span class='ident'>pr</span>, <span class='ident'>id</span>, .. } <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}/pull/{}#discussion_r{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>repo</span>, <span class='ident'>pr</span>, <span class='ident'>id</span>)],
             <span class='ident'>EventPayload</span>::<span class='ident'>Push</span> { <span class='kw-2'>ref</span> <span class='ident'>prev_head</span>, <span class='kw-2'>ref</span> <span class='ident'>new_head</span>, .. } <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}/compare/{}...{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>repo</span>, <span class='ident'>prev_head</span>, <span class='ident'>new_head</span>)],
             <span class='ident'>EventPayload</span>::<span class='ident'>Release</span> { <span class='kw-2'>ref</span> <span class='ident'>tag_name</span>, .. } <span class='op'>=&gt;</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;https://github.com/{}/releases/tag/{}&quot;</span>, <span class='self'>self</span>.<span class='ident'>repo</span>, <span class='ident'>tag_name</span>)],
@@ -1284,7 +1278,7 @@
                 <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{} starred {}&quot;</span>, <span class='self'>self</span>.<span class='ident'>actor</span>, <span class='self'>self</span>.<span class='ident'>repo</span>));
             }
             <span class='ident'>EventPayload</span>::<span class='ident'>Other</span> { <span class='kw-2'>ref</span> <span class='ident'>event_type</span> } <span class='op'>=&gt;</span> {
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;unsupported event: {}&quot;</span>, <span class='ident'>event_type</span>));
+                <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{} invoked an unsupported event on {}: {}&quot;</span>, <span class='self'>self</span>.<span class='ident'>actor</span>, <span class='self'>self</span>.<span class='ident'>repo</span>, <span class='ident'>event_type</span>));
             }
         }
 
