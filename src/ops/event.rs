@@ -612,7 +612,7 @@ impl fmt::Display for Event {
                 try!(write!(f, "{} starred {}", self.actor, self.repo));
             }
             EventPayload::Other { ref event_type } => {
-                try!(write!(f, "unsupported event: {}", event_type));
+                try!(write!(f, "{} invoked an unsupported event on {}: {}", self.actor, self.repo, event_type));
             }
         }
 

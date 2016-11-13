@@ -50,11 +50,11 @@ use discord::Discord;
 /// # use std::fs::{self, File};
 /// # use std::env::temp_dir;
 /// # use std::io::Write;
-/// let tf = temp_dir().join("dishub-doctest").join("ops-add_feeds-verify-1");
+/// let tf = temp_dir().join("dishub-doctest").join("ops-add_feeds-verify-0");
 /// fs::create_dir_all(&tf).unwrap();
 /// File::create(tf.join("tokens.toml")).unwrap().write(&[]).unwrap();
 ///
-/// assert_eq!(add_feeds::verify(&("$TEMP/ops-add_feeds-verify-1".to_string(), tf.clone())),
+/// assert_eq!(add_feeds::verify(&("$TEMP/ops-add_feeds-verify-0".to_string(), tf.clone())),
 ///            Ok((tf.join("tokens.toml"), tf.join("feeds.toml"))));
 /// assert!(tf.join("feeds.toml").exists());
 /// ```
@@ -65,11 +65,11 @@ use discord::Discord;
 /// # use dishub::ops::add_feeds;
 /// # use std::env::temp_dir;
 /// # use dishub::Error;
-/// let tf = temp_dir().join("dishub-doctest").join("ops-add_feeds-verify-0");
-/// assert_eq!(add_feeds::verify(&("$TEMP/ops-add_feeds-verify-0".to_string(), tf)),
+/// let tf = temp_dir().join("dishub-doctest").join("ops-add_feeds-verify-1");
+/// assert_eq!(add_feeds::verify(&("$TEMP/ops-add_feeds-verify-1".to_string(), tf)),
 ///            Err(Error::RequiredFileFromSubsystemNonexistant {
 ///                    subsys: "init",
-///                    fname: "$TEMP/ops-add_feeds-verify-0/tokens.toml".to_string(),
+///                    fname: "$TEMP/ops-add_feeds-verify-1/tokens.toml".to_string(),
 ///                }));
 /// ```
 pub fn verify(config_dir: &(String, PathBuf)) -> Result<(PathBuf, PathBuf), Error> {
@@ -172,7 +172,7 @@ pub fn verify_subject(subject: &str, tokens: &AppTokens) -> Result<(), Error> {
 /// # use dishub::ops::{add_feeds, AppTokens};
 /// # use dishub::Error;
 /// # fn main() {
-/// #     assert!(realmain().is_ok());
+/// #     realmain().unwrap();
 /// # }
 /// # fn realmain() -> Result<(), Error> {
 /// # let tokens = AppTokens {
@@ -231,7 +231,7 @@ pub fn get_valid_server<R: BufRead, W: Write>(servers: Vec<(u64, String)>, input
 /// # use dishub::ops::{add_feeds, AppTokens};
 /// # use dishub::Error;
 /// # fn main() {
-/// #     assert!(realmain().is_ok());
+/// #     realmain().unwrap();
 /// # }
 /// # fn realmain() -> Result<(), Error> {
 /// # let tokens = AppTokens {

@@ -33,11 +33,11 @@ use std::path::PathBuf;
 /// # use std::fs::{self, File};
 /// # use std::env::temp_dir;
 /// # use std::io::Write;
-/// let tf = temp_dir().join("dishub-doctest").join("ops-unfollow_feeds-verify-1");
+/// let tf = temp_dir().join("dishub-doctest").join("ops-unfollow_feeds-verify-0");
 /// fs::create_dir_all(&tf).unwrap();
 /// File::create(tf.join("feeds.toml")).unwrap().write(&[]).unwrap();
 ///
-/// assert_eq!(unfollow_feeds::verify(&("$TEMP/ops-unfollow_feeds-verify-1".to_string(), tf.clone())),
+/// assert_eq!(unfollow_feeds::verify(&("$TEMP/ops-unfollow_feeds-verify-0".to_string(), tf.clone())),
 ///            Ok(tf.join("feeds.toml")));
 /// assert!(tf.join("feeds.toml").exists());
 /// ```
@@ -48,11 +48,11 @@ use std::path::PathBuf;
 /// # use dishub::ops::unfollow_feeds;
 /// # use std::env::temp_dir;
 /// # use dishub::Error;
-/// let tf = temp_dir().join("dishub-doctest").join("ops-unfollow_feeds-verify-0");
-/// assert_eq!(unfollow_feeds::verify(&("$TEMP/ops-unfollow_feeds-verify-0".to_string(), tf)),
+/// let tf = temp_dir().join("dishub-doctest").join("ops-unfollow_feeds-verify-1");
+/// assert_eq!(unfollow_feeds::verify(&("$TEMP/ops-unfollow_feeds-verify-1".to_string(), tf)),
 ///            Err(Error::RequiredFileFromSubsystemNonexistant {
 ///                    subsys: "add-feeds",
-///                    fname: "$TEMP/ops-unfollow_feeds-verify-0/feeds.toml".to_string(),
+///                    fname: "$TEMP/ops-unfollow_feeds-verify-1/feeds.toml".to_string(),
 ///                }));
 /// ```
 pub fn verify(config_dir: &(String, PathBuf)) -> Result<PathBuf, Error> {
