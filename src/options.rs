@@ -39,7 +39,7 @@ pub enum Subsystem {
     UnfollowFeeds,
     /// Run the activity-posting daemon
     StartDaemon {
-        /// How long to sleep between each iteration. Default: 5 minutes
+        /// How long to sleep between each iteration. Default: 1 minute
         sleep: Duration,
     },
 }

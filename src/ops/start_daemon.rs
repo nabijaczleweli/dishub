@@ -130,7 +130,7 @@ pub fn verify(config_dir: &(String, PathBuf)) -> Result<(PathBuf, PathBuf), Erro
 ///
 /// let new_feeds: Vec<_> = feeds.iter().filter(|f| start_daemon::feeds_filter(&mut out, f)).collect();
 ///
-/// assert_eq!(&out[..], &b"Too early to re-poll nabijaczleweli/dishub.\n"[..]);
+/// assert_eq!(&out[..], &b"Too early to re-poll nabijaczleweli/dishub\n"[..]);
 /// assert_eq!(&new_feeds[..], &[&feeds[0], &feeds[2]]);
 /// # }
 /// ```
@@ -139,7 +139,7 @@ pub fn feeds_filter<W: Write>(output: &mut W, f: &Feed) -> bool {
     let now = now.with_timezone(now.offset());
 
     if f.next_min.is_some() && *f.next_min.as_ref().unwrap() > now {
-        writeln!(output, "Too early to re-poll {}.", f.subject).unwrap();
+        writeln!(output, "Too early to re-poll {}", f.subject).unwrap();
         false
     } else {
         true

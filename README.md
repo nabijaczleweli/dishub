@@ -2,3 +2,4 @@
 Rust app for posting GitHub activity on Discord.
 
 ## [Documentation](https://cdn.rawgit.com/nabijaczleweli/dishub/doc/dishub/index.html)
+## [Manpages](https://cdn.rawgit.com/nabijaczleweli/dishub/man/dishub.1.html)
