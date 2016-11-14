@@ -7,7 +7,7 @@ readme = "README.md"
 keywords = ["discord", "github", "activity", "post"]
 license = "MIT"
 # Remember to also update in appveyor.yml
-version = "0.1.0"
+version = "0.1.1"
 # Remember to also update in dishub.md
 authors = ["nabijaczleweli <nabijaczleweli@gmail.com>"]
 exclude = ["*.enc"]
