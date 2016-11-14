@@ -1,0 +1,30 @@
+{
+  "push_id": 1396747461,
+  "size": 2,
+  "distinct_size": 1,
+  "ref": "refs/heads/doc",
+  "head": "46650797f4aec4d373c647062eb3df288ee7b8f2",
+  "before": "4d28f4b488f04c35135af7576ff5fd1f0ce53c7a",
+  "commits": [
+    {
+      "sha": "46650797f4aec4d373c647062eb3df288ee7b8f2",
+      "author": {
+        "email": "nabijaczleweli@gmail.com",
+        "name": "Nabijaczleweli Autouploader Bot"
+      },
+      "message": "Update docs for commits f69e263c6caf...40e07efdf879",
+      "distinct": true,
+      "url": "https://api.github.com/repos/nabijaczleweli/dishub/commits/46650797f4aec4d373c647062eb3df288ee7b8f2"
+    },
+    {
+      "sha": "8eab6892203102e66a4b1eed26abc5a24cad8afe",
+      "author": {
+        "email": "nabijaczleweli@gmail.com",
+        "name": "Nabijaczleweli Autouploader Bot"
+      },
+      "message": "Update manual for commits 1c8725dc2222...58998fadba13",
+      "distinct": false,
+      "url": "https://api.github.com/repos/nabijaczleweli/cargo-update/commits/8eab6892203102e66a4b1eed26abc5a24cad8afe"
+    }
+  ]
+}

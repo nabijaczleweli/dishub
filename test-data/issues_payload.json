@@ -1,0 +1,59 @@
+{
+  "action": "opened",
+  "issue": {
+    "url": "https://api.github.com/repos/nabijaczleweli/cargo-update/issues/11",
+    "repository_url": "https://api.github.com/repos/nabijaczleweli/cargo-update",
+    "labels_url": "https://api.github.com/repos/nabijaczleweli/cargo-update/issues/11/labels{/name}",
+    "comments_url": "https://api.github.com/repos/nabijaczleweli/cargo-update/issues/11/comments",
+    "events_url": "https://api.github.com/repos/nabijaczleweli/cargo-update/issues/11/events",
+    "html_url": "https://github.com/nabijaczleweli/cargo-update/issues/11",
+    "id": 188390341,
+    "number": 11,
+    "title": "'unknown error occurred': It",
+    "user": {
+      "login": "liigo",
+      "id": 346530,
+      "avatar_url": "https://avatars.githubusercontent.com/u/346530?v=3",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/liigo",
+      "html_url": "https://github.com/liigo",
+      "followers_url": "https://api.github.com/users/liigo/followers",
+      "following_url": "https://api.github.com/users/liigo/following{/other_user}",
+      "gists_url": "https://api.github.com/users/liigo/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/liigo/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/liigo/subscriptions",
+      "organizations_url": "https://api.github.com/users/liigo/orgs",
+      "repos_url": "https://api.github.com/users/liigo/repos",
+      "events_url": "https://api.github.com/users/liigo/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/liigo/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "labels": [
+      {
+        "id": 468744049,
+        "url": "https://api.github.com/repos/nabijaczleweli/cargo-update/labels/bug",
+        "name": "bug",
+        "color": "ee0701",
+        "default": true
+      },
+      {
+        "id": 468744057,
+        "url": "https://api.github.com/repos/nabijaczleweli/cargo-update/labels/question",
+        "name": "question",
+        "color": "cc317c",
+        "default": true
+      }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignee": null,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2016-11-10T00:42:17Z",
+    "updated_at": "2016-11-10T00:42:17Z",
+    "closed_at": null,
+    "body": "```C:\\Users\\liigo>cargo install-update```"
+  }
+}

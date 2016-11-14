@@ -237,7 +237,7 @@ pub struct GollumPayload {
     pub sha: String,
     /// The URL to the Wiki page.
     ///
-    /// Can be used straight as a user-facing URL.
+    /// This is the part after `https://github.com`
     pub html_url: String,
 }
 
@@ -337,7 +337,7 @@ impl Event {
                     actor: j["actor"]["display_login"].as_str().unwrap().to_string(),
                     repo: j["repo"]["name"].as_str().unwrap().to_string(),
                     id: u64::from_str(j["id"].as_str().unwrap()).unwrap(),
-                    payload: EventPayload::from(j),
+                    payload: EventPayload::from(j["type"].as_str().unwrap(), &j["payload"]),
                 }
             })
             .collect()
@@ -378,7 +378,7 @@ impl Event {
             }
             EventPayload::Delete { .. } => vec![],
             EventPayload::Fork { ref new_slug } => vec![format!("https://github.com/{}", new_slug)],
-            EventPayload::Gollum { ref pages } => pages.iter().map(|p| p.html_url.clone()).collect(),
+            EventPayload::Gollum { ref pages } => pages.iter().map(|p| format!("https://github.com{}", p.html_url)).collect(),
             EventPayload::IssueComment { issue, id, .. } => vec![format!("https://github.com/{}/issues/{}#issuecomment-{}", self.repo, issue, id)],
             EventPayload::Issues { number, .. } => vec![format!("https://github.com/{}/issues/{}", self.repo, number)],
             EventPayload::Member { .. } => vec![],
@@ -395,36 +395,36 @@ impl Event {
 }
 
 impl EventPayload {
-    /// Parse the payload from the *whole* event.
+    /// Parse the payload from the `payload` key of the event and the type.
     ///
     /// Not meant to be used directly, use `Event::parse()` instead.
-    pub fn from(ev: &JsonValue) -> EventPayload {
-        match ev["type"].as_str().unwrap() {
+    pub fn from(tpe: &str, payload: &JsonValue) -> EventPayload {
+        match tpe {
             "CommitCommentEvent" => {
                 EventPayload::CommitComment {
-                    content: ev["payload"]["comment"]["body"].as_str().unwrap().to_string(),
-                    commit_id: ev["payload"]["comment"]["commit_id"].as_str().unwrap().to_string(),
-                    id: ev["payload"]["comment"]["id"].as_number().unwrap().into(),
+                    content: payload["comment"]["body"].as_str().unwrap().to_string(),
+                    commit_id: payload["comment"]["commit_id"].as_str().unwrap().to_string(),
+                    id: payload["comment"]["id"].as_number().unwrap().into(),
                 }
             }
             "CreateEvent" => {
                 EventPayload::Create {
-                    ref_type: ev["payload"]["ref_type"].as_str().unwrap().to_string(),
-                    ref_name: ev["payload"]["ref"].as_str().map(str::to_string),
-                    master_branch: ev["payload"]["master_branch"].as_str().unwrap().to_string(),
-                    repo_description: ev["payload"]["description"].as_str().unwrap().to_string(),
+                    ref_type: payload["ref_type"].as_str().unwrap().to_string(),
+                    ref_name: payload["ref"].as_str().map(str::to_string),
+                    master_branch: payload["master_branch"].as_str().unwrap().to_string(),
+                    repo_description: payload["description"].as_str().unwrap().to_string(),
                 }
             }
             "DeleteEvent" => {
                 EventPayload::Delete {
-                    ref_type: ev["payload"]["ref_type"].as_str().unwrap().to_string(),
-                    ref_name: ev["payload"]["ref"].as_str().unwrap().to_string(),
+                    ref_type: payload["ref_type"].as_str().unwrap().to_string(),
+                    ref_name: payload["ref"].as_str().unwrap().to_string(),
                 }
             }
-            "ForkEvent" => EventPayload::Fork { new_slug: ev["payload"]["forkee"]["full_name"].as_str().unwrap().to_string() },
+            "ForkEvent" => EventPayload::Fork { new_slug: payload["forkee"]["full_name"].as_str().unwrap().to_string() },
             "GollumEvent" => {
                 EventPayload::Gollum {
-                    pages: ev["payload"]["pages"]
+                    pages: payload["pages"]
                         .members()
                         .map(|pg| {
                             GollumPayload {
@@ -440,62 +440,62 @@ impl EventPayload {
             }
             "IssueCommentEvent" => {
                 EventPayload::IssueComment {
-                    action: ev["payload"]["action"].as_str().unwrap().to_string(),
-                    issue: ev["payload"]["issue"]["number"].as_number().unwrap().into(),
-                    body: ev["payload"]["comment"]["body"].as_str().unwrap().to_string(),
-                    id: ev["payload"]["comment"]["id"].as_number().unwrap().into(),
+                    action: payload["action"].as_str().unwrap().to_string(),
+                    issue: payload["issue"]["number"].as_number().unwrap().into(),
+                    body: payload["comment"]["body"].as_str().unwrap().to_string(),
+                    id: payload["comment"]["id"].as_number().unwrap().into(),
                 }
             }
             "IssuesEvent" => {
                 EventPayload::Issues {
-                    action: ev["payload"]["action"].as_str().unwrap().to_string(),
-                    number: ev["payload"]["issue"]["number"].as_number().unwrap().into(),
-                    title: ev["payload"]["issue"]["title"].as_str().unwrap().to_string(),
-                    body: ev["payload"]["issue"]["body"].as_str().unwrap().to_string(),
-                    labels: ev["payload"]["issue"]["labels"].members().map(|l| l["name"].as_str().unwrap().to_string()).collect(),
+                    action: payload["action"].as_str().unwrap().to_string(),
+                    number: payload["issue"]["number"].as_number().unwrap().into(),
+                    title: payload["issue"]["title"].as_str().unwrap().to_string(),
+                    body: payload["issue"]["body"].as_str().unwrap().to_string(),
+                    labels: payload["issue"]["labels"].members().map(|l| l["name"].as_str().unwrap().to_string()).collect(),
                 }
             }
             "MemberEvent" => {
                 EventPayload::Member {
-                    action: ev["payload"]["action"].as_str().unwrap().to_string(),
-                    user: ev["payload"]["member"]["login"].as_str().unwrap().to_string(),
+                    action: payload["action"].as_str().unwrap().to_string(),
+                    user: payload["member"]["login"].as_str().unwrap().to_string(),
                 }
             }
             "PublicEvent" => EventPayload::Public,
             "PullRequestEvent" => {
                 EventPayload::PullRequest {
-                    action: ev["payload"]["action"].as_str().unwrap().to_string(),
-                    number: ev["payload"]["number"].as_number().unwrap().into(),
-                    title: ev["payload"]["pull_request"]["title"].as_str().unwrap().to_string(),
-                    body: ev["payload"]["pull_request"]["body"].as_str().unwrap().to_string(),
-                    merged: ev["payload"]["pull_request"]["merged"].as_bool().unwrap(),
+                    action: payload["action"].as_str().unwrap().to_string(),
+                    number: payload["number"].as_number().unwrap().into(),
+                    title: payload["pull_request"]["title"].as_str().unwrap().to_string(),
+                    body: payload["pull_request"]["body"].as_str().unwrap().to_string(),
+                    merged: payload["pull_request"]["merged"].as_bool().unwrap(),
                 }
             }
             "PullRequestReviewEvent" => {
                 EventPayload::PullRequestReview {
-                    action: ev["payload"]["action"].as_str().unwrap().to_string(),
-                    pr: ev["payload"]["pull_request"]["number"].as_number().unwrap().into(),
-                    state: ev["payload"]["review"]["state"].as_str().unwrap().to_string(),
-                    body: ev["payload"]["review"]["body"].as_str().unwrap().to_string(),
-                    id: ev["payload"]["review"]["id"].as_number().unwrap().into(),
+                    action: payload["action"].as_str().unwrap().to_string(),
+                    pr: payload["pull_request"]["number"].as_number().unwrap().into(),
+                    state: payload["review"]["state"].as_str().unwrap().to_string(),
+                    body: payload["review"]["body"].as_str().unwrap().to_string(),
+                    id: payload["review"]["id"].as_number().unwrap().into(),
                 }
             }
             "PullRequestReviewCommentEvent" => {
                 EventPayload::PullRequestReviewComment {
-                    action: ev["payload"]["action"].as_str().unwrap().to_string(),
-                    pr: ev["payload"]["pull_request"]["number"].as_number().unwrap().into(),
-                    body: ev["payload"]["comment"]["body"].as_str().unwrap().to_string(),
-                    id: ev["payload"]["comment"]["id"].as_number().unwrap().into(),
+                    action: payload["action"].as_str().unwrap().to_string(),
+                    pr: payload["pull_request"]["number"].as_number().unwrap().into(),
+                    body: payload["comment"]["body"].as_str().unwrap().to_string(),
+                    id: payload["comment"]["id"].as_number().unwrap().into(),
                 }
             }
             "PushEvent" => {
                 EventPayload::Push {
-                    pushed_ref: ev["payload"]["ref"].as_str().unwrap().to_string(),
-                    prev_head: ev["payload"]["before"].as_str().unwrap().to_string(),
-                    new_head: ev["payload"]["head"].as_str().unwrap().to_string(),
-                    size: ev["payload"]["size"].as_number().unwrap().into(),
-                    distinct_size: ev["payload"]["distinct_size"].as_number().unwrap().into(),
-                    commits: ev["payload"]["commits"]
+                    pushed_ref: payload["ref"].as_str().unwrap().to_string(),
+                    prev_head: payload["before"].as_str().unwrap().to_string(),
+                    new_head: payload["head"].as_str().unwrap().to_string(),
+                    size: payload["size"].as_number().unwrap().into(),
+                    distinct_size: payload["distinct_size"].as_number().unwrap().into(),
+                    commits: payload["commits"]
                         .members()
                         .map(|c| {
                             Commit {
@@ -511,16 +511,16 @@ impl EventPayload {
             }
             "ReleaseEvent" => {
                 EventPayload::Release {
-                    action: ev["payload"]["action"].as_str().unwrap().to_string(),
-                    tag_name: ev["payload"]["release"]["tag_name"].as_str().unwrap().to_string(),
-                    target: ev["payload"]["release"]["target_commitish"].as_str().unwrap().to_string(),
-                    draft: ev["payload"]["release"]["draft"].as_bool().unwrap(),
-                    prerelease: ev["payload"]["release"]["prerelease"].as_bool().unwrap(),
-                    name: ev["payload"]["release"]["name"].as_str().map(str::to_string),
-                    body: ev["payload"]["release"]["body"].as_str().map(str::to_string),
+                    action: payload["action"].as_str().unwrap().to_string(),
+                    tag_name: payload["release"]["tag_name"].as_str().unwrap().to_string(),
+                    target: payload["release"]["target_commitish"].as_str().unwrap().to_string(),
+                    draft: payload["release"]["draft"].as_bool().unwrap(),
+                    prerelease: payload["release"]["prerelease"].as_bool().unwrap(),
+                    name: payload["release"]["name"].as_str().map(str::to_string),
+                    body: payload["release"]["body"].as_str().map(str::to_string),
                 }
             }
-            "WatchEvent" => EventPayload::Watch { action: ev["payload"]["action"].as_str().unwrap().to_string() },
+            "WatchEvent" => EventPayload::Watch { action: payload["action"].as_str().unwrap().to_string() },
             t => EventPayload::Other { event_type: t.to_string() },
         }
     }
@@ -550,10 +550,8 @@ impl fmt::Display for Event {
             }
             EventPayload::Gollum { ref pages } => {
                 try!(write!(f, "{} changed wiki on {}:", self.actor, self.repo));
-                for (i, &GollumPayload { ref title, ref action, .. }) in pages.iter().enumerate() {
-                    if i != pages.len() - 1 {
-                        try!(writeln!(f, ""));
-                    }
+                for &GollumPayload { ref title, ref action, .. } in pages {
+                    try!(writeln!(f, ""));
                     try!(write!(f, "  {} \"{}\"", action, title));
                 }
             }
@@ -586,7 +584,7 @@ impl fmt::Display for Event {
                 try!(write!(f, "{} {} as {} #{} on {}", self.actor, action, state, pr, self.repo));
             }
             EventPayload::PullRequestReviewComment { ref action, pr, .. } => {
-                try!(write!(f, "{} {} #{} on {}", self.actor, action, pr, self.repo));
+                try!(write!(f, "{} {} comment to #{} on {}", self.actor, action, pr, self.repo));
             }
             EventPayload::Push { ref pushed_ref, distinct_size, .. } => {
                 try!(write!(f,

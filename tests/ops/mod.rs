@@ -4,8 +4,9 @@ use std::env::temp_dir;
 
 mod init;
 mod feed;
-mod app_tokens;
+mod event;
 mod add_feeds;
+mod app_tokens;
 mod unfollow_feeds;
 
 

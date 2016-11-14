@@ -32,6 +32,11 @@
 		},
 		{
 			"follow_symlinks": true,
+			"name": "Test data",
+			"path": "test-data"
+		},
+		{
+			"follow_symlinks": true,
 			"name": "Manpages",
 			"path": "man"
 		},

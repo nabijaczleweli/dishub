@@ -1,0 +1,73 @@
+{
+  "action": "published",
+  "release": {
+    "url": "https://api.github.com/repos/nabijaczleweli/cargo-update/releases/4629623",
+    "assets_url": "https://api.github.com/repos/nabijaczleweli/cargo-update/releases/4629623/assets",
+    "upload_url": "https://uploads.github.com/repos/nabijaczleweli/cargo-update/releases/4629623/assets{?name,label}",
+    "html_url": "https://github.com/nabijaczleweli/cargo-update/releases/tag/v0.5.0",
+    "id": 4629623,
+    "tag_name": "v0.5.0",
+    "target_commitish": "master",
+    "name": null,
+    "draft": false,
+    "author": {
+      "login": "nabijaczleweli",
+      "id": 6709544,
+      "avatar_url": "https://avatars.githubusercontent.com/u/6709544?v=3",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/nabijaczleweli",
+      "html_url": "https://github.com/nabijaczleweli",
+      "followers_url": "https://api.github.com/users/nabijaczleweli/followers",
+      "following_url": "https://api.github.com/users/nabijaczleweli/following{/other_user}",
+      "gists_url": "https://api.github.com/users/nabijaczleweli/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/nabijaczleweli/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/nabijaczleweli/subscriptions",
+      "organizations_url": "https://api.github.com/users/nabijaczleweli/orgs",
+      "repos_url": "https://api.github.com/users/nabijaczleweli/repos",
+      "events_url": "https://api.github.com/users/nabijaczleweli/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/nabijaczleweli/received_events",
+      "type": "User",
+      "site_admin": false
+    },
+    "prerelease": false,
+    "created_at": "2016-11-10T20:51:38Z",
+    "published_at": "2016-11-10T20:55:12Z",
+    "assets": [
+      {
+        "url": "https://api.github.com/repos/nabijaczleweli/cargo-update/releases/assets/2624495",
+        "id": 2624495,
+        "name": "cargo-install-update-man-v0.5.0.tbz2",
+        "label": "",
+        "uploader": {
+          "login": "nabijaczleweli",
+          "id": 6709544,
+          "avatar_url": "https://avatars.githubusercontent.com/u/6709544?v=3",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/nabijaczleweli",
+          "html_url": "https://github.com/nabijaczleweli",
+          "followers_url": "https://api.github.com/users/nabijaczleweli/followers",
+          "following_url": "https://api.github.com/users/nabijaczleweli/following{/other_user}",
+          "gists_url": "https://api.github.com/users/nabijaczleweli/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/nabijaczleweli/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/nabijaczleweli/subscriptions",
+          "organizations_url": "https://api.github.com/users/nabijaczleweli/orgs",
+          "repos_url": "https://api.github.com/users/nabijaczleweli/repos",
+          "events_url": "https://api.github.com/users/nabijaczleweli/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/nabijaczleweli/received_events",
+          "type": "User",
+          "site_admin": false
+        },
+        "content_type": "application/x-gtar",
+        "state": "uploaded",
+        "size": 4326,
+        "download_count": 0,
+        "created_at": "2016-11-10T20:55:12Z",
+        "updated_at": "2016-11-10T20:55:12Z",
+        "browser_download_url": "https://github.com/nabijaczleweli/cargo-update/releases/download/v0.5.0/cargo-install-update-man-v0.5.0.tbz2"
+      }
+    ],
+    "tarball_url": "https://api.github.com/repos/nabijaczleweli/cargo-update/tarball/v0.5.0",
+    "zipball_url": "https://api.github.com/repos/nabijaczleweli/cargo-update/zipball/v0.5.0",
+    "body": null
+  }
+}
