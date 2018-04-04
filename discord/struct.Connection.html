@@ -9,14 +9,18 @@
 
     <title>discord::Connection - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'><a href='index.html'>discord</a></p><script>window.sidebarCurrent = {name: 'Connection', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Connection</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.set_game">set_game</a><a href="#method.set_game_name">set_game_name</a><a href="#method.set_presence">set_presence</a><a href="#method.recv_event">recv_event</a><a href="#method.shutdown">shutdown</a><a href="#method.sync_servers">sync_servers</a><a href="#method.sync_calls">sync_calls</a><a href="#method.download_all_members">download_all_members</a></div></div><p class='location'><a href='index.html'>discord</a></p><script>window.sidebarCurrent = {name: 'Connection', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,52 +54,49 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>discord</a>::<wbr><a class='struct' href=''>Connection</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>discord</a>::<wbr><a class="struct" href=''>Connection</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-214' class='srclink' href='../src/discord/connection.rs.html#43-55' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/discord/connection.rs.html#43-55' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct Connection { /* fields omitted */ }</pre><div class='docblock'><p>Websocket connection to the Discord servers.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../discord/struct.Connection.html' title='discord::Connection'>Connection</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-223' class='srclink' href='../src/discord/connection.rs.html#57-413' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(base_url: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, token: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, shard_info: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 2]</a>&gt;) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='struct' href='../discord/struct.Connection.html' title='discord::Connection'>Connection</a>, <a class='struct' href='../discord/model/struct.ReadyEvent.html' title='discord::model::ReadyEvent'>ReadyEvent</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;</code></span></h4>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../discord/struct.Connection.html" title="struct discord::Connection">Connection</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/connection.rs.html#57-413' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;base_url: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;token: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;shard_info: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 2]</a>&gt;<br>) -&gt; <a class="type" href="../discord/type.Result.html" title="type discord::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="struct" href="../discord/struct.Connection.html" title="struct discord::Connection">Connection</a>, <a class="struct" href="../discord/model/struct.ReadyEvent.html" title="struct discord::model::ReadyEvent">ReadyEvent</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/connection.rs.html#66-138' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Establish a connection to the Discord websocket servers.</p>
-
 <p>Returns both the <code>Connection</code> and the <code>ReadyEvent</code> which is always the
 first event received and contains initial state information.</p>
-
 <p>Usually called internally by <code>Discord::connect</code>, which provides both
 the token and URL and an optional user-given shard ID and total shard
 count.</p>
-</div><h4 id='method.set_game' class='method'><span id='set_game.v' class='invisible'><code>fn <a href='#method.set_game' class='fnname'>set_game</a>(&amp;self, game: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../discord/model/struct.Game.html' title='discord::model::Game'>Game</a>&gt;)</code></span></h4>
+</div><h4 id='method.set_game' class="method"><span id='set_game.v' class='invisible'><code>pub fn <a href='#method.set_game' class='fnname'>set_game</a>(&amp;self, game: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../discord/model/struct.Game.html" title="struct discord::model::Game">Game</a>&gt;)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/connection.rs.html#141-143' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Change the game information that this client reports as playing.</p>
-</div><h4 id='method.set_game_name' class='method'><span id='set_game_name.v' class='invisible'><code>fn <a href='#method.set_game_name' class='fnname'>set_game_name</a>(&amp;self, name: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>)</code></span></h4>
+</div><h4 id='method.set_game_name' class="method"><span id='set_game_name.v' class='invisible'><code>pub fn <a href='#method.set_game_name' class='fnname'>set_game_name</a>(&amp;self, name: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/connection.rs.html#147-149' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Set the client to be playing this game, with defaults used for any
 extended information.</p>
-</div><h4 id='method.set_presence' class='method'><span id='set_presence.v' class='invisible'><code>fn <a href='#method.set_presence' class='fnname'>set_presence</a>(&amp;self, game: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../discord/model/struct.Game.html' title='discord::model::Game'>Game</a>&gt;, status: <a class='enum' href='../discord/model/enum.OnlineStatus.html' title='discord::model::OnlineStatus'>OnlineStatus</a>, afk: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>)</code></span></h4>
+</div><h4 id='method.set_presence' class="method"><span id='set_presence.v' class='invisible'><code>pub fn <a href='#method.set_presence' class='fnname'>set_presence</a>(&amp;self, game: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../discord/model/struct.Game.html" title="struct discord::model::Game">Game</a>&gt;, status: <a class="enum" href="../discord/model/enum.OnlineStatus.html" title="enum discord::model::OnlineStatus">OnlineStatus</a>, afk: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/connection.rs.html#155-173' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Sets the active presence of the client, including game and/or status
 information.</p>
-
 <p><code>afk</code> will help Discord determine where to send notifications.</p>
-</div><h4 id='method.recv_event' class='method'><span id='recv_event.v' class='invisible'><code>fn <a href='#method.recv_event' class='fnname'>recv_event</a>(&amp;mut self) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='enum' href='../discord/model/enum.Event.html' title='discord::model::Event'>Event</a>&gt;</code></span></h4>
+</div><h4 id='method.recv_event' class="method"><span id='recv_event.v' class='invisible'><code>pub fn <a href='#method.recv_event' class='fnname'>recv_event</a>(&amp;mut self) -&gt; <a class="type" href="../discord/type.Result.html" title="type discord::Result">Result</a>&lt;<a class="enum" href="../discord/model/enum.Event.html" title="enum discord::model::Event">Event</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/connection.rs.html#198-268' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Receive an event over the websocket, blocking until one is available.</p>
-</div><h4 id='method.shutdown' class='method'><span id='shutdown.v' class='invisible'><code>fn <a href='#method.shutdown' class='fnname'>shutdown</a>(self) -&gt; <a class='type' href='../discord/type.Result.html' title='discord::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></span></h4>
+</div><h4 id='method.shutdown' class="method"><span id='shutdown.v' class='invisible'><code>pub fn <a href='#method.shutdown' class='fnname'>shutdown</a>(self) -&gt; <a class="type" href="../discord/type.Result.html" title="type discord::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/connection.rs.html#340-351' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Cleanly shut down the websocket connection. Optional.</p>
-</div><h4 id='method.sync_servers' class='method'><span id='sync_servers.v' class='invisible'><code>fn <a href='#method.sync_servers' class='fnname'>sync_servers</a>(&amp;self, servers: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></span></h4>
+</div><h4 id='method.sync_servers' class="method"><span id='sync_servers.v' class='invisible'><code>pub fn <a href='#method.sync_servers' class='fnname'>sync_servers</a>(&amp;self, servers: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="struct" href="../discord/model/struct.ServerId.html" title="struct discord::model::ServerId">ServerId</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/connection.rs.html#373-379' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Requests a download of online member lists.</p>
-
 <p>It is recommended to avoid calling this method until the online member list
 is actually needed, especially for large servers, in order to save bandwidth
 and memory.</p>
-
 <p>Can be used with <code>State::all_servers</code>.</p>
-</div><h4 id='method.sync_calls' class='method'><span id='sync_calls.v' class='invisible'><code>fn <a href='#method.sync_calls' class='fnname'>sync_calls</a>(&amp;self, channels: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>)</code></span></h4>
+</div><h4 id='method.sync_calls' class="method"><span id='sync_calls.v' class='invisible'><code>pub fn <a href='#method.sync_calls' class='fnname'>sync_calls</a>(&amp;self, channels: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="struct" href="../discord/model/struct.ChannelId.html" title="struct discord::model::ChannelId">ChannelId</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/connection.rs.html#384-394' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Request a synchronize of active calls for the specified channels.</p>
-
 <p>Can be used with <code>State::all_private_channels</code>.</p>
-</div><h4 id='method.download_all_members' class='method'><span id='download_all_members.v' class='invisible'><code>fn <a href='#method.download_all_members' class='fnname'>download_all_members</a>(&amp;mut self, state: &amp;mut <a class='struct' href='../discord/struct.State.html' title='discord::State'>State</a>)</code></span></h4>
+</div><h4 id='method.download_all_members' class="method"><span id='download_all_members.v' class='invisible'><code>pub fn <a href='#method.download_all_members' class='fnname'>download_all_members</a>(&amp;mut self, state: &amp;mut <a class="struct" href="../discord/struct.State.html" title="struct discord::State">State</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/connection.rs.html#400-412' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Requests a download of all member information for large servers.</p>
-
 <p>The members lists are cleared on call, and then refilled as chunks are received. When
 <code>unknown_members()</code> returns 0, the download has completed.</p>
 </div></div></section>
@@ -103,18 +112,22 @@ and memory.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -146,11 +159,8 @@ and memory.</p>
     <script>
         window.rootPath = "../";
         window.currentCrate = "discord";
-        window.playgroundUrl = "";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    
     <script defer src="../search-index.js"></script>
 </body>
 </html>

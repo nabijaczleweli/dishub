@@ -9,14 +9,18 @@
 
     <title>response.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,7 +54,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -178,141 +190,141 @@
 <span id="134">134</span>
 <span id="135">135</span>
 <span id="136">136</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Structs for WebSocket responses</span>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>option</span>::<span class='prelude-ty'>Option</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::{<span class='ident'>Read</span>, <span class='ident'>Write</span>};
+</pre><pre class="rust ">
+<span class="doccomment">//! Structs for WebSocket responses</span>
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">option</span>::<span class="prelude-ty">Option</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="ident">Read</span>, <span class="ident">Write</span>};
 
-<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>status</span>::<span class='ident'>StatusCode</span>;
-<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>buffer</span>::<span class='ident'>BufReader</span>;
-<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>version</span>::<span class='ident'>HttpVersion</span>;
-<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>header</span>::<span class='ident'>Headers</span>;
-<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>header</span>::{<span class='ident'>Connection</span>, <span class='ident'>ConnectionOption</span>};
-<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>header</span>::{<span class='ident'>Upgrade</span>, <span class='ident'>Protocol</span>, <span class='ident'>ProtocolName</span>};
-<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>http</span>::<span class='ident'>h1</span>::<span class='ident'>parse_response</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">status</span>::<span class="ident">StatusCode</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">buffer</span>::<span class="ident">BufReader</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">version</span>::<span class="ident">HttpVersion</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::<span class="ident">Headers</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::{<span class="ident">Connection</span>, <span class="ident">ConnectionOption</span>};
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::{<span class="ident">Upgrade</span>, <span class="ident">Protocol</span>, <span class="ident">ProtocolName</span>};
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">http</span>::<span class="ident">h1</span>::<span class="ident">parse_response</span>;
 
-<span class='kw'>use</span> <span class='ident'>unicase</span>::<span class='ident'>UniCase</span>;
+<span class="kw">use</span> <span class="ident">unicase</span>::<span class="ident">UniCase</span>;
 
-<span class='kw'>use</span> <span class='ident'>header</span>::{<span class='ident'>WebSocketAccept</span>, <span class='ident'>WebSocketProtocol</span>, <span class='ident'>WebSocketExtensions</span>};
+<span class="kw">use</span> <span class="ident">header</span>::{<span class="ident">WebSocketAccept</span>, <span class="ident">WebSocketProtocol</span>, <span class="ident">WebSocketExtensions</span>};
 
-<span class='kw'>use</span> <span class='ident'>client</span>::{<span class='ident'>Client</span>, <span class='ident'>Request</span>, <span class='ident'>Sender</span>, <span class='ident'>Receiver</span>};
-<span class='kw'>use</span> <span class='ident'>result</span>::{<span class='ident'>WebSocketResult</span>, <span class='ident'>WebSocketError</span>};
-<span class='kw'>use</span> <span class='ident'>dataframe</span>::<span class='ident'>DataFrame</span>;
-<span class='kw'>use</span> <span class='ident'>ws</span>::<span class='ident'>dataframe</span>::<span class='ident'>DataFrame</span> <span class='kw'>as</span> <span class='ident'>DataFrameable</span>;
-<span class='kw'>use</span> <span class='ident'>ws</span>;
+<span class="kw">use</span> <span class="ident">client</span>::{<span class="ident">Client</span>, <span class="ident">Request</span>, <span class="ident">Sender</span>, <span class="ident">Receiver</span>};
+<span class="kw">use</span> <span class="ident">result</span>::{<span class="ident">WebSocketResult</span>, <span class="ident">WebSocketError</span>};
+<span class="kw">use</span> <span class="ident">dataframe</span>::<span class="ident">DataFrame</span>;
+<span class="kw">use</span> <span class="ident">ws</span>::<span class="ident">dataframe</span>::<span class="ident">DataFrame</span> <span class="kw">as</span> <span class="ident">DataFrameable</span>;
+<span class="kw">use</span> <span class="ident">ws</span>;
 
-<span class='doccomment'>/// Represents a WebSocket response.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Response</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Read</span>, <span class='ident'>W</span>: <span class='ident'>Write</span><span class='op'>&gt;</span> {
-	<span class='doccomment'>/// The status of the response</span>
-	<span class='kw'>pub</span> <span class='ident'>status</span>: <span class='ident'>StatusCode</span>,
-	<span class='doccomment'>/// The headers contained in this response</span>
-	<span class='kw'>pub</span> <span class='ident'>headers</span>: <span class='ident'>Headers</span>,
-	<span class='doccomment'>/// The HTTP version of this response</span>
-	<span class='kw'>pub</span> <span class='ident'>version</span>: <span class='ident'>HttpVersion</span>,
+<span class="doccomment">/// Represents a WebSocket response.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Response</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span>, <span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span> {
+	<span class="doccomment">/// The status of the response</span>
+	<span class="kw">pub</span> <span class="ident">status</span>: <span class="ident">StatusCode</span>,
+	<span class="doccomment">/// The headers contained in this response</span>
+	<span class="kw">pub</span> <span class="ident">headers</span>: <span class="ident">Headers</span>,
+	<span class="doccomment">/// The HTTP version of this response</span>
+	<span class="kw">pub</span> <span class="ident">version</span>: <span class="ident">HttpVersion</span>,
 
-	<span class='ident'>request</span>: <span class='ident'>Request</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>W</span><span class='op'>&gt;</span>
+	<span class="ident">request</span>: <span class="ident">Request</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">W</span><span class="op">&gt;</span>
 }
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>W</span><span class='op'>&gt;</span> <span class='ident'>Send</span> <span class='kw'>for</span> <span class='ident'>Response</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>W</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>R</span>: <span class='ident'>Read</span> <span class='op'>+</span> <span class='ident'>Send</span>, <span class='ident'>W</span>: <span class='ident'>Write</span> <span class='op'>+</span> <span class='ident'>Send</span> { }
+<span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">W</span><span class="op">&gt;</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">Response</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">W</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Send</span>, <span class="ident">W</span>: <span class="ident">Write</span> <span class="op">+</span> <span class="ident">Send</span> { }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Read</span>, <span class='ident'>W</span>: <span class='ident'>Write</span><span class='op'>&gt;</span> <span class='ident'>Response</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>W</span><span class='op'>&gt;</span> {
-	<span class='doccomment'>/// Reads a Response off the stream associated with a Request.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// This is called by Request.send(), and does not need to be called by the user.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>read</span>(<span class='kw-2'>mut</span> <span class='ident'>request</span>: <span class='ident'>Request</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>W</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>W</span><span class='op'>&gt;&gt;</span> {
-		<span class='kw'>let</span> (<span class='ident'>status</span>, <span class='ident'>version</span>, <span class='ident'>headers</span>) <span class='op'>=</span> {
-			<span class='kw'>let</span> <span class='ident'>reader</span> <span class='op'>=</span> <span class='ident'>request</span>.<span class='ident'>get_mut_reader</span>();
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span>, <span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">Response</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">W</span><span class="op">&gt;</span> {
+	<span class="doccomment">/// Reads a Response off the stream associated with a Request.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// This is called by Request.send(), and does not need to be called by the user.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read</span>(<span class="kw-2">mut</span> <span class="ident">request</span>: <span class="ident">Request</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">W</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">W</span><span class="op">&gt;&gt;</span> {
+		<span class="kw">let</span> (<span class="ident">status</span>, <span class="ident">version</span>, <span class="ident">headers</span>) <span class="op">=</span> {
+			<span class="kw">let</span> <span class="ident">reader</span> <span class="op">=</span> <span class="ident">request</span>.<span class="ident">get_mut_reader</span>();
 
-			<span class='kw'>let</span> <span class='ident'>response</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>parse_response</span>(<span class='ident'>reader</span>));
+			<span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">parse_response</span>(<span class="ident">reader</span>));
 
-			<span class='kw'>let</span> <span class='ident'>status</span> <span class='op'>=</span> <span class='ident'>StatusCode</span>::<span class='ident'>from_u16</span>(<span class='ident'>response</span>.<span class='ident'>subject</span>.<span class='number'>0</span>);
-			(<span class='ident'>status</span>, <span class='ident'>response</span>.<span class='ident'>version</span>, <span class='ident'>response</span>.<span class='ident'>headers</span>)
+			<span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="ident">StatusCode</span>::<span class="ident">from_u16</span>(<span class="ident">response</span>.<span class="ident">subject</span>.<span class="number">0</span>);
+			(<span class="ident">status</span>, <span class="ident">response</span>.<span class="ident">version</span>, <span class="ident">response</span>.<span class="ident">headers</span>)
 		};
 
-		<span class='prelude-val'>Ok</span>(<span class='ident'>Response</span> {
-			<span class='ident'>status</span>: <span class='ident'>status</span>,
-			<span class='ident'>headers</span>: <span class='ident'>headers</span>,
-			<span class='ident'>version</span>: <span class='ident'>version</span>,
-			<span class='ident'>request</span>: <span class='ident'>request</span>
+		<span class="prelude-val">Ok</span>(<span class="ident">Response</span> {
+			<span class="ident">status</span>: <span class="ident">status</span>,
+			<span class="ident">headers</span>: <span class="ident">headers</span>,
+			<span class="ident">version</span>: <span class="ident">version</span>,
+			<span class="ident">request</span>: <span class="ident">request</span>
 		})
 	}
 
-	<span class='doccomment'>/// Short-cut to obtain the WebSocketAccept value.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>accept</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>WebSocketAccept</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>headers</span>.<span class='ident'>get</span>()
+	<span class="doccomment">/// Short-cut to obtain the WebSocketAccept value.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">accept</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">WebSocketAccept</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">get</span>()
 	}
-	<span class='doccomment'>/// Short-cut to obtain the WebSocketProtocol value.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>protocol</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>WebSocketProtocol</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>headers</span>.<span class='ident'>get</span>()
+	<span class="doccomment">/// Short-cut to obtain the WebSocketProtocol value.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">protocol</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">WebSocketProtocol</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">get</span>()
 	}
-	<span class='doccomment'>/// Short-cut to obtain the WebSocketExtensions value.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>extensions</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>WebSocketExtensions</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>headers</span>.<span class='ident'>get</span>()
+	<span class="doccomment">/// Short-cut to obtain the WebSocketExtensions value.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">extensions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">WebSocketExtensions</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">get</span>()
 	}
-		<span class='doccomment'>/// Returns a reference to the inner Reader.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_reader</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>BufReader</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>request</span>.<span class='ident'>get_reader</span>()
+		<span class="doccomment">/// Returns a reference to the inner Reader.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_reader</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">BufReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">request</span>.<span class="ident">get_reader</span>()
 	}
-	<span class='doccomment'>/// Returns a reference to the inner Writer.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_writer</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>W</span> {
-		<span class='self'>self</span>.<span class='ident'>request</span>.<span class='ident'>get_writer</span>()
+	<span class="doccomment">/// Returns a reference to the inner Writer.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_writer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">W</span> {
+		<span class="self">self</span>.<span class="ident">request</span>.<span class="ident">get_writer</span>()
 	}
-	<span class='doccomment'>/// Returns a mutable reference to the inner Reader.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mut_reader</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BufReader</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>request</span>.<span class='ident'>get_mut_reader</span>()
+	<span class="doccomment">/// Returns a mutable reference to the inner Reader.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mut_reader</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BufReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">request</span>.<span class="ident">get_mut_reader</span>()
 	}
-	<span class='doccomment'>/// Returns a mutable reference to the inner Writer.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mut_writer</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span> {
-		<span class='self'>self</span>.<span class='ident'>request</span>.<span class='ident'>get_mut_writer</span>()
+	<span class="doccomment">/// Returns a mutable reference to the inner Writer.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mut_writer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span> {
+		<span class="self">self</span>.<span class="ident">request</span>.<span class="ident">get_mut_writer</span>()
 	}
-	<span class='doccomment'>/// Returns a reference to the request associated with this response.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_request</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>Request</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>W</span><span class='op'>&gt;</span> {
-		<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>request</span>
+	<span class="doccomment">/// Returns a reference to the request associated with this response.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_request</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">W</span><span class="op">&gt;</span> {
+		<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">request</span>
 	}
-	<span class='doccomment'>/// Return the inner Reader and Writer.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>into_inner</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>BufReader</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>, <span class='ident'>W</span>) {
-		<span class='self'>self</span>.<span class='ident'>request</span>.<span class='ident'>into_inner</span>()
+	<span class="doccomment">/// Return the inner Reader and Writer.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_inner</span>(<span class="self">self</span>) <span class="op">-&gt;</span> (<span class="ident">BufReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>, <span class="ident">W</span>) {
+		<span class="self">self</span>.<span class="ident">request</span>.<span class="ident">into_inner</span>()
 	}
 
-	<span class='doccomment'>/// Check if this response constitutes a successful handshake.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>validate</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-		<span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>status</span> <span class='op'>!=</span> <span class='ident'>StatusCode</span>::<span class='ident'>SwitchingProtocols</span> {
-			<span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>WebSocketError</span>::<span class='ident'>ResponseError</span>(<span class='string'>&quot;Status code must be Switching Protocols&quot;</span>));
+	<span class="doccomment">/// Check if this response constitutes a successful handshake.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">validate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+		<span class="kw">if</span> <span class="self">self</span>.<span class="ident">status</span> <span class="op">!=</span> <span class="ident">StatusCode</span>::<span class="ident">SwitchingProtocols</span> {
+			<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">WebSocketError</span>::<span class="ident">ResponseError</span>(<span class="string">&quot;Status code must be Switching Protocols&quot;</span>));
 		}
-		<span class='kw'>let</span> <span class='ident'>key</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>request</span>.<span class='ident'>key</span>().<span class='ident'>ok_or</span>(
-			<span class='ident'>WebSocketError</span>::<span class='ident'>RequestError</span>(<span class='string'>&quot;Request Sec-WebSocket-Key was invalid&quot;</span>)
+		<span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">request</span>.<span class="ident">key</span>().<span class="ident">ok_or</span>(
+			<span class="ident">WebSocketError</span>::<span class="ident">RequestError</span>(<span class="string">&quot;Request Sec-WebSocket-Key was invalid&quot;</span>)
 		));
-		<span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>accept</span>() <span class='op'>!=</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span>(<span class='ident'>WebSocketAccept</span>::<span class='ident'>new</span>(<span class='ident'>key</span>))) {
-			<span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>WebSocketError</span>::<span class='ident'>ResponseError</span>(<span class='string'>&quot;Sec-WebSocket-Accept is invalid&quot;</span>));
+		<span class="kw">if</span> <span class="self">self</span>.<span class="ident">accept</span>() <span class="op">!=</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>(<span class="ident">WebSocketAccept</span>::<span class="ident">new</span>(<span class="ident">key</span>))) {
+			<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">WebSocketError</span>::<span class="ident">ResponseError</span>(<span class="string">&quot;Sec-WebSocket-Accept is invalid&quot;</span>));
 		}
-		<span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>headers</span>.<span class='ident'>get</span>() <span class='op'>!=</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span>(<span class='ident'>Upgrade</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Protocol</span>{
-			<span class='ident'>name</span>: <span class='ident'>ProtocolName</span>::<span class='ident'>WebSocket</span>,
-			<span class='ident'>version</span>: <span class='prelude-val'>None</span>
+		<span class="kw">if</span> <span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">get</span>() <span class="op">!=</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>(<span class="ident">Upgrade</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Protocol</span>{
+			<span class="ident">name</span>: <span class="ident">ProtocolName</span>::<span class="ident">WebSocket</span>,
+			<span class="ident">version</span>: <span class="prelude-val">None</span>
 		}]))) {
-			<span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>WebSocketError</span>::<span class='ident'>ResponseError</span>(<span class='string'>&quot;Upgrade field must be WebSocket&quot;</span>));
+			<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">WebSocketError</span>::<span class="ident">ResponseError</span>(<span class="string">&quot;Upgrade field must be WebSocket&quot;</span>));
 		}
-		<span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>headers</span>.<span class='ident'>get</span>() <span class='op'>!=</span> <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span>(<span class='ident'>Connection</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>ConnectionOption</span>::<span class='ident'>ConnectionHeader</span>(<span class='ident'>UniCase</span>(<span class='string'>&quot;Upgrade&quot;</span>.<span class='ident'>to_string</span>()))]))) {
-			<span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>WebSocketError</span>::<span class='ident'>ResponseError</span>(<span class='string'>&quot;Connection field must be &#39;Upgrade&#39;&quot;</span>));
+		<span class="kw">if</span> <span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">get</span>() <span class="op">!=</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>(<span class="ident">Connection</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="ident">ConnectionOption</span>::<span class="ident">ConnectionHeader</span>(<span class="ident">UniCase</span>(<span class="string">&quot;Upgrade&quot;</span>.<span class="ident">to_string</span>()))]))) {
+			<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">WebSocketError</span>::<span class="ident">ResponseError</span>(<span class="string">&quot;Connection field must be &#39;Upgrade&#39;&quot;</span>));
 		}
-		<span class='prelude-val'>Ok</span>(())
+		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class='doccomment'>/// Consume this response and return a Client ready to transmit/receive data frames</span>
-	<span class='doccomment'>/// using the data frame type D, Sender B and Receiver C.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// Does not check if the response was valid. Use `validate()` to ensure that the response constitutes a successful handshake.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>begin_with</span><span class='op'>&lt;</span><span class='ident'>D</span>, <span class='ident'>B</span>, <span class='ident'>C</span><span class='op'>&gt;</span>(<span class='self'>self</span>, <span class='ident'>sender</span>: <span class='ident'>B</span>, <span class='ident'>receiver</span>: <span class='ident'>C</span>) <span class='op'>-&gt;</span> <span class='ident'>Client</span><span class='op'>&lt;</span><span class='ident'>D</span>, <span class='ident'>B</span>, <span class='ident'>C</span><span class='op'>&gt;</span>
-	<span class='kw'>where</span> <span class='ident'>B</span>: <span class='ident'>ws</span>::<span class='ident'>Sender</span>, <span class='ident'>C</span>: <span class='ident'>ws</span>::<span class='ident'>Receiver</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>, <span class='ident'>D</span>: <span class='ident'>DataFrameable</span> {
-		<span class='ident'>Client</span>::<span class='ident'>new</span>(<span class='ident'>sender</span>, <span class='ident'>receiver</span>)
+	<span class="doccomment">/// Consume this response and return a Client ready to transmit/receive data frames</span>
+	<span class="doccomment">/// using the data frame type D, Sender B and Receiver C.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// Does not check if the response was valid. Use `validate()` to ensure that the response constitutes a successful handshake.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">begin_with</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">B</span>, <span class="ident">C</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">sender</span>: <span class="ident">B</span>, <span class="ident">receiver</span>: <span class="ident">C</span>) <span class="op">-&gt;</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">B</span>, <span class="ident">C</span><span class="op">&gt;</span>
+	<span class="kw">where</span> <span class="ident">B</span>: <span class="ident">ws</span>::<span class="ident">Sender</span>, <span class="ident">C</span>: <span class="ident">ws</span>::<span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>, <span class="ident">D</span>: <span class="ident">DataFrameable</span> {
+		<span class="ident">Client</span>::<span class="ident">new</span>(<span class="ident">sender</span>, <span class="ident">receiver</span>)
 	}
-	<span class='doccomment'>/// Consume this response and return a Client ready to transmit/receive data frames.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// Does not check if the response was valid. Use `validate()` to ensure that the response constitutes a successful handshake.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>begin</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Client</span><span class='op'>&lt;</span><span class='ident'>DataFrame</span>, <span class='ident'>Sender</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span>, <span class='ident'>Receiver</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;&gt;</span> {
-		<span class='kw'>let</span> (<span class='ident'>reader</span>, <span class='ident'>writer</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>into_inner</span>();
-		<span class='kw'>let</span> <span class='ident'>sender</span> <span class='op'>=</span> <span class='ident'>Sender</span>::<span class='ident'>new</span>(<span class='ident'>writer</span>, <span class='bool-val'>true</span>);
-		<span class='kw'>let</span> <span class='ident'>receiver</span> <span class='op'>=</span> <span class='ident'>Receiver</span>::<span class='ident'>new</span>(<span class='ident'>reader</span>, <span class='bool-val'>false</span>);
-		<span class='ident'>Client</span>::<span class='ident'>new</span>(<span class='ident'>sender</span>, <span class='ident'>receiver</span>)
+	<span class="doccomment">/// Consume this response and return a Client ready to transmit/receive data frames.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// Does not check if the response was valid. Use `validate()` to ensure that the response constitutes a successful handshake.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">begin</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">DataFrame</span>, <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>, <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;&gt;</span> {
+		<span class="kw">let</span> (<span class="ident">reader</span>, <span class="ident">writer</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">into_inner</span>();
+		<span class="kw">let</span> <span class="ident">sender</span> <span class="op">=</span> <span class="ident">Sender</span>::<span class="ident">new</span>(<span class="ident">writer</span>, <span class="bool-val">true</span>);
+		<span class="kw">let</span> <span class="ident">receiver</span> <span class="op">=</span> <span class="ident">Receiver</span>::<span class="ident">new</span>(<span class="ident">reader</span>, <span class="bool-val">false</span>);
+		<span class="ident">Client</span>::<span class="ident">new</span>(<span class="ident">sender</span>, <span class="ident">receiver</span>)
 	}
 }
 </pre>
@@ -329,18 +341,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -372,11 +388,8 @@
     <script>
         window.rootPath = "../../../";
         window.currentCrate = "websocket";
-        window.playgroundUrl = "";
     </script>
-    <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
-    
     <script defer src="../../../search-index.js"></script>
 </body>
 </html>

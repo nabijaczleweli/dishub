@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors["serde"] = [];implementors["dishub"] = [];
+implementors["serde"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

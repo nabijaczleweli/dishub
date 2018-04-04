@@ -9,14 +9,18 @@
 
     <title>discord - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc mod">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'></p><script>window.sidebarCurrent = {name: 'discord', ty: 'mod', relpath: '../'};</script>
+        <p class='location'>Crate discord</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#modules">Modules</a></li><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#functions">Functions</a></li><li><a href="#types">Type Definitions</a></li></ul></div><p class='location'></p><script>window.sidebarCurrent = {name: 'discord', ty: 'mod', relpath: '../'};</script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,151 +54,162 @@
         </form>
     </nav>
 
-    <section id='main' class="content mod">
-<h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>discord</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Crate <a class="mod" href=''>discord</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-0' class='srclink' href='../src/discord/lib.rs.html#1-1331' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/discord/lib.rs.html#1-1331' title='goto source code'>[src]</a></span></h1>
 <div class='docblock'><p>Client library for the <a href="https://discordapp.com">Discord</a> API.</p>
-
 <p>The Discord API can be divided into three main components: the RESTful API
- to which calls can be made to take actions, a websocket-based permanent
- connection over which state updates are received, and the voice calling
- system.</p>
-
+to which calls can be made to take actions, a websocket-based permanent
+connection over which state updates are received, and the voice calling
+system.</p>
 <p>Log in to Discord with <code>Discord::new</code>, <code>new_cache</code>, or <code>from_bot_token</code> as appropriate.
- The resulting value can be used to make REST API calls to post messages and manipulate Discord
- state. Calling <code>connect()</code> will open a websocket connection, through which events can be
- received. These two channels are enough to write a simple chatbot which can
- read and respond to messages.</p>
-
+The resulting value can be used to make REST API calls to post messages and manipulate Discord
+state. Calling <code>connect()</code> will open a websocket connection, through which events can be
+received. These two channels are enough to write a simple chatbot which can
+read and respond to messages.</p>
 <p>For more in-depth tracking of Discord state, a <code>State</code> can be seeded with
- the <code>ReadyEvent</code> obtained when opening a <code>Connection</code> and kept updated with
- the events received over it.</p>
-
+the <code>ReadyEvent</code> obtained when opening a <code>Connection</code> and kept updated with
+the events received over it.</p>
 <p><em><b>NOTE</b>: The library has been compiled without voice support.</em>
- To join voice servers, call <code>Connection::voice</code> to get a <code>VoiceConnection</code> and use <code>connect</code>
- to join a channel, then <code>play</code> and <code>stop</code> to control playback. Manipulating deaf/mute state
- and receiving audio are also possible.</p>
-
+To join voice servers, call <code>Connection::voice</code> to get a <code>VoiceConnection</code> and use <code>connect</code>
+to join a channel, then <code>play</code> and <code>stop</code> to control playback. Manipulating deaf/mute state
+and receiving audio are also possible.</p>
 <p>For examples, see the <code>examples</code> directory in the source tree.</p>
 </div><h2 id='modules' class='section-header'><a href="#modules">Modules</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='mod' href='model/index.html'
-                                  title='discord::model'>model</a></td>
+                           <td><a class="mod" href="model/index.html"
+                                  title='mod discord::model'>model</a></td>
                            <td class='docblock-short'>
                                 <p>Struct and enum definitions of values in the Discord model.</p>
+
                            </td>
                        </tr></table><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Connection.html'
-                                  title='discord::Connection'>Connection</a></td>
+                           <td><a class="struct" href="struct.Connection.html"
+                                  title='struct discord::Connection'>Connection</a></td>
                            <td class='docblock-short'>
                                 <p>Websocket connection to the Discord servers.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.Discord.html'
-                                  title='discord::Discord'>Discord</a></td>
+                           <td><a class="struct" href="struct.Discord.html"
+                                  title='struct discord::Discord'>Discord</a></td>
                            <td class='docblock-short'>
                                 <p>Client for the Discord REST API.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.EditChannel.html'
-                                  title='discord::EditChannel'>EditChannel</a></td>
+                           <td><a class="struct" href="struct.EditChannel.html"
+                                  title='struct discord::EditChannel'>EditChannel</a></td>
                            <td class='docblock-short'>
                                 <p>Patch content for the <code>edit_channel</code> call.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.EditMember.html'
-                                  title='discord::EditMember'>EditMember</a></td>
+                           <td><a class="struct" href="struct.EditMember.html"
+                                  title='struct discord::EditMember'>EditMember</a></td>
                            <td class='docblock-short'>
                                 <p>Patch content for the <code>edit_member</code> call.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.EditProfile.html'
-                                  title='discord::EditProfile'>EditProfile</a></td>
+                           <td><a class="struct" href="struct.EditProfile.html"
+                                  title='struct discord::EditProfile'>EditProfile</a></td>
                            <td class='docblock-short'>
                                 <p>Patch content for the <code>edit_profile</code> call.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.EditServer.html'
-                                  title='discord::EditServer'>EditServer</a></td>
+                           <td><a class="struct" href="struct.EditServer.html"
+                                  title='struct discord::EditServer'>EditServer</a></td>
                            <td class='docblock-short'>
                                 <p>Patch content for the <code>edit_server</code> call.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='struct' href='struct.State.html'
-                                  title='discord::State'>State</a></td>
+                           <td><a class="struct" href="struct.State.html"
+                                  title='struct discord::State'>State</a></td>
                            <td class='docblock-short'>
                                 <p>Known state composed from received events.</p>
+
                            </td>
                        </tr></table><h2 id='enums' class='section-header'><a href="#enums">Enums</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='enum' href='enum.ChannelRef.html'
-                                  title='discord::ChannelRef'>ChannelRef</a></td>
+                           <td><a class="enum" href="enum.ChannelRef.html"
+                                  title='enum discord::ChannelRef'>ChannelRef</a></td>
                            <td class='docblock-short'>
                                 <p>A reference to a private or public channel.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='enum' href='enum.Error.html'
-                                  title='discord::Error'>Error</a></td>
+                           <td><a class="enum" href="enum.Error.html"
+                                  title='enum discord::Error'>Error</a></td>
                            <td class='docblock-short'>
                                 <p>Discord API error type.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='enum' href='enum.GetMessages.html'
-                                  title='discord::GetMessages'>GetMessages</a></td>
+                           <td><a class="enum" href="enum.GetMessages.html"
+                                  title='enum discord::GetMessages'>GetMessages</a></td>
                            <td class='docblock-short'>
                                 <p>Argument to <code>get_messages</code> to specify the desired message retrieval.</p>
+
                            </td>
                        </tr></table><h2 id='functions' class='section-header'><a href="#functions">Functions</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.get_active_maintenances.html'
-                                  title='discord::get_active_maintenances'>get_active_maintenances</a></td>
+                           <td><a class="fn" href="fn.get_active_maintenances.html"
+                                  title='fn discord::get_active_maintenances'>get_active_maintenances</a></td>
                            <td class='docblock-short'>
                                 <p>Retrieves the active maintenances from the status page.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.get_unresolved_incidents.html'
-                                  title='discord::get_unresolved_incidents'>get_unresolved_incidents</a></td>
+                           <td><a class="fn" href="fn.get_unresolved_incidents.html"
+                                  title='fn discord::get_unresolved_incidents'>get_unresolved_incidents</a></td>
                            <td class='docblock-short'>
                                 <p>Retrieves the current unresolved incidents from the status page.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.get_upcoming_maintenances.html'
-                                  title='discord::get_upcoming_maintenances'>get_upcoming_maintenances</a></td>
+                           <td><a class="fn" href="fn.get_upcoming_maintenances.html"
+                                  title='fn discord::get_upcoming_maintenances'>get_upcoming_maintenances</a></td>
                            <td class='docblock-short'>
                                 <p>Retrieves the upcoming maintenances from the status page.</p>
+
                            </td>
                        </tr>
                        <tr class=' module-item'>
-                           <td><a class='fn' href='fn.read_image.html'
-                                  title='discord::read_image'>read_image</a></td>
+                           <td><a class="fn" href="fn.read_image.html"
+                                  title='fn discord::read_image'>read_image</a></td>
                            <td class='docblock-short'>
                                 <p>Read an image from a file into a string suitable for upload.</p>
+
                            </td>
                        </tr></table><h2 id='types' class='section-header'><a href="#types">Type Definitions</a></h2>
 <table>
                        <tr class=' module-item'>
-                           <td><a class='type' href='type.Result.html'
-                                  title='discord::Result'>Result</a></td>
+                           <td><a class="type" href="type.Result.html"
+                                  title='type discord::Result'>Result</a></td>
                            <td class='docblock-short'>
                                 <p>Discord API <code>Result</code> alias type.</p>
+
                            </td>
                        </tr></table></section>
     <section id='search' class="content hidden"></section>
@@ -201,18 +224,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -244,11 +271,8 @@
     <script>
         window.rootPath = "../";
         window.currentCrate = "discord";
-        window.playgroundUrl = "";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    
     <script defer src="../search-index.js"></script>
 </body>
 </html>

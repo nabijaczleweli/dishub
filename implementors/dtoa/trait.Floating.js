@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors["dtoa"] = [];implementors["dishub"] = [];
+implementors["dtoa"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

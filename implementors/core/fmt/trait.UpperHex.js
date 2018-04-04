@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors["lazy_static"] = [];implementors["regex_syntax"] = [];implementors["libc"] = [];implementors["num"] = [];implementors["phf"] = [];implementors["openssl"] = [];implementors["chrono"] = [];implementors["serde"] = [];implementors["mime_guess"] = [];implementors["hyper"] = [];implementors["websocket"] = [];implementors["dishub"] = [];
+implementors["bitflags"] = ["impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/fmt/trait.UpperHex.html\" title=\"trait core::fmt::UpperHex\">UpperHex</a> for <a class=\"struct\" href=\"bitflags/example_generated/struct.Flags.html\" title=\"struct bitflags::example_generated::Flags\">Flags</a>",];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

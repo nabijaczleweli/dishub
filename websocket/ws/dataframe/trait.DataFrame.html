@@ -9,14 +9,18 @@
 
     <title>websocket::ws::dataframe::DataFrame - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc trait">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'><a href='../../index.html'>websocket</a>::<wbr><a href='../index.html'>ws</a>::<wbr><a href='index.html'>dataframe</a></p><script>window.sidebarCurrent = {name: 'DataFrame', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Trait DataFrame</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#required-methods">Required Methods</a><div class="sidebar-links"><a href="#tymethod.is_last">is_last</a><a href="#tymethod.opcode">opcode</a><a href="#tymethod.reserved">reserved</a><a href="#tymethod.payload">payload</a></div><a class="sidebar-title" href="#provided-methods">Provided Methods</a><div class="sidebar-links"><a href="#method.size">size</a><a href="#method.write_payload">write_payload</a><a href="#method.write_to">write_to</a></div><a class="sidebar-title" href="#foreign-impls">Implementations on Foreign Types</a><div class="sidebar-links"><a href="#impl-DataFrame">&amp;&#39;a D</a></div><a class="sidebar-title" href="#implementors">Implementors</a></div><p class='location'><a href='../../index.html'>websocket</a>::<wbr><a href='../index.html'>ws</a>::<wbr><a href='index.html'>dataframe</a></p><script>window.sidebarCurrent = {name: 'DataFrame', ty: 'trait', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,45 +54,64 @@
         </form>
     </nav>
 
-    <section id='main' class="content trait">
-<h1 class='fqn'><span class='in-band'>Trait <a href='../../index.html'>websocket</a>::<wbr><a href='../index.html'>ws</a>::<wbr><a href='index.html'>dataframe</a>::<wbr><a class='trait' href=''>DataFrame</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Trait <a href='../../index.html'>websocket</a>::<wbr><a href='../index.html'>ws</a>::<wbr><a href='index.html'>dataframe</a>::<wbr><a class="trait" href=''>DataFrame</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-512' class='srclink' href='../../../src/websocket/ws/dataframe.rs.html#15-84' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../../src/websocket/ws/dataframe.rs.html#15-84' title='goto source code'>[src]</a></span></h1>
 <pre class='rust trait'>pub trait DataFrame {
-    fn <a href='#tymethod.is_last' class='fnname'>is_last</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>;
-    fn <a href='#tymethod.opcode' class='fnname'>opcode</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a>;
-    fn <a href='#tymethod.reserved' class='fnname'>reserved</a>&lt;'a&gt;(&amp;'a self) -&gt; &amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 3]</a>;
-    fn <a href='#tymethod.payload' class='fnname'>payload</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/collections/borrow/enum.Cow.html' title='collections::borrow::Cow'>Cow</a>&lt;'a,&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>&gt;;
+    fn <a href='#tymethod.is_last' class='fnname'>is_last</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>;
+<div class='item-spacer'></div>    fn <a href='#tymethod.opcode' class='fnname'>opcode</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>;
+<div class='item-spacer'></div>    fn <a href='#tymethod.reserved' class='fnname'>reserved</a>&lt;'a&gt;(&amp;'a self) -&gt; &amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 3]</a>;
+<div class='item-spacer'></div>    fn <a href='#tymethod.payload' class='fnname'>payload</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/alloc/borrow/enum.Cow.html" title="enum alloc::borrow::Cow">Cow</a>&lt;'a, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>&gt;;
 
-    fn <a href='#method.size' class='fnname'>size</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a> { ... }
-    fn <a href='#method.write_payload' class='fnname'>write_payload</a>&lt;W&gt;(&amp;self, socket: &amp;mut W) -&gt; <a class='type' href='../../../websocket/result/type.WebSocketResult.html' title='websocket::result::WebSocketResult'>WebSocketResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt; <span class='where'>where W: <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a></span> { ... }
-    fn <a href='#method.write_to' class='fnname'>write_to</a>&lt;W&gt;(&amp;self, writer: &amp;mut W, mask: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) -&gt; <a class='type' href='../../../websocket/result/type.WebSocketResult.html' title='websocket::result::WebSocketResult'>WebSocketResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt; <span class='where'>where W: <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a></span> { ... }
+    fn <a href='#method.size' class='fnname'>size</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a> { ... }
+<div class='item-spacer'></div>    fn <a href='#method.write_payload' class='fnname'>write_payload</a>&lt;W&gt;(&amp;self, socket: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>W) -&gt; <a class="type" href="../../../websocket/result/type.WebSocketResult.html" title="type websocket::result::WebSocketResult">WebSocketResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;<br>&nbsp;&nbsp;&nbsp; <span class="where">where<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;W: <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a></span>,
+    { ... }
+<div class='item-spacer'></div>    fn <a href='#method.write_to' class='fnname'>write_to</a>&lt;W&gt;(&amp;self, writer: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>W, mask: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <a class="type" href="../../../websocket/result/type.WebSocketResult.html" title="type websocket::result::WebSocketResult">WebSocketResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;<br>&nbsp;&nbsp;&nbsp; <span class="where">where<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;W: <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a></span>,
+    { ... }
 }</pre><div class='docblock'><p>A generic DataFrame. Every dataframe should be able to
 provide these methods. (If the payload is not known in advance then
 rewrite the write_payload method)</p>
 </div>
-            <h2 id='required-methods'>Required Methods</h2>
+            <h2 id='required-methods' class='small-section-header'>
+              Required Methods<a href='#required-methods' class='anchor'></a>
+            </h2>
             <div class='methods'>
-        <h3 id='tymethod.is_last' class='method stab '><span id='is_last.v' class='invisible'><code>fn <a href='#tymethod.is_last' class='fnname'>is_last</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code></span></h3><div class='docblock'><p>Is this dataframe the final dataframe of the message?</p>
-</div><h3 id='tymethod.opcode' class='method stab '><span id='opcode.v' class='invisible'><code>fn <a href='#tymethod.opcode' class='fnname'>opcode</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a></code></span></h3><div class='docblock'><p>What type of data does this dataframe contain?</p>
-</div><h3 id='tymethod.reserved' class='method stab '><span id='reserved.v' class='invisible'><code>fn <a href='#tymethod.reserved' class='fnname'>reserved</a>&lt;'a&gt;(&amp;'a self) -&gt; &amp;'a <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.array.html'>; 3]</a></code></span></h3><div class='docblock'><p>Reserved bits of this dataframe</p>
-</div><h3 id='tymethod.payload' class='method stab '><span id='payload.v' class='invisible'><code>fn <a href='#tymethod.payload' class='fnname'>payload</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/collections/borrow/enum.Cow.html' title='collections::borrow::Cow'>Cow</a>&lt;'a,&nbsp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>[</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u8.html'>u8</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>&gt;</code></span></h3><div class='docblock'><p>Entire payload of the dataframe. If not known then implement
+        <h3 id='tymethod.is_last' class='method'><span id='is_last.v' class='invisible'><code>fn <a href='#tymethod.is_last' class='fnname'>is_last</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span></h3><div class='docblock'><p>Is this dataframe the final dataframe of the message?</p>
+</div><h3 id='tymethod.opcode' class='method'><span id='opcode.v' class='invisible'><code>fn <a href='#tymethod.opcode' class='fnname'>opcode</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span></h3><div class='docblock'><p>What type of data does this dataframe contain?</p>
+</div><h3 id='tymethod.reserved' class='method'><span id='reserved.v' class='invisible'><code>fn <a href='#tymethod.reserved' class='fnname'>reserved</a>&lt;'a&gt;(&amp;'a self) -&gt; &amp;'a <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 3]</a></code></span></h3><div class='docblock'><p>Reserved bits of this dataframe</p>
+</div><h3 id='tymethod.payload' class='method'><span id='payload.v' class='invisible'><code>fn <a href='#tymethod.payload' class='fnname'>payload</a>&lt;'a&gt;(&amp;'a self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/alloc/borrow/enum.Cow.html" title="enum alloc::borrow::Cow">Cow</a>&lt;'a, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>&gt;</code></span></h3><div class='docblock'><p>Entire payload of the dataframe. If not known then implement
 write_payload as that is the actual method used when sending the
 dataframe over the wire.</p>
 </div></div>
-            <h2 id='provided-methods'>Provided Methods</h2>
+            <h2 id='provided-methods' class='small-section-header'>
+              Provided Methods<a href='#provided-methods' class='anchor'></a>
+            </h2>
             <div class='methods'>
-        <h3 id='method.size' class='method stab '><span id='size.v' class='invisible'><code>fn <a href='#method.size' class='fnname'>size</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.usize.html'>usize</a></code></span></h3><div class='docblock'><p>How long (in bytes) is this dataframe&#39;s payload</p>
-</div><h3 id='method.write_payload' class='method stab '><span id='write_payload.v' class='invisible'><code>fn <a href='#method.write_payload' class='fnname'>write_payload</a>&lt;W&gt;(&amp;self, socket: &amp;mut W) -&gt; <a class='type' href='../../../websocket/result/type.WebSocketResult.html' title='websocket::result::WebSocketResult'>WebSocketResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt; <span class='where'>where W: <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a></span></code></span></h3><div class='docblock'><p>Write the payload to a writer</p>
-</div><h3 id='method.write_to' class='method stab '><span id='write_to.v' class='invisible'><code>fn <a href='#method.write_to' class='fnname'>write_to</a>&lt;W&gt;(&amp;self, writer: &amp;mut W, mask: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>) -&gt; <a class='type' href='../../../websocket/result/type.WebSocketResult.html' title='websocket::result::WebSocketResult'>WebSocketResult</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt; <span class='where'>where W: <a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a></span></code></span></h3><div class='docblock'><p>Writes a DataFrame to a Writer.</p>
+        <h3 id='method.size' class='method'><span id='size.v' class='invisible'><code>fn <a href='#method.size' class='fnname'>size</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span></h3><div class='docblock'><p>How long (in bytes) is this dataframe's payload</p>
+</div><h3 id='method.write_payload' class='method'><span id='write_payload.v' class='invisible'><code>fn <a href='#method.write_payload' class='fnname'>write_payload</a>&lt;W&gt;(&amp;self, socket: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>W) -&gt; <a class="type" href="../../../websocket/result/type.WebSocketResult.html" title="type websocket::result::WebSocketResult">WebSocketResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;W: <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a>,&nbsp;</span></code></span></h3><div class='docblock'><p>Write the payload to a writer</p>
+</div><h3 id='method.write_to' class='method'><span id='write_to.v' class='invisible'><code>fn <a href='#method.write_to' class='fnname'>write_to</a>&lt;W&gt;(&amp;self, writer: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>W, mask: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <a class="type" href="../../../websocket/result/type.WebSocketResult.html" title="type websocket::result::WebSocketResult">WebSocketResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;W: <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a>,&nbsp;</span></code></span></h3><div class='docblock'><p>Writes a DataFrame to a Writer.</p>
 </div></div>
-        <h2 id='implementors'>Implementors</h2>
+                <h2 id='foreign-impls' class='small-section-header'>
+                  Implementations on Foreign Types<a href='#foreign-impls' class='anchor'></a>
+                </h2>
+            <h3 id='impl-DataFrame' class='impl'><span class='in-band'><code>impl&lt;'a, D&gt; <a class="trait" href="../../../websocket/ws/dataframe/trait.DataFrame.html" title="trait websocket::ws::dataframe::DataFrame">DataFrame</a> for <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;'a </a>D <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;D: <a class="trait" href="../../../websocket/ws/dataframe/trait.DataFrame.html" title="trait websocket::ws::dataframe::DataFrame">DataFrame</a>,&nbsp;</span></code><a href='#impl-DataFrame' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/websocket/ws/dataframe.rs.html#86-124' title='goto source code'>[src]</a></span></h3>
+<span class='docblock autohide'><div class='impl-items'><h4 id='method.is_last' class="method"><span id='is_last.v-1' class='invisible'><code>fn <a href='#method.is_last' class='fnname'>is_last</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/websocket/ws/dataframe.rs.html#89-91' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.opcode' class="method"><span id='opcode.v-1' class='invisible'><code>fn <a href='#method.opcode' class='fnname'>opcode</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/websocket/ws/dataframe.rs.html#94-96' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.reserved' class="method"><span id='reserved.v-1' class='invisible'><code>fn <a href='#method.reserved' class='fnname'>reserved</a>&lt;'b&gt;(&amp;'b self) -&gt; &amp;'b <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.array.html">; 3]</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/websocket/ws/dataframe.rs.html#99-101' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.payload' class="method"><span id='payload.v-1' class='invisible'><code>fn <a href='#method.payload' class='fnname'>payload</a>&lt;'b&gt;(&amp;'b self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/alloc/borrow/enum.Cow.html" title="enum alloc::borrow::Cow">Cow</a>&lt;'b, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">[</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/websocket/ws/dataframe.rs.html#104-106' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.size-1' class="method"><span id='size.v-1' class='invisible'><code>fn <a href='#method.size' class='fnname'>size</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/websocket/ws/dataframe.rs.html#109-111' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.write_payload-1' class="method"><span id='write_payload.v-1' class='invisible'><code>fn <a href='#method.write_payload' class='fnname'>write_payload</a>&lt;W&gt;(&amp;self, socket: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>W) -&gt; <a class="type" href="../../../websocket/result/type.WebSocketResult.html" title="type websocket::result::WebSocketResult">WebSocketResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;W: <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/websocket/ws/dataframe.rs.html#114-117' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.write_to-1' class="method"><span id='write_to.v-1' class='invisible'><code>fn <a href='#method.write_to' class='fnname'>write_to</a>&lt;W&gt;(&amp;self, writer: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;mut </a>W, mask: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>) -&gt; <a class="type" href="../../../websocket/result/type.WebSocketResult.html" title="type websocket::result::WebSocketResult">WebSocketResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; <span class="where fmt-newline">where<br>&nbsp;&nbsp;&nbsp;&nbsp;W: <a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a>,&nbsp;</span></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../../src/websocket/ws/dataframe.rs.html#120-123' title='goto source code'>[src]</a></span></h4>
+</div></span>
+        <h2 id='implementors' class='small-section-header'>
+          Implementors<a href='#implementors' class='anchor'></a>
+        </h2>
         <ul class='item-list' id='implementors-list'>
-    <li><code>impl&lt;'a,&nbsp;D&gt; DataFrame for &amp;'a D <span class='where'>where D: <a class='trait' href='../../../websocket/ws/dataframe/trait.DataFrame.html' title='websocket::ws::dataframe::DataFrame'>DataFrame</a></span></code></li>
-<li><code>impl DataFrameable for <a class='struct' href='../../../websocket/dataframe/struct.DataFrame.html' title='websocket::dataframe::DataFrame'>DataFrame</a></code></li>
-<li><code>impl&lt;'a&gt; DataFrame for <a class='struct' href='../../../websocket/message/struct.Message.html' title='websocket::message::Message'>Message</a>&lt;'a&gt;</code></li>
+    <li><div class='out-of-band'><a class='srclink' href='../../../src/websocket/dataframe.rs.html#78-98' title='goto source code'>[src]</a></div><code>impl DataFrameable for <a class="struct" href="../../../websocket/dataframe/struct.DataFrame.html" title="struct websocket::dataframe::DataFrame">DataFrame</a></code></li>
+<li><div class='out-of-band'><a class='srclink' href='../../../src/websocket/message.rs.html#114-152' title='goto source code'>[src]</a></div><code>impl&lt;'a&gt; DataFrame for <a class="struct" href="../../../websocket/message/struct.Message.html" title="struct websocket::message::Message">Message</a>&lt;'a&gt;</code></li>
 </ul><script type="text/javascript" async
                          src="../../../implementors/websocket/ws/dataframe/trait.DataFrame.js">
                  </script></section>
@@ -96,18 +127,22 @@ dataframe over the wire.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -139,11 +174,8 @@ dataframe over the wire.</p>
     <script>
         window.rootPath = "../../../";
         window.currentCrate = "websocket";
-        window.playgroundUrl = "";
     </script>
-    <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
-    
     <script defer src="../../../search-index.js"></script>
 </body>
 </html>

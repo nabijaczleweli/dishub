@@ -9,14 +9,18 @@
 
     <title>url.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../../main.css" id="themeStyle">
+    <script src="../../../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,7 +54,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -385,347 +397,347 @@
 <span id="341">341</span>
 <span id="342">342</span>
 <span id="343">343</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Utility functions for dealing with URLs</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! Utility functions for dealing with URLs</span>
 
-<span class='kw'>use</span> <span class='ident'>url</span>::{<span class='ident'>Url</span>, <span class='ident'>Position</span>};
-<span class='kw'>use</span> <span class='ident'>url</span>::<span class='ident'>Host</span> <span class='kw'>as</span> <span class='ident'>UrlHost</span>;
-<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>header</span>::<span class='ident'>Host</span>;
-<span class='kw'>use</span> <span class='ident'>result</span>::{<span class='ident'>WebSocketResult</span>, <span class='ident'>WSUrlErrorKind</span>};
+<span class="kw">use</span> <span class="ident">url</span>::{<span class="ident">Url</span>, <span class="ident">Position</span>};
+<span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Host</span> <span class="kw">as</span> <span class="ident">UrlHost</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::<span class="ident">Host</span>;
+<span class="kw">use</span> <span class="ident">result</span>::{<span class="ident">WebSocketResult</span>, <span class="ident">WSUrlErrorKind</span>};
 
-<span class='doccomment'>/// Trait that gets required WebSocket URL components</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>ToWebSocketUrlComponents</span> {
-	<span class='doccomment'>/// Retrieve the required WebSocket URL components from this</span>
-	<span class='kw'>fn</span> <span class='ident'>to_components</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>(<span class='ident'>Host</span>, <span class='ident'>String</span>, <span class='ident'>bool</span>)<span class='op'>&gt;</span>;
+<span class="doccomment">/// Trait that gets required WebSocket URL components</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ToWebSocketUrlComponents</span> {
+	<span class="doccomment">/// Retrieve the required WebSocket URL components from this</span>
+	<span class="kw">fn</span> <span class="ident">to_components</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>(<span class="ident">Host</span>, <span class="ident">String</span>, <span class="ident">bool</span>)<span class="op">&gt;</span>;
 }
 
-<span class='kw'>impl</span> <span class='ident'>ToWebSocketUrlComponents</span> <span class='kw'>for</span> <span class='ident'>str</span> {
-	<span class='kw'>fn</span> <span class='ident'>to_components</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>(<span class='ident'>Host</span>, <span class='ident'>String</span>, <span class='ident'>bool</span>)<span class='op'>&gt;</span> {
-		<span class='ident'>parse_url_str</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>)
+<span class="kw">impl</span> <span class="ident">ToWebSocketUrlComponents</span> <span class="kw">for</span> <span class="ident">str</span> {
+	<span class="kw">fn</span> <span class="ident">to_components</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>(<span class="ident">Host</span>, <span class="ident">String</span>, <span class="ident">bool</span>)<span class="op">&gt;</span> {
+		<span class="ident">parse_url_str</span>(<span class="kw-2">&amp;</span><span class="self">self</span>)
 	}
 }
 
-<span class='kw'>impl</span> <span class='ident'>ToWebSocketUrlComponents</span> <span class='kw'>for</span> <span class='ident'>Url</span> {
-	<span class='kw'>fn</span> <span class='ident'>to_components</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>(<span class='ident'>Host</span>, <span class='ident'>String</span>, <span class='ident'>bool</span>)<span class='op'>&gt;</span> {
-		<span class='ident'>parse_url</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>)
+<span class="kw">impl</span> <span class="ident">ToWebSocketUrlComponents</span> <span class="kw">for</span> <span class="ident">Url</span> {
+	<span class="kw">fn</span> <span class="ident">to_components</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>(<span class="ident">Host</span>, <span class="ident">String</span>, <span class="ident">bool</span>)<span class="op">&gt;</span> {
+		<span class="ident">parse_url</span>(<span class="kw-2">&amp;</span><span class="self">self</span>)
 	}
 }
 
-<span class='kw'>impl</span> <span class='ident'>ToWebSocketUrlComponents</span> <span class='kw'>for</span> (<span class='ident'>Host</span>, <span class='ident'>String</span>, <span class='ident'>bool</span>) {
-	<span class='doccomment'>/// Convert a Host, resource name and secure flag to WebSocket URL components.</span>
-	<span class='kw'>fn</span> <span class='ident'>to_components</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>(<span class='ident'>Host</span>, <span class='ident'>String</span>, <span class='ident'>bool</span>)<span class='op'>&gt;</span> {
-		<span class='kw'>let</span> (<span class='kw-2'>mut</span> <span class='ident'>host</span>, <span class='kw-2'>mut</span> <span class='ident'>resource_name</span>, <span class='ident'>secure</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>clone</span>();
-		<span class='ident'>host</span>.<span class='ident'>port</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='kw'>match</span> <span class='ident'>host</span>.<span class='ident'>port</span> {
-			<span class='prelude-val'>Some</span>(<span class='ident'>port</span>) <span class='op'>=&gt;</span> <span class='ident'>port</span>,
-			<span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='kw'>if</span> <span class='ident'>secure</span> { <span class='number'>443</span> } <span class='kw'>else</span> { <span class='number'>80</span> },
+<span class="kw">impl</span> <span class="ident">ToWebSocketUrlComponents</span> <span class="kw">for</span> (<span class="ident">Host</span>, <span class="ident">String</span>, <span class="ident">bool</span>) {
+	<span class="doccomment">/// Convert a Host, resource name and secure flag to WebSocket URL components.</span>
+	<span class="kw">fn</span> <span class="ident">to_components</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>(<span class="ident">Host</span>, <span class="ident">String</span>, <span class="ident">bool</span>)<span class="op">&gt;</span> {
+		<span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">host</span>, <span class="kw-2">mut</span> <span class="ident">resource_name</span>, <span class="ident">secure</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();
+		<span class="ident">host</span>.<span class="ident">port</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="kw">match</span> <span class="ident">host</span>.<span class="ident">port</span> {
+			<span class="prelude-val">Some</span>(<span class="ident">port</span>) <span class="op">=&gt;</span> <span class="ident">port</span>,
+			<span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">secure</span> { <span class="number">443</span> } <span class="kw">else</span> { <span class="number">80</span> },
 		});
-		<span class='kw'>if</span> <span class='ident'>resource_name</span>.<span class='ident'>is_empty</span>() {
-			<span class='ident'>resource_name</span> <span class='op'>=</span> <span class='string'>&quot;/&quot;</span>.<span class='ident'>to_owned</span>();
+		<span class="kw">if</span> <span class="ident">resource_name</span>.<span class="ident">is_empty</span>() {
+			<span class="ident">resource_name</span> <span class="op">=</span> <span class="string">&quot;/&quot;</span>.<span class="ident">to_owned</span>();
 		}
-		<span class='prelude-val'>Ok</span>((<span class='ident'>host</span>, <span class='ident'>resource_name</span>, <span class='ident'>secure</span>))
+		<span class="prelude-val">Ok</span>((<span class="ident">host</span>, <span class="ident">resource_name</span>, <span class="ident">secure</span>))
 	}
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>ToWebSocketUrlComponents</span> <span class='kw'>for</span> (<span class='ident'>Host</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>, <span class='ident'>bool</span>) {
-	<span class='doccomment'>/// Convert a Host, resource name and secure flag to WebSocket URL components.</span>
-	<span class='kw'>fn</span> <span class='ident'>to_components</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>(<span class='ident'>Host</span>, <span class='ident'>String</span>, <span class='ident'>bool</span>)<span class='op'>&gt;</span> {
-		(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>clone</span>(), <span class='self'>self</span>.<span class='number'>1</span>.<span class='ident'>to_owned</span>(), <span class='self'>self</span>.<span class='number'>2</span>).<span class='ident'>to_components</span>()
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">ToWebSocketUrlComponents</span> <span class="kw">for</span> (<span class="ident">Host</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="ident">bool</span>) {
+	<span class="doccomment">/// Convert a Host, resource name and secure flag to WebSocket URL components.</span>
+	<span class="kw">fn</span> <span class="ident">to_components</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>(<span class="ident">Host</span>, <span class="ident">String</span>, <span class="ident">bool</span>)<span class="op">&gt;</span> {
+		(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>(), <span class="self">self</span>.<span class="number">1</span>.<span class="ident">to_owned</span>(), <span class="self">self</span>.<span class="number">2</span>).<span class="ident">to_components</span>()
 	}
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>ToWebSocketUrlComponents</span> <span class='kw'>for</span> (<span class='ident'>Host</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>) {
-	<span class='doccomment'>/// Convert a Host and resource name to WebSocket URL components, assuming an insecure connection.</span>
-	<span class='kw'>fn</span> <span class='ident'>to_components</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>(<span class='ident'>Host</span>, <span class='ident'>String</span>, <span class='ident'>bool</span>)<span class='op'>&gt;</span> {
-		(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>clone</span>(), <span class='self'>self</span>.<span class='number'>1</span>.<span class='ident'>to_owned</span>(), <span class='bool-val'>false</span>).<span class='ident'>to_components</span>()
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">ToWebSocketUrlComponents</span> <span class="kw">for</span> (<span class="ident">Host</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>) {
+	<span class="doccomment">/// Convert a Host and resource name to WebSocket URL components, assuming an insecure connection.</span>
+	<span class="kw">fn</span> <span class="ident">to_components</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>(<span class="ident">Host</span>, <span class="ident">String</span>, <span class="ident">bool</span>)<span class="op">&gt;</span> {
+		(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>(), <span class="self">self</span>.<span class="number">1</span>.<span class="ident">to_owned</span>(), <span class="bool-val">false</span>).<span class="ident">to_components</span>()
 	}
 }
 
-<span class='kw'>impl</span> <span class='ident'>ToWebSocketUrlComponents</span> <span class='kw'>for</span> (<span class='ident'>Host</span>, <span class='ident'>String</span>) {
-	<span class='doccomment'>/// Convert a Host and resource name to WebSocket URL components, assuming an insecure connection.</span>
-	<span class='kw'>fn</span> <span class='ident'>to_components</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>(<span class='ident'>Host</span>, <span class='ident'>String</span>, <span class='ident'>bool</span>)<span class='op'>&gt;</span> {
-		(<span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>clone</span>(), <span class='self'>self</span>.<span class='number'>1</span>.<span class='ident'>clone</span>(), <span class='bool-val'>false</span>).<span class='ident'>to_components</span>()
+<span class="kw">impl</span> <span class="ident">ToWebSocketUrlComponents</span> <span class="kw">for</span> (<span class="ident">Host</span>, <span class="ident">String</span>) {
+	<span class="doccomment">/// Convert a Host and resource name to WebSocket URL components, assuming an insecure connection.</span>
+	<span class="kw">fn</span> <span class="ident">to_components</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>(<span class="ident">Host</span>, <span class="ident">String</span>, <span class="ident">bool</span>)<span class="op">&gt;</span> {
+		(<span class="self">self</span>.<span class="number">0</span>.<span class="ident">clone</span>(), <span class="self">self</span>.<span class="number">1</span>.<span class="ident">clone</span>(), <span class="bool-val">false</span>).<span class="ident">to_components</span>()
 	}
 }
 
-<span class='kw'>impl</span> <span class='ident'>ToWebSocketUrlComponents</span> <span class='kw'>for</span> (<span class='ident'>UrlHost</span>, <span class='ident'>u16</span>, <span class='ident'>String</span>, <span class='ident'>bool</span>) {
-	<span class='doccomment'>/// Convert a Host, port, resource name and secure flag to WebSocket URL components.</span>
-	<span class='kw'>fn</span> <span class='ident'>to_components</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>(<span class='ident'>Host</span>, <span class='ident'>String</span>, <span class='ident'>bool</span>)<span class='op'>&gt;</span> {
-		(<span class='ident'>Host</span> {
-			<span class='ident'>hostname</span>: <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>to_string</span>(),
-			<span class='ident'>port</span>: <span class='prelude-val'>Some</span>(<span class='self'>self</span>.<span class='number'>1</span>)
-		}, <span class='self'>self</span>.<span class='number'>2</span>.<span class='ident'>clone</span>(), <span class='self'>self</span>.<span class='number'>3</span>).<span class='ident'>to_components</span>()
+<span class="kw">impl</span> <span class="ident">ToWebSocketUrlComponents</span> <span class="kw">for</span> (<span class="ident">UrlHost</span>, <span class="ident">u16</span>, <span class="ident">String</span>, <span class="ident">bool</span>) {
+	<span class="doccomment">/// Convert a Host, port, resource name and secure flag to WebSocket URL components.</span>
+	<span class="kw">fn</span> <span class="ident">to_components</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>(<span class="ident">Host</span>, <span class="ident">String</span>, <span class="ident">bool</span>)<span class="op">&gt;</span> {
+		(<span class="ident">Host</span> {
+			<span class="ident">hostname</span>: <span class="self">self</span>.<span class="number">0</span>.<span class="ident">to_string</span>(),
+			<span class="ident">port</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="number">1</span>)
+		}, <span class="self">self</span>.<span class="number">2</span>.<span class="ident">clone</span>(), <span class="self">self</span>.<span class="number">3</span>).<span class="ident">to_components</span>()
 	}
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>ToWebSocketUrlComponents</span> <span class='kw'>for</span> (<span class='ident'>UrlHost</span>, <span class='ident'>u16</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>, <span class='ident'>bool</span>) {
-	<span class='doccomment'>/// Convert a Host, port, resource name and secure flag to WebSocket URL components.</span>
-	<span class='kw'>fn</span> <span class='ident'>to_components</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>(<span class='ident'>Host</span>, <span class='ident'>String</span>, <span class='ident'>bool</span>)<span class='op'>&gt;</span> {
-		(<span class='ident'>Host</span> {
-			<span class='ident'>hostname</span>: <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>to_string</span>(),
-			<span class='ident'>port</span>: <span class='prelude-val'>Some</span>(<span class='self'>self</span>.<span class='number'>1</span>)
-		}, <span class='self'>self</span>.<span class='number'>2</span>, <span class='self'>self</span>.<span class='number'>3</span>).<span class='ident'>to_components</span>()
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">ToWebSocketUrlComponents</span> <span class="kw">for</span> (<span class="ident">UrlHost</span>, <span class="ident">u16</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>, <span class="ident">bool</span>) {
+	<span class="doccomment">/// Convert a Host, port, resource name and secure flag to WebSocket URL components.</span>
+	<span class="kw">fn</span> <span class="ident">to_components</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>(<span class="ident">Host</span>, <span class="ident">String</span>, <span class="ident">bool</span>)<span class="op">&gt;</span> {
+		(<span class="ident">Host</span> {
+			<span class="ident">hostname</span>: <span class="self">self</span>.<span class="number">0</span>.<span class="ident">to_string</span>(),
+			<span class="ident">port</span>: <span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="number">1</span>)
+		}, <span class="self">self</span>.<span class="number">2</span>, <span class="self">self</span>.<span class="number">3</span>).<span class="ident">to_components</span>()
 	}
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>T</span>: <span class='ident'>ToWebSocketUrlComponents</span><span class='op'>&gt;</span> <span class='ident'>ToWebSocketUrlComponents</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>T</span> {
-	<span class='kw'>fn</span> <span class='ident'>to_components</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>(<span class='ident'>Host</span>, <span class='ident'>String</span>, <span class='ident'>bool</span>)<span class='op'>&gt;</span> {
-		(<span class='op'>*</span><span class='op'>*</span><span class='self'>self</span>).<span class='ident'>to_components</span>()
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="ident">ToWebSocketUrlComponents</span><span class="op">&gt;</span> <span class="ident">ToWebSocketUrlComponents</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">T</span> {
+	<span class="kw">fn</span> <span class="ident">to_components</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>(<span class="ident">Host</span>, <span class="ident">String</span>, <span class="ident">bool</span>)<span class="op">&gt;</span> {
+		(<span class="kw-2">*</span><span class="kw-2">*</span><span class="self">self</span>).<span class="ident">to_components</span>()
 	}
 }
 
-<span class='doccomment'>/// Gets the host, port, resource and secure from the string representation of a url</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse_url_str</span>(<span class='ident'>url_str</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>(<span class='ident'>Host</span>, <span class='ident'>String</span>, <span class='ident'>bool</span>)<span class='op'>&gt;</span> {
-    <span class='comment'>// https://html.spec.whatwg.org/multipage/#parse-a-websocket-url&#39;s-components</span>
-    <span class='comment'>// Steps 1 and 2</span>
-    <span class='kw'>let</span> <span class='ident'>parsed_url</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Url</span>::<span class='ident'>parse</span>(<span class='ident'>url_str</span>));
-    <span class='ident'>parse_url</span>(<span class='kw-2'>&amp;</span><span class='ident'>parsed_url</span>)
+<span class="doccomment">/// Gets the host, port, resource and secure from the string representation of a url</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_url_str</span>(<span class="ident">url_str</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>(<span class="ident">Host</span>, <span class="ident">String</span>, <span class="ident">bool</span>)<span class="op">&gt;</span> {
+    <span class="comment">// https://html.spec.whatwg.org/multipage/#parse-a-websocket-url&#39;s-components</span>
+    <span class="comment">// Steps 1 and 2</span>
+    <span class="kw">let</span> <span class="ident">parsed_url</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="ident">url_str</span>));
+    <span class="ident">parse_url</span>(<span class="kw-2">&amp;</span><span class="ident">parsed_url</span>)
 }
 
-<span class='doccomment'>/// Gets the host, port, resource, and secure flag from a url</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>parse_url</span>(<span class='ident'>url</span>: <span class='kw-2'>&amp;</span><span class='ident'>Url</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>(<span class='ident'>Host</span>, <span class='ident'>String</span>, <span class='ident'>bool</span>)<span class='op'>&gt;</span> {
-    <span class='comment'>// https://html.spec.whatwg.org/multipage/#parse-a-websocket-url&#39;s-components</span>
+<span class="doccomment">/// Gets the host, port, resource, and secure flag from a url</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_url</span>(<span class="ident">url</span>: <span class="kw-2">&amp;</span><span class="ident">Url</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>(<span class="ident">Host</span>, <span class="ident">String</span>, <span class="ident">bool</span>)<span class="op">&gt;</span> {
+    <span class="comment">// https://html.spec.whatwg.org/multipage/#parse-a-websocket-url&#39;s-components</span>
 
-    <span class='comment'>// Step 4</span>
-    <span class='kw'>if</span> <span class='ident'>url</span>.<span class='ident'>fragment</span>().<span class='ident'>is_some</span>() {
-        <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>From</span>::<span class='ident'>from</span>(<span class='ident'>WSUrlErrorKind</span>::<span class='ident'>CannotSetFragment</span>));
+    <span class="comment">// Step 4</span>
+    <span class="kw">if</span> <span class="ident">url</span>.<span class="ident">fragment</span>().<span class="ident">is_some</span>() {
+        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">From</span>::<span class="ident">from</span>(<span class="ident">WSUrlErrorKind</span>::<span class="ident">CannotSetFragment</span>));
     }
 
-    <span class='kw'>let</span> <span class='ident'>secure</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>url</span>.<span class='ident'>scheme</span>() {
-        <span class='comment'>// step 5</span>
-        <span class='string'>&quot;ws&quot;</span> <span class='op'>=&gt;</span> <span class='bool-val'>false</span>,
-        <span class='string'>&quot;wss&quot;</span> <span class='op'>=&gt;</span> <span class='bool-val'>true</span>,
-        <span class='comment'>// step 3</span>
-        _ <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>From</span>::<span class='ident'>from</span>(<span class='ident'>WSUrlErrorKind</span>::<span class='ident'>InvalidScheme</span>)),
+    <span class="kw">let</span> <span class="ident">secure</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">url</span>.<span class="ident">scheme</span>() {
+        <span class="comment">// step 5</span>
+        <span class="string">&quot;ws&quot;</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+        <span class="string">&quot;wss&quot;</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+        <span class="comment">// step 3</span>
+        _ <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">From</span>::<span class="ident">from</span>(<span class="ident">WSUrlErrorKind</span>::<span class="ident">InvalidScheme</span>)),
     };
 
-    <span class='kw'>let</span> <span class='ident'>host</span> <span class='op'>=</span> <span class='ident'>url</span>.<span class='ident'>host_str</span>().<span class='ident'>unwrap</span>().<span class='ident'>to_owned</span>(); <span class='comment'>// Step 6</span>
-    <span class='kw'>let</span> <span class='ident'>port</span> <span class='op'>=</span> <span class='ident'>url</span>.<span class='ident'>port_or_known_default</span>(); <span class='comment'>// Steps 7 and 8</span>
+    <span class="kw">let</span> <span class="ident">host</span> <span class="op">=</span> <span class="ident">url</span>.<span class="ident">host_str</span>().<span class="ident">unwrap</span>().<span class="ident">to_owned</span>(); <span class="comment">// Step 6</span>
+    <span class="kw">let</span> <span class="ident">port</span> <span class="op">=</span> <span class="ident">url</span>.<span class="ident">port_or_known_default</span>(); <span class="comment">// Steps 7 and 8</span>
 
-    <span class='comment'>// steps 9, 10, 11</span>
-    <span class='kw'>let</span> <span class='ident'>resource</span> <span class='op'>=</span> <span class='ident'>url</span>[<span class='ident'>Position</span>::<span class='ident'>BeforePath</span>..<span class='ident'>Position</span>::<span class='ident'>AfterQuery</span>].<span class='ident'>to_owned</span>();
+    <span class="comment">// steps 9, 10, 11</span>
+    <span class="kw">let</span> <span class="ident">resource</span> <span class="op">=</span> <span class="ident">url</span>[<span class="ident">Position</span>::<span class="ident">BeforePath</span>..<span class="ident">Position</span>::<span class="ident">AfterQuery</span>].<span class="ident">to_owned</span>();
 
-    <span class='comment'>// Step 12</span>
-    <span class='prelude-val'>Ok</span>((<span class='ident'>Host</span> { <span class='ident'>hostname</span>: <span class='ident'>host</span>, <span class='ident'>port</span>: <span class='ident'>port</span> }, <span class='ident'>resource</span>, <span class='ident'>secure</span>))
+    <span class="comment">// Step 12</span>
+    <span class="prelude-val">Ok</span>((<span class="ident">Host</span> { <span class="ident">hostname</span>: <span class="ident">host</span>, <span class="ident">port</span>: <span class="ident">port</span> }, <span class="ident">resource</span>, <span class="ident">secure</span>))
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>all</span>(<span class='ident'>feature</span> <span class='op'>=</span> <span class='string'>&quot;nightly&quot;</span>, <span class='ident'>test</span>))]</span>
-<span class='kw'>mod</span> <span class='ident'>tests</span> {
-    <span class='kw'>use</span> <span class='kw'>super</span>::<span class='op'>*</span>;
-    <span class='comment'>//use test;</span>
-    <span class='kw'>use</span> <span class='ident'>url</span>::<span class='ident'>Url</span>;
-    <span class='kw'>use</span> <span class='ident'>result</span>::{<span class='ident'>WebSocketError</span>, <span class='ident'>WSUrlErrorKind</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;nightly&quot;</span>, <span class="ident">test</span>))]</span>
+<span class="kw">mod</span> <span class="ident">tests</span> {
+    <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
+    <span class="comment">//use test;</span>
+    <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
+    <span class="kw">use</span> <span class="ident">result</span>::{<span class="ident">WebSocketError</span>, <span class="ident">WSUrlErrorKind</span>};
 
-    <span class='kw'>fn</span> <span class='ident'>url_for_test</span>() <span class='op'>-&gt;</span> <span class='ident'>Url</span> {
-        <span class='ident'>Url</span>::<span class='ident'>parse</span>(<span class='string'>&quot;ws://www.example.com:8080/some/path?a=b&amp;c=d&quot;</span>).<span class='ident'>unwrap</span>()
+    <span class="kw">fn</span> <span class="ident">url_for_test</span>() <span class="op">-&gt;</span> <span class="ident">Url</span> {
+        <span class="ident">Url</span>::<span class="ident">parse</span>(<span class="string">&quot;ws://www.example.com:8080/some/path?a=b&amp;c=d&quot;</span>).<span class="ident">unwrap</span>()
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_parse_url_fragments_not_accepted</span>() {
-        <span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>url_for_test</span>();
-        <span class='ident'>url</span>.<span class='ident'>set_fragment</span>(<span class='prelude-val'>Some</span>(<span class='string'>&quot;non_null_fragment&quot;</span>));
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_parse_url_fragments_not_accepted</span>() {
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">url_for_test</span>();
+        <span class="ident">url</span>.<span class="ident">set_fragment</span>(<span class="prelude-val">Some</span>(<span class="string">&quot;non_null_fragment&quot;</span>));
 
-        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>parse_url</span>(<span class='ident'>url</span>);
-        <span class='kw'>match</span> <span class='ident'>result</span> {
-            <span class='prelude-val'>Err</span>(<span class='ident'>WebSocketError</span>::<span class='ident'>WebSocketUrlError</span>(
-                <span class='ident'>WSUrlErrorKind</span>::<span class='ident'>CannotSetFragment</span>)) <span class='op'>=&gt;</span> (),
-            <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Expected WSUrlErrorKind::CannotSetFragment but got {}&quot;</span>, <span class='ident'>e</span>),
-            <span class='prelude-val'>Ok</span>(_) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Expected WSUrlErrorKind::CannotSetFragment but got Ok&quot;</span>)
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">parse_url</span>(<span class="ident">url</span>);
+        <span class="kw">match</span> <span class="ident">result</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">WebSocketError</span>::<span class="ident">WebSocketUrlError</span>(
+                <span class="ident">WSUrlErrorKind</span>::<span class="ident">CannotSetFragment</span>)) <span class="op">=&gt;</span> (),
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Expected WSUrlErrorKind::CannotSetFragment but got {}&quot;</span>, <span class="ident">e</span>),
+            <span class="prelude-val">Ok</span>(_) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Expected WSUrlErrorKind::CannotSetFragment but got Ok&quot;</span>)
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_parse_url_invalid_schemes_return_error</span>() {
-        <span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>url_for_test</span>();
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_parse_url_invalid_schemes_return_error</span>() {
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">url_for_test</span>();
 
-        <span class='kw'>let</span> <span class='ident'>invalid_schemes</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span>[<span class='string'>&quot;http&quot;</span>, <span class='string'>&quot;https&quot;</span>, <span class='string'>&quot;gopher&quot;</span>, <span class='string'>&quot;file&quot;</span>, <span class='string'>&quot;ftp&quot;</span>, <span class='string'>&quot;other&quot;</span>];
-        <span class='kw'>for</span> <span class='ident'>scheme</span> <span class='kw'>in</span> <span class='ident'>invalid_schemes</span> {
-            <span class='ident'>url</span>.<span class='ident'>set_scheme</span>(<span class='ident'>scheme</span>).<span class='ident'>unwrap</span>();
+        <span class="kw">let</span> <span class="ident">invalid_schemes</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;http&quot;</span>, <span class="string">&quot;https&quot;</span>, <span class="string">&quot;gopher&quot;</span>, <span class="string">&quot;file&quot;</span>, <span class="string">&quot;ftp&quot;</span>, <span class="string">&quot;other&quot;</span>];
+        <span class="kw">for</span> <span class="ident">scheme</span> <span class="kw">in</span> <span class="ident">invalid_schemes</span> {
+            <span class="ident">url</span>.<span class="ident">set_scheme</span>(<span class="ident">scheme</span>).<span class="ident">unwrap</span>();
 
-            <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>parse_url</span>(<span class='ident'>url</span>);
-            <span class='kw'>match</span> <span class='ident'>result</span> {
-                <span class='prelude-val'>Err</span>(<span class='ident'>WebSocketError</span>::<span class='ident'>WebSocketUrlError</span>(
-                    <span class='ident'>WSUrlErrorKind</span>::<span class='ident'>InvalidScheme</span>)) <span class='op'>=&gt;</span> (),
-                <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Expected WSUrlErrorKind::InvalidScheme but got {}&quot;</span>, <span class='ident'>e</span>),
-                <span class='prelude-val'>Ok</span>(_) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Expected WSUrlErrorKind::InvalidScheme but got Ok&quot;</span>)
+            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">parse_url</span>(<span class="ident">url</span>);
+            <span class="kw">match</span> <span class="ident">result</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">WebSocketError</span>::<span class="ident">WebSocketUrlError</span>(
+                    <span class="ident">WSUrlErrorKind</span>::<span class="ident">InvalidScheme</span>)) <span class="op">=&gt;</span> (),
+                <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Expected WSUrlErrorKind::InvalidScheme but got {}&quot;</span>, <span class="ident">e</span>),
+                <span class="prelude-val">Ok</span>(_) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Expected WSUrlErrorKind::InvalidScheme but got Ok&quot;</span>)
             }
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_parse_url_valid_schemes_return_ok</span>() {
-        <span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>url_for_test</span>();
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_parse_url_valid_schemes_return_ok</span>() {
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">url_for_test</span>();
 
-        <span class='kw'>let</span> <span class='ident'>valid_schemes</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span>[<span class='string'>&quot;ws&quot;</span>, <span class='string'>&quot;wss&quot;</span>];
-        <span class='kw'>for</span> <span class='ident'>scheme</span> <span class='kw'>in</span> <span class='ident'>valid_schemes</span> {
-            <span class='ident'>url</span>.<span class='ident'>set_scheme</span>(<span class='ident'>scheme</span>).<span class='ident'>unwrap</span>();
+        <span class="kw">let</span> <span class="ident">valid_schemes</span> <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;ws&quot;</span>, <span class="string">&quot;wss&quot;</span>];
+        <span class="kw">for</span> <span class="ident">scheme</span> <span class="kw">in</span> <span class="ident">valid_schemes</span> {
+            <span class="ident">url</span>.<span class="ident">set_scheme</span>(<span class="ident">scheme</span>).<span class="ident">unwrap</span>();
 
-            <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>parse_url</span>(<span class='ident'>url</span>);
-            <span class='kw'>match</span> <span class='ident'>result</span> {
-                <span class='prelude-val'>Ok</span>(_) <span class='op'>=&gt;</span> (),
-                <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Expected Ok, but got {}&quot;</span>, <span class='ident'>e</span>)
+            <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">parse_url</span>(<span class="ident">url</span>);
+            <span class="kw">match</span> <span class="ident">result</span> {
+                <span class="prelude-val">Ok</span>(_) <span class="op">=&gt;</span> (),
+                <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Expected Ok, but got {}&quot;</span>, <span class="ident">e</span>)
             }
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_parse_url_ws_returns_unset_secure_flag</span>() {
-        <span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>url_for_test</span>();
-        <span class='ident'>url</span>.<span class='ident'>set_scheme</span>(<span class='string'>&quot;ws&quot;</span>).<span class='ident'>unwrap</span>();
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_parse_url_ws_returns_unset_secure_flag</span>() {
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">url_for_test</span>();
+        <span class="ident">url</span>.<span class="ident">set_scheme</span>(<span class="string">&quot;ws&quot;</span>).<span class="ident">unwrap</span>();
 
-        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>parse_url</span>(<span class='ident'>url</span>);
-        <span class='kw'>let</span> <span class='ident'>secure</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>result</span> {
-            <span class='prelude-val'>Ok</span>((_, _, <span class='ident'>secure</span>)) <span class='op'>=&gt;</span> <span class='ident'>secure</span>,
-            <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='ident'>e</span>),
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">parse_url</span>(<span class="ident">url</span>);
+        <span class="kw">let</span> <span class="ident">secure</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">result</span> {
+            <span class="prelude-val">Ok</span>((_, _, <span class="ident">secure</span>)) <span class="op">=&gt;</span> <span class="ident">secure</span>,
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="ident">e</span>),
         };
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>secure</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">secure</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_parse_url_wss_returns_set_secure_flag</span>() {
-        <span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>url_for_test</span>();
-        <span class='ident'>url</span>.<span class='ident'>set_scheme</span>(<span class='string'>&quot;wss&quot;</span>).<span class='ident'>unwrap</span>();
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_parse_url_wss_returns_set_secure_flag</span>() {
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">url_for_test</span>();
+        <span class="ident">url</span>.<span class="ident">set_scheme</span>(<span class="string">&quot;wss&quot;</span>).<span class="ident">unwrap</span>();
 
-        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>parse_url</span>(<span class='ident'>url</span>);
-        <span class='kw'>let</span> <span class='ident'>secure</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>result</span> {
-            <span class='prelude-val'>Ok</span>((_, _, <span class='ident'>secure</span>)) <span class='op'>=&gt;</span> <span class='ident'>secure</span>,
-            <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='ident'>e</span>),
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">parse_url</span>(<span class="ident">url</span>);
+        <span class="kw">let</span> <span class="ident">secure</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">result</span> {
+            <span class="prelude-val">Ok</span>((_, _, <span class="ident">secure</span>)) <span class="op">=&gt;</span> <span class="ident">secure</span>,
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="ident">e</span>),
         };
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>secure</span>);
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">secure</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_parse_url_generates_proper_output</span>() {
-        <span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='ident'>url_for_test</span>();
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_parse_url_generates_proper_output</span>() {
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">url_for_test</span>();
 
-        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>parse_url</span>(<span class='ident'>url</span>);
-        <span class='kw'>let</span> (<span class='ident'>host</span>, <span class='ident'>resource</span>) <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>result</span> {
-            <span class='prelude-val'>Ok</span>((<span class='ident'>host</span>, <span class='ident'>resource</span>, _)) <span class='op'>=&gt;</span> (<span class='ident'>host</span>, <span class='ident'>resource</span>),
-            <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='ident'>e</span>),
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">parse_url</span>(<span class="ident">url</span>);
+        <span class="kw">let</span> (<span class="ident">host</span>, <span class="ident">resource</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">result</span> {
+            <span class="prelude-val">Ok</span>((<span class="ident">host</span>, <span class="ident">resource</span>, _)) <span class="op">=&gt;</span> (<span class="ident">host</span>, <span class="ident">resource</span>),
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="ident">e</span>),
         };
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>host</span>.<span class='ident'>hostname</span>, <span class='string'>&quot;www.example.com&quot;</span>.<span class='ident'>to_owned</span>());
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>resource</span>, <span class='string'>&quot;/some/path?a=b&amp;c=d&quot;</span>.<span class='ident'>to_owned</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">host</span>.<span class="ident">hostname</span>, <span class="string">&quot;www.example.com&quot;</span>.<span class="ident">to_owned</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">resource</span>, <span class="string">&quot;/some/path?a=b&amp;c=d&quot;</span>.<span class="ident">to_owned</span>());
 
-        <span class='kw'>match</span> <span class='ident'>host</span>.<span class='ident'>port</span> {
-            <span class='prelude-val'>Some</span>(<span class='ident'>port</span>) <span class='op'>=&gt;</span> <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>port</span>, <span class='number'>8080</span>),
-            _ <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Port should not be None&quot;</span>),
+        <span class="kw">match</span> <span class="ident">host</span>.<span class="ident">port</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">port</span>) <span class="op">=&gt;</span> <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">port</span>, <span class="number">8080</span>),
+            _ <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Port should not be None&quot;</span>),
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_parse_url_empty_path_should_give_slash</span>() {
-        <span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>url_for_test</span>();
-        <span class='ident'>url</span>.<span class='ident'>set_path</span>(<span class='string'>&quot;/&quot;</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_parse_url_empty_path_should_give_slash</span>() {
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">url_for_test</span>();
+        <span class="ident">url</span>.<span class="ident">set_path</span>(<span class="string">&quot;/&quot;</span>);
 
-        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>parse_url</span>(<span class='ident'>url</span>);
-        <span class='kw'>let</span> <span class='ident'>resource</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>result</span> {
-            <span class='prelude-val'>Ok</span>((_, <span class='ident'>resource</span>, _)) <span class='op'>=&gt;</span> <span class='ident'>resource</span>,
-            <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='ident'>e</span>),
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">parse_url</span>(<span class="ident">url</span>);
+        <span class="kw">let</span> <span class="ident">resource</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">result</span> {
+            <span class="prelude-val">Ok</span>((_, <span class="ident">resource</span>, _)) <span class="op">=&gt;</span> <span class="ident">resource</span>,
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="ident">e</span>),
         };
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>resource</span>, <span class='string'>&quot;/?a=b&amp;c=d&quot;</span>.<span class='ident'>to_owned</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">resource</span>, <span class="string">&quot;/?a=b&amp;c=d&quot;</span>.<span class="ident">to_owned</span>());
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_parse_url_none_query_should_not_append_question_mark</span>() {
-        <span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>url_for_test</span>();
-        <span class='ident'>url</span>.<span class='ident'>set_query</span>(<span class='prelude-val'>None</span>);
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_parse_url_none_query_should_not_append_question_mark</span>() {
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">url_for_test</span>();
+        <span class="ident">url</span>.<span class="ident">set_query</span>(<span class="prelude-val">None</span>);
 
-        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>parse_url</span>(<span class='ident'>url</span>);
-        <span class='kw'>let</span> <span class='ident'>resource</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>result</span> {
-            <span class='prelude-val'>Ok</span>((_, <span class='ident'>resource</span>, _)) <span class='op'>=&gt;</span> <span class='ident'>resource</span>,
-            <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='ident'>e</span>),
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">parse_url</span>(<span class="ident">url</span>);
+        <span class="kw">let</span> <span class="ident">resource</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">result</span> {
+            <span class="prelude-val">Ok</span>((_, <span class="ident">resource</span>, _)) <span class="op">=&gt;</span> <span class="ident">resource</span>,
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="ident">e</span>),
         };
 
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>resource</span>, <span class='string'>&quot;/some/path&quot;</span>.<span class='ident'>to_owned</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">resource</span>, <span class="string">&quot;/some/path&quot;</span>.<span class="ident">to_owned</span>());
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_parse_url_none_port_should_use_default_port</span>() {
-        <span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>url_for_test</span>();
-        <span class='ident'>url</span>.<span class='ident'>set_port</span>(<span class='prelude-val'>None</span>).<span class='ident'>unwrap</span>();
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_parse_url_none_port_should_use_default_port</span>() {
+        <span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">url_for_test</span>();
+        <span class="ident">url</span>.<span class="ident">set_port</span>(<span class="prelude-val">None</span>).<span class="ident">unwrap</span>();
 
-        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>parse_url</span>(<span class='ident'>url</span>);
-        <span class='kw'>let</span> <span class='ident'>host</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>result</span> {
-            <span class='prelude-val'>Ok</span>((<span class='ident'>host</span>, _, _)) <span class='op'>=&gt;</span> <span class='ident'>host</span>,
-            <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='ident'>e</span>),
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">parse_url</span>(<span class="ident">url</span>);
+        <span class="kw">let</span> <span class="ident">host</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">result</span> {
+            <span class="prelude-val">Ok</span>((<span class="ident">host</span>, _, _)) <span class="op">=&gt;</span> <span class="ident">host</span>,
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="ident">e</span>),
         };
 
-        <span class='kw'>match</span> <span class='ident'>host</span>.<span class='ident'>port</span> {
-            <span class='prelude-val'>Some</span>(<span class='number'>80</span>) <span class='op'>=&gt;</span> (),
-            <span class='prelude-val'>Some</span>(<span class='ident'>p</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Expected port to be 80 but got {}&quot;</span>, <span class='ident'>p</span>),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Expected port to be 80 but got `None`&quot;</span>),
+        <span class="kw">match</span> <span class="ident">host</span>.<span class="ident">port</span> {
+            <span class="prelude-val">Some</span>(<span class="number">80</span>) <span class="op">=&gt;</span> (),
+            <span class="prelude-val">Some</span>(<span class="ident">p</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Expected port to be 80 but got {}&quot;</span>, <span class="ident">p</span>),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Expected port to be 80 but got `None`&quot;</span>),
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_parse_url_str_valid_url1</span>() {
-        <span class='kw'>let</span> <span class='ident'>url_str</span> <span class='op'>=</span> <span class='string'>&quot;ws://www.example.com/some/path?a=b&amp;c=d&quot;</span>;
-        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>parse_url_str</span>(<span class='ident'>url_str</span>);
-        <span class='kw'>let</span> (<span class='ident'>host</span>, <span class='ident'>resource</span>, <span class='ident'>secure</span>) <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>result</span> {
-            <span class='prelude-val'>Ok</span>((<span class='ident'>host</span>, <span class='ident'>resource</span>, <span class='ident'>secure</span>)) <span class='op'>=&gt;</span> (<span class='ident'>host</span>, <span class='ident'>resource</span>, <span class='ident'>secure</span>),
-            <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='ident'>e</span>),
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_parse_url_str_valid_url1</span>() {
+        <span class="kw">let</span> <span class="ident">url_str</span> <span class="op">=</span> <span class="string">&quot;ws://www.example.com/some/path?a=b&amp;c=d&quot;</span>;
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">parse_url_str</span>(<span class="ident">url_str</span>);
+        <span class="kw">let</span> (<span class="ident">host</span>, <span class="ident">resource</span>, <span class="ident">secure</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">result</span> {
+            <span class="prelude-val">Ok</span>((<span class="ident">host</span>, <span class="ident">resource</span>, <span class="ident">secure</span>)) <span class="op">=&gt;</span> (<span class="ident">host</span>, <span class="ident">resource</span>, <span class="ident">secure</span>),
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="ident">e</span>),
         };
 
-        <span class='kw'>match</span> <span class='ident'>host</span>.<span class='ident'>port</span> {
-            <span class='prelude-val'>Some</span>(<span class='number'>80</span>) <span class='op'>=&gt;</span> (),
-            <span class='prelude-val'>Some</span>(<span class='ident'>p</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Expected port 80 but got {}&quot;</span>, <span class='ident'>p</span>),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Expected port 80 but got `None`&quot;</span>)
+        <span class="kw">match</span> <span class="ident">host</span>.<span class="ident">port</span> {
+            <span class="prelude-val">Some</span>(<span class="number">80</span>) <span class="op">=&gt;</span> (),
+            <span class="prelude-val">Some</span>(<span class="ident">p</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Expected port 80 but got {}&quot;</span>, <span class="ident">p</span>),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Expected port 80 but got `None`&quot;</span>)
         }
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>host</span>.<span class='ident'>hostname</span>, <span class='string'>&quot;www.example.com&quot;</span>.<span class='ident'>to_owned</span>());
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>resource</span>, <span class='string'>&quot;/some/path?a=b&amp;c=d&quot;</span>.<span class='ident'>to_owned</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='op'>!</span><span class='ident'>secure</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">host</span>.<span class="ident">hostname</span>, <span class="string">&quot;www.example.com&quot;</span>.<span class="ident">to_owned</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">resource</span>, <span class="string">&quot;/some/path?a=b&amp;c=d&quot;</span>.<span class="ident">to_owned</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="op">!</span><span class="ident">secure</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_parse_url_str_valid_url2</span>() {
-        <span class='kw'>let</span> <span class='ident'>url_str</span> <span class='op'>=</span> <span class='string'>&quot;wss://www.example.com&quot;</span>;
-        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>parse_url_str</span>(<span class='ident'>url_str</span>);
-        <span class='kw'>let</span> (<span class='ident'>host</span>, <span class='ident'>resource</span>, <span class='ident'>secure</span>) <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>result</span> {
-            <span class='prelude-val'>Ok</span>((<span class='ident'>host</span>, <span class='ident'>resource</span>, <span class='ident'>secure</span>)) <span class='op'>=&gt;</span> (<span class='ident'>host</span>, <span class='ident'>resource</span>, <span class='ident'>secure</span>),
-            <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='ident'>e</span>)
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_parse_url_str_valid_url2</span>() {
+        <span class="kw">let</span> <span class="ident">url_str</span> <span class="op">=</span> <span class="string">&quot;wss://www.example.com&quot;</span>;
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">parse_url_str</span>(<span class="ident">url_str</span>);
+        <span class="kw">let</span> (<span class="ident">host</span>, <span class="ident">resource</span>, <span class="ident">secure</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">result</span> {
+            <span class="prelude-val">Ok</span>((<span class="ident">host</span>, <span class="ident">resource</span>, <span class="ident">secure</span>)) <span class="op">=&gt;</span> (<span class="ident">host</span>, <span class="ident">resource</span>, <span class="ident">secure</span>),
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="ident">e</span>)
         };
 
-        <span class='kw'>match</span> <span class='ident'>host</span>.<span class='ident'>port</span> {
-            <span class='prelude-val'>Some</span>(<span class='number'>443</span>) <span class='op'>=&gt;</span> (),
-            <span class='prelude-val'>Some</span>(<span class='ident'>p</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Expected port 443 but got {}&quot;</span>, <span class='ident'>p</span>),
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Expected port 443 but got `None`&quot;</span>)
+        <span class="kw">match</span> <span class="ident">host</span>.<span class="ident">port</span> {
+            <span class="prelude-val">Some</span>(<span class="number">443</span>) <span class="op">=&gt;</span> (),
+            <span class="prelude-val">Some</span>(<span class="ident">p</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Expected port 443 but got {}&quot;</span>, <span class="ident">p</span>),
+            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Expected port 443 but got `None`&quot;</span>)
         }
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>host</span>.<span class='ident'>hostname</span>, <span class='string'>&quot;www.example.com&quot;</span>.<span class='ident'>to_owned</span>());
-        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>resource</span>, <span class='string'>&quot;/&quot;</span>.<span class='ident'>to_owned</span>());
-        <span class='macro'>assert</span><span class='macro'>!</span>(<span class='ident'>secure</span>);
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">host</span>.<span class="ident">hostname</span>, <span class="string">&quot;www.example.com&quot;</span>.<span class="ident">to_owned</span>());
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">resource</span>, <span class="string">&quot;/&quot;</span>.<span class="ident">to_owned</span>());
+        <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">secure</span>);
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_parse_url_str_invalid_relative_url</span>() {
-        <span class='kw'>let</span> <span class='ident'>url_str</span> <span class='op'>=</span> <span class='string'>&quot;/some/relative/path?a=b&amp;c=d&quot;</span>;
-        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>parse_url_str</span>(<span class='ident'>url_str</span>);
-        <span class='kw'>match</span> <span class='ident'>result</span> {
-            <span class='prelude-val'>Err</span>(<span class='ident'>WebSocketError</span>::<span class='ident'>UrlError</span>(_)) <span class='op'>=&gt;</span> (),
-            <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Expected UrlError, but got unexpected error {}&quot;</span>, <span class='ident'>e</span>),
-            <span class='prelude-val'>Ok</span>(_) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Expected UrlError, but got Ok&quot;</span>),
-        }
-    }
-
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_parse_url_str_invalid_url_scheme</span>() {
-        <span class='kw'>let</span> <span class='ident'>url_str</span> <span class='op'>=</span> <span class='string'>&quot;http://www.example.com/some/path?a=b&amp;c=d&quot;</span>;
-        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>parse_url_str</span>(<span class='ident'>url_str</span>);
-        <span class='kw'>match</span> <span class='ident'>result</span> {
-            <span class='prelude-val'>Err</span>(<span class='ident'>WebSocketError</span>::<span class='ident'>WebSocketUrlError</span>(<span class='ident'>WSUrlErrorKind</span>::<span class='ident'>InvalidScheme</span>)) <span class='op'>=&gt;</span> (),
-            <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Expected InvalidScheme, but got unexpected error {}&quot;</span>, <span class='ident'>e</span>),
-            <span class='prelude-val'>Ok</span>(_) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Expected InvalidScheme, but got Ok&quot;</span>),
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_parse_url_str_invalid_relative_url</span>() {
+        <span class="kw">let</span> <span class="ident">url_str</span> <span class="op">=</span> <span class="string">&quot;/some/relative/path?a=b&amp;c=d&quot;</span>;
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">parse_url_str</span>(<span class="ident">url_str</span>);
+        <span class="kw">match</span> <span class="ident">result</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">WebSocketError</span>::<span class="ident">UrlError</span>(_)) <span class="op">=&gt;</span> (),
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Expected UrlError, but got unexpected error {}&quot;</span>, <span class="ident">e</span>),
+            <span class="prelude-val">Ok</span>(_) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Expected UrlError, but got Ok&quot;</span>),
         }
     }
 
-    <span class='attribute'>#[<span class='ident'>test</span>]</span>
-    <span class='kw'>fn</span> <span class='ident'>test_parse_url_str_invalid_url_fragment</span>() {
-        <span class='kw'>let</span> <span class='ident'>url_str</span> <span class='op'>=</span> <span class='string'>&quot;http://www.example.com/some/path#some-id&quot;</span>;
-        <span class='kw'>let</span> <span class='ident'>result</span> <span class='op'>=</span> <span class='ident'>parse_url_str</span>(<span class='ident'>url_str</span>);
-        <span class='kw'>match</span> <span class='ident'>result</span> {
-            <span class='prelude-val'>Err</span>(<span class='ident'>WebSocketError</span>::<span class='ident'>WebSocketUrlError</span>(<span class='ident'>WSUrlErrorKind</span>::<span class='ident'>CannotSetFragment</span>)) <span class='op'>=&gt;</span> (),
-            <span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Expected CannotSetFragment, but got unexpected error {}&quot;</span>, <span class='ident'>e</span>),
-            <span class='prelude-val'>Ok</span>(_) <span class='op'>=&gt;</span> <span class='macro'>panic</span><span class='macro'>!</span>(<span class='string'>&quot;Expected CannotSetFragment, but got Ok&quot;</span>),
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_parse_url_str_invalid_url_scheme</span>() {
+        <span class="kw">let</span> <span class="ident">url_str</span> <span class="op">=</span> <span class="string">&quot;http://www.example.com/some/path?a=b&amp;c=d&quot;</span>;
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">parse_url_str</span>(<span class="ident">url_str</span>);
+        <span class="kw">match</span> <span class="ident">result</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">WebSocketError</span>::<span class="ident">WebSocketUrlError</span>(<span class="ident">WSUrlErrorKind</span>::<span class="ident">InvalidScheme</span>)) <span class="op">=&gt;</span> (),
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Expected InvalidScheme, but got unexpected error {}&quot;</span>, <span class="ident">e</span>),
+            <span class="prelude-val">Ok</span>(_) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Expected InvalidScheme, but got Ok&quot;</span>),
+        }
+    }
+
+    <span class="attribute">#[<span class="ident">test</span>]</span>
+    <span class="kw">fn</span> <span class="ident">test_parse_url_str_invalid_url_fragment</span>() {
+        <span class="kw">let</span> <span class="ident">url_str</span> <span class="op">=</span> <span class="string">&quot;http://www.example.com/some/path#some-id&quot;</span>;
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">parse_url_str</span>(<span class="ident">url_str</span>);
+        <span class="kw">match</span> <span class="ident">result</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">WebSocketError</span>::<span class="ident">WebSocketUrlError</span>(<span class="ident">WSUrlErrorKind</span>::<span class="ident">CannotSetFragment</span>)) <span class="op">=&gt;</span> (),
+            <span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Expected CannotSetFragment, but got unexpected error {}&quot;</span>, <span class="ident">e</span>),
+            <span class="prelude-val">Ok</span>(_) <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Expected CannotSetFragment, but got Ok&quot;</span>),
         }
     }
 }
@@ -743,18 +755,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -786,11 +802,8 @@
     <script>
         window.rootPath = "../../../../";
         window.currentCrate = "websocket";
-        window.playgroundUrl = "";
     </script>
-    <script src="../../../../jquery.js"></script>
     <script src="../../../../main.js"></script>
-    
     <script defer src="../../../../search-index.js"></script>
 </body>
 </html>

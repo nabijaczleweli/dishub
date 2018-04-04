@@ -4,19 +4,23 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.8.3/src/error.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_json-0.8.6/src/error.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>error.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,7 +54,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -300,265 +312,265 @@
 <span id="256">256</span>
 <span id="257">257</span>
 <span id="258">258</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! JSON Errors</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! This module is centered around the `Error` and `ErrorCode` types, which represents all possible</span>
-<span class='doccomment'>//! `serde_json` errors.</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! JSON Errors</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This module is centered around the `Error` and `ErrorCode` types, which represents all possible</span>
+<span class="doccomment">//! `serde_json` errors.</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>result</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">result</span>;
 
-<span class='kw'>use</span> <span class='ident'>serde</span>::<span class='ident'>de</span>;
-<span class='kw'>use</span> <span class='ident'>serde</span>::<span class='ident'>ser</span>;
+<span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">de</span>;
+<span class="kw">use</span> <span class="ident">serde</span>::<span class="ident">ser</span>;
 
-<span class='doccomment'>/// The errors that can arise while parsing a JSON stream.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>ErrorCode</span> {
-    <span class='doccomment'>/// Catchall for syntax error messages</span>
-    <span class='ident'>Custom</span>(<span class='ident'>String</span>),
+<span class="doccomment">/// The errors that can arise while parsing a JSON stream.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ErrorCode</span> {
+    <span class="doccomment">/// Catchall for syntax error messages</span>
+    <span class="ident">Custom</span>(<span class="ident">String</span>),
 
-    <span class='doccomment'>/// Incorrect type from value</span>
-    <span class='ident'>InvalidType</span>(<span class='ident'>de</span>::<span class='ident'>Type</span>),
+    <span class="doccomment">/// Incorrect type from value</span>
+    <span class="ident">InvalidType</span>(<span class="ident">de</span>::<span class="ident">Type</span>),
 
-    <span class='doccomment'>/// Incorrect value</span>
-    <span class='ident'>InvalidValue</span>(<span class='ident'>String</span>),
+    <span class="doccomment">/// Incorrect value</span>
+    <span class="ident">InvalidValue</span>(<span class="ident">String</span>),
 
-    <span class='doccomment'>/// Invalid length</span>
-    <span class='ident'>InvalidLength</span>(<span class='ident'>usize</span>),
+    <span class="doccomment">/// Invalid length</span>
+    <span class="ident">InvalidLength</span>(<span class="ident">usize</span>),
 
-    <span class='doccomment'>/// Unknown variant in an enum.</span>
-    <span class='ident'>UnknownVariant</span>(<span class='ident'>String</span>),
+    <span class="doccomment">/// Unknown variant in an enum.</span>
+    <span class="ident">UnknownVariant</span>(<span class="ident">String</span>),
 
-    <span class='doccomment'>/// Unknown field in struct.</span>
-    <span class='ident'>UnknownField</span>(<span class='ident'>String</span>),
+    <span class="doccomment">/// Unknown field in struct.</span>
+    <span class="ident">UnknownField</span>(<span class="ident">String</span>),
 
-    <span class='doccomment'>/// Struct is missing a field.</span>
-    <span class='ident'>MissingField</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>),
+    <span class="doccomment">/// Struct is missing a field.</span>
+    <span class="ident">MissingField</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>),
 
-    <span class='doccomment'>/// EOF while parsing a list.</span>
-    <span class='ident'>EOFWhileParsingList</span>,
+    <span class="doccomment">/// EOF while parsing a list.</span>
+    <span class="ident">EOFWhileParsingList</span>,
 
-    <span class='doccomment'>/// EOF while parsing an object.</span>
-    <span class='ident'>EOFWhileParsingObject</span>,
+    <span class="doccomment">/// EOF while parsing an object.</span>
+    <span class="ident">EOFWhileParsingObject</span>,
 
-    <span class='doccomment'>/// EOF while parsing a string.</span>
-    <span class='ident'>EOFWhileParsingString</span>,
+    <span class="doccomment">/// EOF while parsing a string.</span>
+    <span class="ident">EOFWhileParsingString</span>,
 
-    <span class='doccomment'>/// EOF while parsing a JSON value.</span>
-    <span class='ident'>EOFWhileParsingValue</span>,
+    <span class="doccomment">/// EOF while parsing a JSON value.</span>
+    <span class="ident">EOFWhileParsingValue</span>,
 
-    <span class='doccomment'>/// Expected this character to be a `&#39;:&#39;`.</span>
-    <span class='ident'>ExpectedColon</span>,
+    <span class="doccomment">/// Expected this character to be a `&#39;:&#39;`.</span>
+    <span class="ident">ExpectedColon</span>,
 
-    <span class='doccomment'>/// Expected this character to be either a `&#39;,&#39;` or a `]`.</span>
-    <span class='ident'>ExpectedListCommaOrEnd</span>,
+    <span class="doccomment">/// Expected this character to be either a `&#39;,&#39;` or a `]`.</span>
+    <span class="ident">ExpectedListCommaOrEnd</span>,
 
-    <span class='doccomment'>/// Expected this character to be either a `&#39;,&#39;` or a `}`.</span>
-    <span class='ident'>ExpectedObjectCommaOrEnd</span>,
+    <span class="doccomment">/// Expected this character to be either a `&#39;,&#39;` or a `}`.</span>
+    <span class="ident">ExpectedObjectCommaOrEnd</span>,
 
-    <span class='doccomment'>/// Expected to parse either a `true`, `false`, or a `null`.</span>
-    <span class='ident'>ExpectedSomeIdent</span>,
+    <span class="doccomment">/// Expected to parse either a `true`, `false`, or a `null`.</span>
+    <span class="ident">ExpectedSomeIdent</span>,
 
-    <span class='doccomment'>/// Expected this character to start a JSON value.</span>
-    <span class='ident'>ExpectedSomeValue</span>,
+    <span class="doccomment">/// Expected this character to start a JSON value.</span>
+    <span class="ident">ExpectedSomeValue</span>,
 
-    <span class='doccomment'>/// Invalid hex escape code.</span>
-    <span class='ident'>InvalidEscape</span>,
+    <span class="doccomment">/// Invalid hex escape code.</span>
+    <span class="ident">InvalidEscape</span>,
 
-    <span class='doccomment'>/// Invalid number.</span>
-    <span class='ident'>InvalidNumber</span>,
+    <span class="doccomment">/// Invalid number.</span>
+    <span class="ident">InvalidNumber</span>,
 
-    <span class='doccomment'>/// Number is bigger than the maximum value of its type.</span>
-    <span class='ident'>NumberOutOfRange</span>,
+    <span class="doccomment">/// Number is bigger than the maximum value of its type.</span>
+    <span class="ident">NumberOutOfRange</span>,
 
-    <span class='doccomment'>/// Invalid unicode code point.</span>
-    <span class='ident'>InvalidUnicodeCodePoint</span>,
+    <span class="doccomment">/// Invalid unicode code point.</span>
+    <span class="ident">InvalidUnicodeCodePoint</span>,
 
-    <span class='doccomment'>/// Object key is not a string.</span>
-    <span class='ident'>KeyMustBeAString</span>,
+    <span class="doccomment">/// Object key is not a string.</span>
+    <span class="ident">KeyMustBeAString</span>,
 
-    <span class='doccomment'>/// Lone leading surrogate in hex escape.</span>
-    <span class='ident'>LoneLeadingSurrogateInHexEscape</span>,
+    <span class="doccomment">/// Lone leading surrogate in hex escape.</span>
+    <span class="ident">LoneLeadingSurrogateInHexEscape</span>,
 
-    <span class='doccomment'>/// JSON has non-whitespace trailing characters after the value.</span>
-    <span class='ident'>TrailingCharacters</span>,
+    <span class="doccomment">/// JSON has non-whitespace trailing characters after the value.</span>
+    <span class="ident">TrailingCharacters</span>,
 
-    <span class='doccomment'>/// Unexpected end of hex excape.</span>
-    <span class='ident'>UnexpectedEndOfHexEscape</span>,
+    <span class="doccomment">/// Unexpected end of hex excape.</span>
+    <span class="ident">UnexpectedEndOfHexEscape</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>ErrorCode</span> {
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>ErrorCode</span>::<span class='ident'>Custom</span>(<span class='kw-2'>ref</span> <span class='ident'>msg</span>) <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;{}&quot;</span>, <span class='ident'>msg</span>),
-            <span class='ident'>ErrorCode</span>::<span class='ident'>InvalidType</span>(<span class='kw-2'>ref</span> <span class='ident'>ty</span>) <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;invalid type: {}&quot;</span>, <span class='ident'>ty</span>),
-            <span class='ident'>ErrorCode</span>::<span class='ident'>InvalidValue</span>(<span class='kw-2'>ref</span> <span class='ident'>msg</span>) <span class='op'>=&gt;</span> {
-                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;invalid value: {}&quot;</span>, <span class='ident'>msg</span>)
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">ErrorCode</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">ErrorCode</span>::<span class="ident">Custom</span>(<span class="kw-2">ref</span> <span class="ident">msg</span>) <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">msg</span>),
+            <span class="ident">ErrorCode</span>::<span class="ident">InvalidType</span>(<span class="kw-2">ref</span> <span class="ident">ty</span>) <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;invalid type: {}&quot;</span>, <span class="ident">ty</span>),
+            <span class="ident">ErrorCode</span>::<span class="ident">InvalidValue</span>(<span class="kw-2">ref</span> <span class="ident">msg</span>) <span class="op">=&gt;</span> {
+                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;invalid value: {}&quot;</span>, <span class="ident">msg</span>)
             }
-            <span class='ident'>ErrorCode</span>::<span class='ident'>InvalidLength</span>(<span class='kw-2'>ref</span> <span class='ident'>len</span>) <span class='op'>=&gt;</span> {
-                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;invalid value length {}&quot;</span>, <span class='ident'>len</span>)
+            <span class="ident">ErrorCode</span>::<span class="ident">InvalidLength</span>(<span class="kw-2">ref</span> <span class="ident">len</span>) <span class="op">=&gt;</span> {
+                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;invalid value length {}&quot;</span>, <span class="ident">len</span>)
             }
-            <span class='ident'>ErrorCode</span>::<span class='ident'>UnknownVariant</span>(<span class='kw-2'>ref</span> <span class='ident'>variant</span>) <span class='op'>=&gt;</span> {
-                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;unknown variant \&quot;{}\&quot;&quot;</span>, <span class='ident'>variant</span>)
+            <span class="ident">ErrorCode</span>::<span class="ident">UnknownVariant</span>(<span class="kw-2">ref</span> <span class="ident">variant</span>) <span class="op">=&gt;</span> {
+                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;unknown variant \&quot;{}\&quot;&quot;</span>, <span class="ident">variant</span>)
             }
-            <span class='ident'>ErrorCode</span>::<span class='ident'>UnknownField</span>(<span class='kw-2'>ref</span> <span class='ident'>field</span>) <span class='op'>=&gt;</span> {
-                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;unknown field \&quot;{}\&quot;&quot;</span>, <span class='ident'>field</span>)
+            <span class="ident">ErrorCode</span>::<span class="ident">UnknownField</span>(<span class="kw-2">ref</span> <span class="ident">field</span>) <span class="op">=&gt;</span> {
+                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;unknown field \&quot;{}\&quot;&quot;</span>, <span class="ident">field</span>)
             }
-            <span class='ident'>ErrorCode</span>::<span class='ident'>MissingField</span>(<span class='ident'>field</span>) <span class='op'>=&gt;</span> {
-                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;missing field \&quot;{}\&quot;&quot;</span>, <span class='ident'>field</span>)
+            <span class="ident">ErrorCode</span>::<span class="ident">MissingField</span>(<span class="ident">field</span>) <span class="op">=&gt;</span> {
+                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;missing field \&quot;{}\&quot;&quot;</span>, <span class="ident">field</span>)
             }
-            <span class='ident'>ErrorCode</span>::<span class='ident'>EOFWhileParsingList</span> <span class='op'>=&gt;</span> <span class='string'>&quot;EOF while parsing a list&quot;</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>),
-            <span class='ident'>ErrorCode</span>::<span class='ident'>EOFWhileParsingObject</span> <span class='op'>=&gt;</span> {
-                <span class='string'>&quot;EOF while parsing an object&quot;</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>)
+            <span class="ident">ErrorCode</span>::<span class="ident">EOFWhileParsingList</span> <span class="op">=&gt;</span> <span class="string">&quot;EOF while parsing a list&quot;</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+            <span class="ident">ErrorCode</span>::<span class="ident">EOFWhileParsingObject</span> <span class="op">=&gt;</span> {
+                <span class="string">&quot;EOF while parsing an object&quot;</span>.<span class="ident">fmt</span>(<span class="ident">f</span>)
             }
-            <span class='ident'>ErrorCode</span>::<span class='ident'>EOFWhileParsingString</span> <span class='op'>=&gt;</span> {
-                <span class='string'>&quot;EOF while parsing a string&quot;</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>)
+            <span class="ident">ErrorCode</span>::<span class="ident">EOFWhileParsingString</span> <span class="op">=&gt;</span> {
+                <span class="string">&quot;EOF while parsing a string&quot;</span>.<span class="ident">fmt</span>(<span class="ident">f</span>)
             }
-            <span class='ident'>ErrorCode</span>::<span class='ident'>EOFWhileParsingValue</span> <span class='op'>=&gt;</span> {
-                <span class='string'>&quot;EOF while parsing a value&quot;</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>)
+            <span class="ident">ErrorCode</span>::<span class="ident">EOFWhileParsingValue</span> <span class="op">=&gt;</span> {
+                <span class="string">&quot;EOF while parsing a value&quot;</span>.<span class="ident">fmt</span>(<span class="ident">f</span>)
             }
-            <span class='ident'>ErrorCode</span>::<span class='ident'>ExpectedColon</span> <span class='op'>=&gt;</span> <span class='string'>&quot;expected `:`&quot;</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>),
-            <span class='ident'>ErrorCode</span>::<span class='ident'>ExpectedListCommaOrEnd</span> <span class='op'>=&gt;</span> <span class='string'>&quot;expected `,` or `]`&quot;</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>),
-            <span class='ident'>ErrorCode</span>::<span class='ident'>ExpectedObjectCommaOrEnd</span> <span class='op'>=&gt;</span> <span class='string'>&quot;expected `,` or `}`&quot;</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>),
-            <span class='ident'>ErrorCode</span>::<span class='ident'>ExpectedSomeIdent</span> <span class='op'>=&gt;</span> <span class='string'>&quot;expected ident&quot;</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>),
-            <span class='ident'>ErrorCode</span>::<span class='ident'>ExpectedSomeValue</span> <span class='op'>=&gt;</span> <span class='string'>&quot;expected value&quot;</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>),
-            <span class='ident'>ErrorCode</span>::<span class='ident'>InvalidEscape</span> <span class='op'>=&gt;</span> <span class='string'>&quot;invalid escape&quot;</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>),
-            <span class='ident'>ErrorCode</span>::<span class='ident'>InvalidNumber</span> <span class='op'>=&gt;</span> <span class='string'>&quot;invalid number&quot;</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>),
-            <span class='ident'>ErrorCode</span>::<span class='ident'>NumberOutOfRange</span> <span class='op'>=&gt;</span> <span class='string'>&quot;number out of range&quot;</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>),
-            <span class='ident'>ErrorCode</span>::<span class='ident'>InvalidUnicodeCodePoint</span> <span class='op'>=&gt;</span> {
-                <span class='string'>&quot;invalid unicode code point&quot;</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>)
+            <span class="ident">ErrorCode</span>::<span class="ident">ExpectedColon</span> <span class="op">=&gt;</span> <span class="string">&quot;expected `:`&quot;</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+            <span class="ident">ErrorCode</span>::<span class="ident">ExpectedListCommaOrEnd</span> <span class="op">=&gt;</span> <span class="string">&quot;expected `,` or `]`&quot;</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+            <span class="ident">ErrorCode</span>::<span class="ident">ExpectedObjectCommaOrEnd</span> <span class="op">=&gt;</span> <span class="string">&quot;expected `,` or `}`&quot;</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+            <span class="ident">ErrorCode</span>::<span class="ident">ExpectedSomeIdent</span> <span class="op">=&gt;</span> <span class="string">&quot;expected ident&quot;</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+            <span class="ident">ErrorCode</span>::<span class="ident">ExpectedSomeValue</span> <span class="op">=&gt;</span> <span class="string">&quot;expected value&quot;</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+            <span class="ident">ErrorCode</span>::<span class="ident">InvalidEscape</span> <span class="op">=&gt;</span> <span class="string">&quot;invalid escape&quot;</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+            <span class="ident">ErrorCode</span>::<span class="ident">InvalidNumber</span> <span class="op">=&gt;</span> <span class="string">&quot;invalid number&quot;</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+            <span class="ident">ErrorCode</span>::<span class="ident">NumberOutOfRange</span> <span class="op">=&gt;</span> <span class="string">&quot;number out of range&quot;</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+            <span class="ident">ErrorCode</span>::<span class="ident">InvalidUnicodeCodePoint</span> <span class="op">=&gt;</span> {
+                <span class="string">&quot;invalid unicode code point&quot;</span>.<span class="ident">fmt</span>(<span class="ident">f</span>)
             }
-            <span class='ident'>ErrorCode</span>::<span class='ident'>KeyMustBeAString</span> <span class='op'>=&gt;</span> <span class='string'>&quot;key must be a string&quot;</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>),
-            <span class='ident'>ErrorCode</span>::<span class='ident'>LoneLeadingSurrogateInHexEscape</span> <span class='op'>=&gt;</span> {
-                <span class='string'>&quot;lone leading surrogate in hex escape&quot;</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>)
+            <span class="ident">ErrorCode</span>::<span class="ident">KeyMustBeAString</span> <span class="op">=&gt;</span> <span class="string">&quot;key must be a string&quot;</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+            <span class="ident">ErrorCode</span>::<span class="ident">LoneLeadingSurrogateInHexEscape</span> <span class="op">=&gt;</span> {
+                <span class="string">&quot;lone leading surrogate in hex escape&quot;</span>.<span class="ident">fmt</span>(<span class="ident">f</span>)
             }
-            <span class='ident'>ErrorCode</span>::<span class='ident'>TrailingCharacters</span> <span class='op'>=&gt;</span> <span class='string'>&quot;trailing characters&quot;</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>),
-            <span class='ident'>ErrorCode</span>::<span class='ident'>UnexpectedEndOfHexEscape</span> <span class='op'>=&gt;</span> {
-                <span class='string'>&quot;unexpected end of hex escape&quot;</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>)
+            <span class="ident">ErrorCode</span>::<span class="ident">TrailingCharacters</span> <span class="op">=&gt;</span> <span class="string">&quot;trailing characters&quot;</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+            <span class="ident">ErrorCode</span>::<span class="ident">UnexpectedEndOfHexEscape</span> <span class="op">=&gt;</span> {
+                <span class="string">&quot;unexpected end of hex escape&quot;</span>.<span class="ident">fmt</span>(<span class="ident">f</span>)
             }
         }
     }
 }
 
-<span class='doccomment'>/// This type represents all possible errors that can occur when serializing or deserializing a</span>
-<span class='doccomment'>/// value into JSON.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Error</span> {
-    <span class='doccomment'>/// The JSON value had some syntatic error.</span>
-    <span class='ident'>Syntax</span>(<span class='ident'>ErrorCode</span>, <span class='ident'>usize</span>, <span class='ident'>usize</span>),
+<span class="doccomment">/// This type represents all possible errors that can occur when serializing or deserializing a</span>
+<span class="doccomment">/// value into JSON.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span> {
+    <span class="doccomment">/// The JSON value had some syntatic error.</span>
+    <span class="ident">Syntax</span>(<span class="ident">ErrorCode</span>, <span class="ident">usize</span>, <span class="ident">usize</span>),
 
-    <span class='doccomment'>/// Some IO error occurred when serializing or deserializing a value.</span>
-    <span class='ident'>Io</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>),
+    <span class="doccomment">/// Some IO error occurred when serializing or deserializing a value.</span>
+    <span class="ident">Io</span>(<span class="ident">io</span>::<span class="ident">Error</span>),
 }
 
-<span class='kw'>impl</span> <span class='ident'>error</span>::<span class='ident'>Error</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-    <span class='kw'>fn</span> <span class='ident'>description</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>Error</span>::<span class='ident'>Syntax</span>(..) <span class='op'>=&gt;</span> <span class='string'>&quot;syntax error&quot;</span>,
-            <span class='ident'>Error</span>::<span class='ident'>Io</span>(<span class='kw-2'>ref</span> <span class='ident'>error</span>) <span class='op'>=&gt;</span> <span class='ident'>error</span>::<span class='ident'>Error</span>::<span class='ident'>description</span>(<span class='ident'>error</span>),
+<span class="kw">impl</span> <span class="ident">error</span>::<span class="ident">Error</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">Error</span>::<span class="ident">Syntax</span>(..) <span class="op">=&gt;</span> <span class="string">&quot;syntax error&quot;</span>,
+            <span class="ident">Error</span>::<span class="ident">Io</span>(<span class="kw-2">ref</span> <span class="ident">error</span>) <span class="op">=&gt;</span> <span class="ident">error</span>::<span class="ident">Error</span>::<span class="ident">description</span>(<span class="ident">error</span>),
         }
     }
 
-    <span class='kw'>fn</span> <span class='ident'>cause</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>error</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>Error</span>::<span class='ident'>Io</span>(<span class='kw-2'>ref</span> <span class='ident'>error</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>error</span>),
-            _ <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
-        }
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-    <span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>fmt</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> <span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-        <span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-            <span class='ident'>Error</span>::<span class='ident'>Syntax</span>(<span class='kw-2'>ref</span> <span class='ident'>code</span>, <span class='ident'>line</span>, <span class='ident'>col</span>) <span class='op'>=&gt;</span> {
-                <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>fmt</span>, <span class='string'>&quot;{} at line {} column {}&quot;</span>, <span class='ident'>code</span>, <span class='ident'>line</span>, <span class='ident'>col</span>)
-            }
-            <span class='ident'>Error</span>::<span class='ident'>Io</span>(<span class='kw-2'>ref</span> <span class='ident'>error</span>) <span class='op'>=&gt;</span> <span class='ident'>fmt</span>::<span class='ident'>Display</span>::<span class='ident'>fmt</span>(<span class='ident'>error</span>, <span class='ident'>fmt</span>),
+    <span class="kw">fn</span> <span class="ident">cause</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">error</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">Error</span>::<span class="ident">Io</span>(<span class="kw-2">ref</span> <span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">error</span>),
+            _ <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>io</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>error</span>: <span class='ident'>io</span>::<span class='ident'>Error</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='ident'>Error</span>::<span class='ident'>Io</span>(<span class='ident'>error</span>)
+<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">fmt</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+        <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+            <span class="ident">Error</span>::<span class="ident">Syntax</span>(<span class="kw-2">ref</span> <span class="ident">code</span>, <span class="ident">line</span>, <span class="ident">col</span>) <span class="op">=&gt;</span> {
+                <span class="macro">write</span><span class="macro">!</span>(<span class="ident">fmt</span>, <span class="string">&quot;{} at line {} column {}&quot;</span>, <span class="ident">code</span>, <span class="ident">line</span>, <span class="ident">col</span>)
+            }
+            <span class="ident">Error</span>::<span class="ident">Io</span>(<span class="kw-2">ref</span> <span class="ident">error</span>) <span class="op">=&gt;</span> <span class="ident">fmt</span>::<span class="ident">Display</span>::<span class="ident">fmt</span>(<span class="ident">error</span>, <span class="ident">fmt</span>),
+        }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>de</span>::<span class='ident'>value</span>::<span class='ident'>Error</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-    <span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>error</span>: <span class='ident'>de</span>::<span class='ident'>value</span>::<span class='ident'>Error</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='kw'>match</span> <span class='ident'>error</span> {
-            <span class='ident'>de</span>::<span class='ident'>value</span>::<span class='ident'>Error</span>::<span class='ident'>Custom</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> {
-                <span class='ident'>Error</span>::<span class='ident'>Syntax</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>Custom</span>(<span class='ident'>e</span>), <span class='number'>0</span>, <span class='number'>0</span>)
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">io</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">error</span>: <span class="ident">io</span>::<span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">Io</span>(<span class="ident">error</span>)
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">de</span>::<span class="ident">value</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">error</span>: <span class="ident">de</span>::<span class="ident">value</span>::<span class="ident">Error</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="kw">match</span> <span class="ident">error</span> {
+            <span class="ident">de</span>::<span class="ident">value</span>::<span class="ident">Error</span>::<span class="ident">Custom</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> {
+                <span class="ident">Error</span>::<span class="ident">Syntax</span>(<span class="ident">ErrorCode</span>::<span class="ident">Custom</span>(<span class="ident">e</span>), <span class="number">0</span>, <span class="number">0</span>)
             }
-            <span class='ident'>de</span>::<span class='ident'>value</span>::<span class='ident'>Error</span>::<span class='ident'>EndOfStream</span> <span class='op'>=&gt;</span> <span class='ident'>de</span>::<span class='ident'>Error</span>::<span class='ident'>end_of_stream</span>(),
-            <span class='ident'>de</span>::<span class='ident'>value</span>::<span class='ident'>Error</span>::<span class='ident'>InvalidType</span>(<span class='ident'>ty</span>) <span class='op'>=&gt;</span> {
-                <span class='ident'>Error</span>::<span class='ident'>Syntax</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>InvalidType</span>(<span class='ident'>ty</span>), <span class='number'>0</span>, <span class='number'>0</span>)
+            <span class="ident">de</span>::<span class="ident">value</span>::<span class="ident">Error</span>::<span class="ident">EndOfStream</span> <span class="op">=&gt;</span> <span class="ident">de</span>::<span class="ident">Error</span>::<span class="ident">end_of_stream</span>(),
+            <span class="ident">de</span>::<span class="ident">value</span>::<span class="ident">Error</span>::<span class="ident">InvalidType</span>(<span class="ident">ty</span>) <span class="op">=&gt;</span> {
+                <span class="ident">Error</span>::<span class="ident">Syntax</span>(<span class="ident">ErrorCode</span>::<span class="ident">InvalidType</span>(<span class="ident">ty</span>), <span class="number">0</span>, <span class="number">0</span>)
             }
-            <span class='ident'>de</span>::<span class='ident'>value</span>::<span class='ident'>Error</span>::<span class='ident'>InvalidValue</span>(<span class='ident'>msg</span>) <span class='op'>=&gt;</span> {
-                <span class='ident'>Error</span>::<span class='ident'>Syntax</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>InvalidValue</span>(<span class='ident'>msg</span>), <span class='number'>0</span>, <span class='number'>0</span>)
+            <span class="ident">de</span>::<span class="ident">value</span>::<span class="ident">Error</span>::<span class="ident">InvalidValue</span>(<span class="ident">msg</span>) <span class="op">=&gt;</span> {
+                <span class="ident">Error</span>::<span class="ident">Syntax</span>(<span class="ident">ErrorCode</span>::<span class="ident">InvalidValue</span>(<span class="ident">msg</span>), <span class="number">0</span>, <span class="number">0</span>)
             }
-            <span class='ident'>de</span>::<span class='ident'>value</span>::<span class='ident'>Error</span>::<span class='ident'>InvalidLength</span>(<span class='ident'>len</span>) <span class='op'>=&gt;</span> {
-                <span class='ident'>Error</span>::<span class='ident'>Syntax</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>InvalidLength</span>(<span class='ident'>len</span>), <span class='number'>0</span>, <span class='number'>0</span>)
+            <span class="ident">de</span>::<span class="ident">value</span>::<span class="ident">Error</span>::<span class="ident">InvalidLength</span>(<span class="ident">len</span>) <span class="op">=&gt;</span> {
+                <span class="ident">Error</span>::<span class="ident">Syntax</span>(<span class="ident">ErrorCode</span>::<span class="ident">InvalidLength</span>(<span class="ident">len</span>), <span class="number">0</span>, <span class="number">0</span>)
             }
-            <span class='ident'>de</span>::<span class='ident'>value</span>::<span class='ident'>Error</span>::<span class='ident'>UnknownVariant</span>(<span class='ident'>variant</span>) <span class='op'>=&gt;</span> {
-                <span class='ident'>Error</span>::<span class='ident'>Syntax</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>UnknownVariant</span>(<span class='ident'>variant</span>), <span class='number'>0</span>, <span class='number'>0</span>)
+            <span class="ident">de</span>::<span class="ident">value</span>::<span class="ident">Error</span>::<span class="ident">UnknownVariant</span>(<span class="ident">variant</span>) <span class="op">=&gt;</span> {
+                <span class="ident">Error</span>::<span class="ident">Syntax</span>(<span class="ident">ErrorCode</span>::<span class="ident">UnknownVariant</span>(<span class="ident">variant</span>), <span class="number">0</span>, <span class="number">0</span>)
             }
-            <span class='ident'>de</span>::<span class='ident'>value</span>::<span class='ident'>Error</span>::<span class='ident'>UnknownField</span>(<span class='ident'>field</span>) <span class='op'>=&gt;</span> {
-                <span class='ident'>Error</span>::<span class='ident'>Syntax</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>UnknownField</span>(<span class='ident'>field</span>), <span class='number'>0</span>, <span class='number'>0</span>)
+            <span class="ident">de</span>::<span class="ident">value</span>::<span class="ident">Error</span>::<span class="ident">UnknownField</span>(<span class="ident">field</span>) <span class="op">=&gt;</span> {
+                <span class="ident">Error</span>::<span class="ident">Syntax</span>(<span class="ident">ErrorCode</span>::<span class="ident">UnknownField</span>(<span class="ident">field</span>), <span class="number">0</span>, <span class="number">0</span>)
             }
-            <span class='ident'>de</span>::<span class='ident'>value</span>::<span class='ident'>Error</span>::<span class='ident'>MissingField</span>(<span class='ident'>field</span>) <span class='op'>=&gt;</span> {
-                <span class='ident'>Error</span>::<span class='ident'>Syntax</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>MissingField</span>(<span class='ident'>field</span>), <span class='number'>0</span>, <span class='number'>0</span>)
+            <span class="ident">de</span>::<span class="ident">value</span>::<span class="ident">Error</span>::<span class="ident">MissingField</span>(<span class="ident">field</span>) <span class="op">=&gt;</span> {
+                <span class="ident">Error</span>::<span class="ident">Syntax</span>(<span class="ident">ErrorCode</span>::<span class="ident">MissingField</span>(<span class="ident">field</span>), <span class="number">0</span>, <span class="number">0</span>)
             }
         }
     }
 }
 
-<span class='kw'>impl</span> <span class='ident'>de</span>::<span class='ident'>Error</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-    <span class='kw'>fn</span> <span class='ident'>custom</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>(<span class='ident'>msg</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='ident'>Error</span>::<span class='ident'>Syntax</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>Custom</span>(<span class='ident'>msg</span>.<span class='ident'>into</span>()), <span class='number'>0</span>, <span class='number'>0</span>)
+<span class="kw">impl</span> <span class="ident">de</span>::<span class="ident">Error</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">custom</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>(<span class="ident">msg</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">Syntax</span>(<span class="ident">ErrorCode</span>::<span class="ident">Custom</span>(<span class="ident">msg</span>.<span class="ident">into</span>()), <span class="number">0</span>, <span class="number">0</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>end_of_stream</span>() <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='ident'>Error</span>::<span class='ident'>Syntax</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>EOFWhileParsingValue</span>, <span class='number'>0</span>, <span class='number'>0</span>)
+    <span class="kw">fn</span> <span class="ident">end_of_stream</span>() <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">Syntax</span>(<span class="ident">ErrorCode</span>::<span class="ident">EOFWhileParsingValue</span>, <span class="number">0</span>, <span class="number">0</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>invalid_type</span>(<span class='ident'>ty</span>: <span class='ident'>de</span>::<span class='ident'>Type</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='ident'>Error</span>::<span class='ident'>Syntax</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>InvalidType</span>(<span class='ident'>ty</span>), <span class='number'>0</span>, <span class='number'>0</span>)
+    <span class="kw">fn</span> <span class="ident">invalid_type</span>(<span class="ident">ty</span>: <span class="ident">de</span>::<span class="ident">Type</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">Syntax</span>(<span class="ident">ErrorCode</span>::<span class="ident">InvalidType</span>(<span class="ident">ty</span>), <span class="number">0</span>, <span class="number">0</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>invalid_value</span>(<span class='ident'>msg</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='ident'>Error</span>::<span class='ident'>Syntax</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>InvalidValue</span>(<span class='ident'>msg</span>.<span class='ident'>to_owned</span>()), <span class='number'>0</span>, <span class='number'>0</span>)
+    <span class="kw">fn</span> <span class="ident">invalid_value</span>(<span class="ident">msg</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">Syntax</span>(<span class="ident">ErrorCode</span>::<span class="ident">InvalidValue</span>(<span class="ident">msg</span>.<span class="ident">to_owned</span>()), <span class="number">0</span>, <span class="number">0</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>invalid_length</span>(<span class='ident'>len</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='ident'>Error</span>::<span class='ident'>Syntax</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>InvalidLength</span>(<span class='ident'>len</span>), <span class='number'>0</span>, <span class='number'>0</span>)
+    <span class="kw">fn</span> <span class="ident">invalid_length</span>(<span class="ident">len</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">Syntax</span>(<span class="ident">ErrorCode</span>::<span class="ident">InvalidLength</span>(<span class="ident">len</span>), <span class="number">0</span>, <span class="number">0</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>unknown_variant</span>(<span class='ident'>variant</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='ident'>Error</span>::<span class='ident'>Syntax</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>UnknownVariant</span>(<span class='ident'>String</span>::<span class='ident'>from</span>(<span class='ident'>variant</span>)), <span class='number'>0</span>, <span class='number'>0</span>)
+    <span class="kw">fn</span> <span class="ident">unknown_variant</span>(<span class="ident">variant</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">Syntax</span>(<span class="ident">ErrorCode</span>::<span class="ident">UnknownVariant</span>(<span class="ident">String</span>::<span class="ident">from</span>(<span class="ident">variant</span>)), <span class="number">0</span>, <span class="number">0</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>unknown_field</span>(<span class='ident'>field</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='ident'>Error</span>::<span class='ident'>Syntax</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>UnknownField</span>(<span class='ident'>String</span>::<span class='ident'>from</span>(<span class='ident'>field</span>)), <span class='number'>0</span>, <span class='number'>0</span>)
+    <span class="kw">fn</span> <span class="ident">unknown_field</span>(<span class="ident">field</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">Syntax</span>(<span class="ident">ErrorCode</span>::<span class="ident">UnknownField</span>(<span class="ident">String</span>::<span class="ident">from</span>(<span class="ident">field</span>)), <span class="number">0</span>, <span class="number">0</span>)
     }
 
-    <span class='kw'>fn</span> <span class='ident'>missing_field</span>(<span class='ident'>field</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='ident'>Error</span>::<span class='ident'>Syntax</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>MissingField</span>(<span class='ident'>field</span>), <span class='number'>0</span>, <span class='number'>0</span>)
-    }
-}
-
-<span class='kw'>impl</span> <span class='ident'>ser</span>::<span class='ident'>Error</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-    <span class='doccomment'>/// Raised when there is general error when deserializing a type.</span>
-    <span class='kw'>fn</span> <span class='ident'>custom</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>Into</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span>(<span class='ident'>msg</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-        <span class='ident'>Error</span>::<span class='ident'>Syntax</span>(<span class='ident'>ErrorCode</span>::<span class='ident'>Custom</span>(<span class='ident'>msg</span>.<span class='ident'>into</span>()), <span class='number'>0</span>, <span class='number'>0</span>)
+    <span class="kw">fn</span> <span class="ident">missing_field</span>(<span class="ident">field</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">Syntax</span>(<span class="ident">ErrorCode</span>::<span class="ident">MissingField</span>(<span class="ident">field</span>), <span class="number">0</span>, <span class="number">0</span>)
     }
 }
 
-<span class='doccomment'>/// Helper alias for `Result` objects that return a JSON `Error`.</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>result</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Error</span><span class='op'>&gt;</span>;
+<span class="kw">impl</span> <span class="ident">ser</span>::<span class="ident">Error</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="doccomment">/// Raised when there is general error when deserializing a type.</span>
+    <span class="kw">fn</span> <span class="ident">custom</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>(<span class="ident">msg</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+        <span class="ident">Error</span>::<span class="ident">Syntax</span>(<span class="ident">ErrorCode</span>::<span class="ident">Custom</span>(<span class="ident">msg</span>.<span class="ident">into</span>()), <span class="number">0</span>, <span class="number">0</span>)
+    }
+}
+
+<span class="doccomment">/// Helper alias for `Result` objects that return a JSON `Error`.</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">result</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
@@ -573,18 +585,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -616,11 +632,8 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "serde_json";
-        window.playgroundUrl = "";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

@@ -9,14 +9,18 @@
 
     <title>mod.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,7 +54,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -203,166 +215,166 @@
 <span id="159">159</span>
 <span id="160">160</span>
 <span id="161">161</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Provides an implementation of a WebSocket server</span>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::{<span class='ident'>SocketAddr</span>, <span class='ident'>ToSocketAddrs</span>, <span class='ident'>TcpListener</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::<span class='ident'>Shutdown</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::{<span class='ident'>Read</span>, <span class='ident'>Write</span>};
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>request</span>::<span class='ident'>Request</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>response</span>::<span class='ident'>Response</span>;
+</pre><pre class="rust ">
+<span class="doccomment">//! Provides an implementation of a WebSocket server</span>
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">net</span>::{<span class="ident">SocketAddr</span>, <span class="ident">ToSocketAddrs</span>, <span class="ident">TcpListener</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">net</span>::<span class="ident">Shutdown</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="ident">Read</span>, <span class="ident">Write</span>};
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">request</span>::<span class="ident">Request</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">response</span>::<span class="ident">Response</span>;
 
-<span class='kw'>use</span> <span class='ident'>stream</span>::<span class='ident'>WebSocketStream</span>;
+<span class="kw">use</span> <span class="ident">stream</span>::<span class="ident">WebSocketStream</span>;
 
-<span class='kw'>use</span> <span class='ident'>openssl</span>::<span class='ident'>ssl</span>::<span class='ident'>SslContext</span>;
-<span class='kw'>use</span> <span class='ident'>openssl</span>::<span class='ident'>ssl</span>::<span class='ident'>SslStream</span>;
+<span class="kw">use</span> <span class="ident">openssl</span>::<span class="ident">ssl</span>::<span class="ident">SslContext</span>;
+<span class="kw">use</span> <span class="ident">openssl</span>::<span class="ident">ssl</span>::<span class="ident">SslStream</span>;
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>request</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>response</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">request</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">response</span>;
 
-<span class='doccomment'>/// Represents a WebSocket server which can work with either normal (non-secure) connections, or secure WebSocket connections.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// This is a convenient way to implement WebSocket servers, however it is possible to use any sendable Reader and Writer to obtain</span>
-<span class='doccomment'>/// a WebSocketClient, so if needed, an alternative server implementation can be used.</span>
-<span class='doccomment'>///#Non-secure Servers</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```no_run</span>
-<span class='doccomment'>///extern crate websocket;</span>
-<span class='doccomment'>///# fn main() {</span>
-<span class='doccomment'>///use std::thread;</span>
-<span class='doccomment'>///use websocket::{Server, Message};</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///let server = Server::bind(&quot;127.0.0.1:1234&quot;).unwrap();</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///for connection in server {</span>
-<span class='doccomment'>///    // Spawn a new thread for each connection.</span>
-<span class='doccomment'>///    thread::spawn(move || {</span>
-<span class='doccomment'>///		   let request = connection.unwrap().read_request().unwrap(); // Get the request</span>
-<span class='doccomment'>///		   let response = request.accept(); // Form a response</span>
-<span class='doccomment'>///		   let mut client = response.send().unwrap(); // Send the response</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///		   let message = Message::text(&quot;Hello, client!&quot;);</span>
-<span class='doccomment'>///		   let _ = client.send_message(&amp;message);</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///		   // ...</span>
-<span class='doccomment'>///    });</span>
-<span class='doccomment'>///}</span>
-<span class='doccomment'>/// # }</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///#Secure Servers</span>
-<span class='doccomment'>/// ```no_run</span>
-<span class='doccomment'>///extern crate websocket;</span>
-<span class='doccomment'>///extern crate openssl;</span>
-<span class='doccomment'>///# fn main() {</span>
-<span class='doccomment'>///use std::thread;</span>
-<span class='doccomment'>///use std::path::Path;</span>
-<span class='doccomment'>///use websocket::{Server, Message};</span>
-<span class='doccomment'>///use openssl::ssl::{SslContext, SslMethod};</span>
-<span class='doccomment'>///use openssl::x509::X509FileType;</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///let mut context = SslContext::new(SslMethod::Tlsv1).unwrap();</span>
-<span class='doccomment'>///let _ = context.set_certificate_file(&amp;(Path::new(&quot;cert.pem&quot;)), X509FileType::PEM);</span>
-<span class='doccomment'>///let _ = context.set_private_key_file(&amp;(Path::new(&quot;key.pem&quot;)), X509FileType::PEM);</span>
-<span class='doccomment'>///let server = Server::bind_secure(&quot;127.0.0.1:1234&quot;, &amp;context).unwrap();</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///for connection in server {</span>
-<span class='doccomment'>///    // Spawn a new thread for each connection.</span>
-<span class='doccomment'>///    thread::spawn(move || {</span>
-<span class='doccomment'>///		   let request = connection.unwrap().read_request().unwrap(); // Get the request</span>
-<span class='doccomment'>///		   let response = request.accept(); // Form a response</span>
-<span class='doccomment'>///		   let mut client = response.send().unwrap(); // Send the response</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///		   let message = Message::text(&quot;Hello, client!&quot;);</span>
-<span class='doccomment'>///		   let _ = client.send_message(&amp;message);</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///		   // ...</span>
-<span class='doccomment'>///    });</span>
-<span class='doccomment'>///}</span>
-<span class='doccomment'>/// # }</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Server</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-	<span class='ident'>inner</span>: <span class='ident'>TcpListener</span>,
-	<span class='ident'>context</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>SslContext</span><span class='op'>&gt;</span>,
+<span class="doccomment">/// Represents a WebSocket server which can work with either normal (non-secure) connections, or secure WebSocket connections.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// This is a convenient way to implement WebSocket servers, however it is possible to use any sendable Reader and Writer to obtain</span>
+<span class="doccomment">/// a WebSocketClient, so if needed, an alternative server implementation can be used.</span>
+<span class="doccomment">///#Non-secure Servers</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```no_run</span>
+<span class="doccomment">///extern crate websocket;</span>
+<span class="doccomment">///# fn main() {</span>
+<span class="doccomment">///use std::thread;</span>
+<span class="doccomment">///use websocket::{Server, Message};</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///let server = Server::bind(&quot;127.0.0.1:1234&quot;).unwrap();</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///for connection in server {</span>
+<span class="doccomment">///    // Spawn a new thread for each connection.</span>
+<span class="doccomment">///    thread::spawn(move || {</span>
+<span class="doccomment">///		   let request = connection.unwrap().read_request().unwrap(); // Get the request</span>
+<span class="doccomment">///		   let response = request.accept(); // Form a response</span>
+<span class="doccomment">///		   let mut client = response.send().unwrap(); // Send the response</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///		   let message = Message::text(&quot;Hello, client!&quot;);</span>
+<span class="doccomment">///		   let _ = client.send_message(&amp;message);</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///		   // ...</span>
+<span class="doccomment">///    });</span>
+<span class="doccomment">///}</span>
+<span class="doccomment">/// # }</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///#Secure Servers</span>
+<span class="doccomment">/// ```no_run</span>
+<span class="doccomment">///extern crate websocket;</span>
+<span class="doccomment">///extern crate openssl;</span>
+<span class="doccomment">///# fn main() {</span>
+<span class="doccomment">///use std::thread;</span>
+<span class="doccomment">///use std::path::Path;</span>
+<span class="doccomment">///use websocket::{Server, Message};</span>
+<span class="doccomment">///use openssl::ssl::{SslContext, SslMethod};</span>
+<span class="doccomment">///use openssl::x509::X509FileType;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///let mut context = SslContext::new(SslMethod::Tlsv1).unwrap();</span>
+<span class="doccomment">///let _ = context.set_certificate_file(&amp;(Path::new(&quot;cert.pem&quot;)), X509FileType::PEM);</span>
+<span class="doccomment">///let _ = context.set_private_key_file(&amp;(Path::new(&quot;key.pem&quot;)), X509FileType::PEM);</span>
+<span class="doccomment">///let server = Server::bind_secure(&quot;127.0.0.1:1234&quot;, &amp;context).unwrap();</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///for connection in server {</span>
+<span class="doccomment">///    // Spawn a new thread for each connection.</span>
+<span class="doccomment">///    thread::spawn(move || {</span>
+<span class="doccomment">///		   let request = connection.unwrap().read_request().unwrap(); // Get the request</span>
+<span class="doccomment">///		   let response = request.accept(); // Form a response</span>
+<span class="doccomment">///		   let mut client = response.send().unwrap(); // Send the response</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///		   let message = Message::text(&quot;Hello, client!&quot;);</span>
+<span class="doccomment">///		   let _ = client.send_message(&amp;message);</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///		   // ...</span>
+<span class="doccomment">///    });</span>
+<span class="doccomment">///}</span>
+<span class="doccomment">/// # }</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Server</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+	<span class="ident">inner</span>: <span class="ident">TcpListener</span>,
+	<span class="ident">context</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">SslContext</span><span class="op">&gt;</span>,
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Server</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-	<span class='doccomment'>/// Bind this Server to this socket</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>bind</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>ToSocketAddrs</span><span class='op'>&gt;</span>(<span class='ident'>addr</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Server</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span> {
-		<span class='prelude-val'>Ok</span>(<span class='ident'>Server</span> {
-			<span class='ident'>inner</span>: <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>TcpListener</span>::<span class='ident'>bind</span>(<span class='kw-2'>&amp;</span><span class='ident'>addr</span>)),
-			<span class='ident'>context</span>: <span class='prelude-val'>None</span>,
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Server</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+	<span class="doccomment">/// Bind this Server to this socket</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bind</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ToSocketAddrs</span><span class="op">&gt;</span>(<span class="ident">addr</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Server</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span> {
+		<span class="prelude-val">Ok</span>(<span class="ident">Server</span> {
+			<span class="ident">inner</span>: <span class="macro">try</span><span class="macro">!</span>(<span class="ident">TcpListener</span>::<span class="ident">bind</span>(<span class="kw-2">&amp;</span><span class="ident">addr</span>)),
+			<span class="ident">context</span>: <span class="prelude-val">None</span>,
 		})
 	}
-	<span class='doccomment'>/// Bind this Server to this socket, utilising the given SslContext</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>bind_secure</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>ToSocketAddrs</span><span class='op'>&gt;</span>(<span class='ident'>addr</span>: <span class='ident'>T</span>, <span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>SslContext</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Server</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span> {
-		<span class='prelude-val'>Ok</span>(<span class='ident'>Server</span> {
-			<span class='ident'>inner</span>: <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>TcpListener</span>::<span class='ident'>bind</span>(<span class='kw-2'>&amp;</span><span class='ident'>addr</span>)),
-			<span class='ident'>context</span>: <span class='prelude-val'>Some</span>(<span class='ident'>context</span>),
+	<span class="doccomment">/// Bind this Server to this socket, utilising the given SslContext</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">bind_secure</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ToSocketAddrs</span><span class="op">&gt;</span>(<span class="ident">addr</span>: <span class="ident">T</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">SslContext</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Server</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span> {
+		<span class="prelude-val">Ok</span>(<span class="ident">Server</span> {
+			<span class="ident">inner</span>: <span class="macro">try</span><span class="macro">!</span>(<span class="ident">TcpListener</span>::<span class="ident">bind</span>(<span class="kw-2">&amp;</span><span class="ident">addr</span>)),
+			<span class="ident">context</span>: <span class="prelude-val">Some</span>(<span class="ident">context</span>),
 		})
 	}
-	<span class='doccomment'>/// Get the socket address of this server</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>local_addr</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>SocketAddr</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>local_addr</span>()
+	<span class="doccomment">/// Get the socket address of this server</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">local_addr</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SocketAddr</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">local_addr</span>()
 	}
 
-	<span class='doccomment'>/// Create a new independently owned handle to the underlying socket.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>try_clone</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Server</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;&gt;</span> {
-		<span class='kw'>let</span> <span class='ident'>inner</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>try_clone</span>());
-		<span class='prelude-val'>Ok</span>(<span class='ident'>Server</span> {
-			<span class='ident'>inner</span>: <span class='ident'>inner</span>,
-			<span class='ident'>context</span>: <span class='self'>self</span>.<span class='ident'>context</span>
+	<span class="doccomment">/// Create a new independently owned handle to the underlying socket.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Server</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span> {
+		<span class="kw">let</span> <span class="ident">inner</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">try_clone</span>());
+		<span class="prelude-val">Ok</span>(<span class="ident">Server</span> {
+			<span class="ident">inner</span>: <span class="ident">inner</span>,
+			<span class="ident">context</span>: <span class="self">self</span>.<span class="ident">context</span>
 		})
 	}
 
-	<span class='doccomment'>/// Wait for and accept an incoming WebSocket connection, returning a WebSocketRequest</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>accept</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Connection</span><span class='op'>&lt;</span><span class='ident'>WebSocketStream</span>, <span class='ident'>WebSocketStream</span><span class='op'>&gt;&gt;</span> {
-		<span class='kw'>let</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>inner</span>.<span class='ident'>accept</span>()).<span class='number'>0</span>;
-		<span class='kw'>let</span> <span class='ident'>wsstream</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>context</span> {
-			<span class='prelude-val'>Some</span>(<span class='ident'>context</span>) <span class='op'>=&gt;</span> {
-				<span class='kw'>let</span> <span class='ident'>sslstream</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>SslStream</span>::<span class='ident'>accept</span>(<span class='ident'>context</span>, <span class='ident'>stream</span>) {
-					<span class='prelude-val'>Ok</span>(<span class='ident'>s</span>) <span class='op'>=&gt;</span> <span class='ident'>s</span>,
-					<span class='prelude-val'>Err</span>(<span class='ident'>err</span>) <span class='op'>=&gt;</span> {
-						<span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>Other</span>, <span class='ident'>err</span>));
+	<span class="doccomment">/// Wait for and accept an incoming WebSocket connection, returning a WebSocketRequest</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">accept</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Connection</span><span class="op">&lt;</span><span class="ident">WebSocketStream</span>, <span class="ident">WebSocketStream</span><span class="op">&gt;&gt;</span> {
+		<span class="kw">let</span> <span class="ident">stream</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">inner</span>.<span class="ident">accept</span>()).<span class="number">0</span>;
+		<span class="kw">let</span> <span class="ident">wsstream</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">context</span> {
+			<span class="prelude-val">Some</span>(<span class="ident">context</span>) <span class="op">=&gt;</span> {
+				<span class="kw">let</span> <span class="ident">sslstream</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">SslStream</span>::<span class="ident">accept</span>(<span class="ident">context</span>, <span class="ident">stream</span>) {
+					<span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=&gt;</span> <span class="ident">s</span>,
+					<span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> {
+						<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">Other</span>, <span class="ident">err</span>));
 					}
 				};
-				<span class='ident'>WebSocketStream</span>::<span class='ident'>Ssl</span>(<span class='ident'>sslstream</span>)
+				<span class="ident">WebSocketStream</span>::<span class="ident">Ssl</span>(<span class="ident">sslstream</span>)
 			}
-			<span class='prelude-val'>None</span> <span class='op'>=&gt;</span> { <span class='ident'>WebSocketStream</span>::<span class='ident'>Tcp</span>(<span class='ident'>stream</span>) }
+			<span class="prelude-val">None</span> <span class="op">=&gt;</span> { <span class="ident">WebSocketStream</span>::<span class="ident">Tcp</span>(<span class="ident">stream</span>) }
 		};
-		<span class='prelude-val'>Ok</span>(<span class='ident'>Connection</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>wsstream</span>.<span class='ident'>try_clone</span>()), <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>wsstream</span>.<span class='ident'>try_clone</span>())))
+		<span class="prelude-val">Ok</span>(<span class="ident">Connection</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">wsstream</span>.<span class="ident">try_clone</span>()), <span class="macro">try</span><span class="macro">!</span>(<span class="ident">wsstream</span>.<span class="ident">try_clone</span>())))
 	}
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> <span class='ident'>Iterator</span> <span class='kw'>for</span> <span class='ident'>Server</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span> {
-	<span class='kw'>type</span> <span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Connection</span><span class='op'>&lt;</span><span class='ident'>WebSocketStream</span>, <span class='ident'>WebSocketStream</span><span class='op'>&gt;&gt;</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">Server</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+	<span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Connection</span><span class="op">&lt;</span><span class="ident">WebSocketStream</span>, <span class="ident">WebSocketStream</span><span class="op">&gt;&gt;</span>;
 
-	<span class='kw'>fn</span> <span class='ident'>next</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;&lt;</span><span class='self'>Self</span> <span class='kw'>as</span> <span class='ident'>Iterator</span><span class='op'>&gt;</span>::<span class='ident'>Item</span><span class='op'>&gt;</span> {
-		<span class='prelude-val'>Some</span>(<span class='self'>self</span>.<span class='ident'>accept</span>())
+	<span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Iterator</span><span class="op">&gt;</span>::<span class="ident">Item</span><span class="op">&gt;</span> {
+		<span class="prelude-val">Some</span>(<span class="self">self</span>.<span class="ident">accept</span>())
 	}
 }
 
-<span class='doccomment'>/// Represents a connection to the server that has not been processed yet.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Connection</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Read</span>, <span class='ident'>W</span>: <span class='ident'>Write</span><span class='op'>&gt;</span>(<span class='ident'>R</span>, <span class='ident'>W</span>);
+<span class="doccomment">/// Represents a connection to the server that has not been processed yet.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Connection</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span>, <span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="ident">R</span>, <span class="ident">W</span>);
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Read</span>, <span class='ident'>W</span>: <span class='ident'>Write</span><span class='op'>&gt;</span> <span class='ident'>Connection</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>W</span><span class='op'>&gt;</span> {
-	<span class='doccomment'>/// Process this connection and read the request.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>read_request</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Request</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>W</span><span class='op'>&gt;&gt;</span> {
-		<span class='kw'>match</span> <span class='ident'>Request</span>::<span class='ident'>read</span>(<span class='self'>self</span>.<span class='number'>0</span>, <span class='self'>self</span>.<span class='number'>1</span>) {
-			<span class='prelude-val'>Ok</span>(<span class='ident'>result</span>) <span class='op'>=&gt;</span> { <span class='prelude-val'>Ok</span>(<span class='ident'>result</span>) },
-			<span class='prelude-val'>Err</span>(<span class='ident'>err</span>) <span class='op'>=&gt;</span> {
-				<span class='prelude-val'>Err</span>(<span class='ident'>io</span>::<span class='ident'>Error</span>::<span class='ident'>new</span>(<span class='ident'>io</span>::<span class='ident'>ErrorKind</span>::<span class='ident'>InvalidInput</span>, <span class='ident'>err</span>))
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span>, <span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">Connection</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">W</span><span class="op">&gt;</span> {
+	<span class="doccomment">/// Process this connection and read the request.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read_request</span>(<span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">W</span><span class="op">&gt;&gt;</span> {
+		<span class="kw">match</span> <span class="ident">Request</span>::<span class="ident">read</span>(<span class="self">self</span>.<span class="number">0</span>, <span class="self">self</span>.<span class="number">1</span>) {
+			<span class="prelude-val">Ok</span>(<span class="ident">result</span>) <span class="op">=&gt;</span> { <span class="prelude-val">Ok</span>(<span class="ident">result</span>) },
+			<span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=&gt;</span> {
+				<span class="prelude-val">Err</span>(<span class="ident">io</span>::<span class="ident">Error</span>::<span class="ident">new</span>(<span class="ident">io</span>::<span class="ident">ErrorKind</span>::<span class="ident">InvalidInput</span>, <span class="ident">err</span>))
 			}
 		}
 	}
 }
 
-<span class='kw'>impl</span> <span class='ident'>Connection</span><span class='op'>&lt;</span><span class='ident'>WebSocketStream</span>, <span class='ident'>WebSocketStream</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// Shuts down the currennt connection in the specified way.</span>
-    <span class='doccomment'>/// All future IO calls to this connection will return immediately with an appropriate</span>
-    <span class='doccomment'>/// return value.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>shutdown</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>how</span>: <span class='ident'>Shutdown</span>) <span class='op'>-&gt;</span> <span class='ident'>io</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='number'>0</span>.<span class='ident'>shutdown</span>(<span class='ident'>how</span>)
+<span class="kw">impl</span> <span class="ident">Connection</span><span class="op">&lt;</span><span class="ident">WebSocketStream</span>, <span class="ident">WebSocketStream</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Shuts down the currennt connection in the specified way.</span>
+    <span class="doccomment">/// All future IO calls to this connection will return immediately with an appropriate</span>
+    <span class="doccomment">/// return value.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shutdown</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">how</span>: <span class="ident">Shutdown</span>) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="number">0</span>.<span class="ident">shutdown</span>(<span class="ident">how</span>)
     }
 }
 </pre>
@@ -379,18 +391,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -422,11 +438,8 @@
     <script>
         window.rootPath = "../../../";
         window.currentCrate = "websocket";
-        window.playgroundUrl = "";
     </script>
-    <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
-    
     <script defer src="../../../search-index.js"></script>
 </body>
 </html>

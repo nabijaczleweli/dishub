@@ -9,14 +9,18 @@
 
     <title>discord::model::ServerInfo - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'><a href='../index.html'>discord</a>::<wbr><a href='index.html'>model</a></p><script>window.sidebarCurrent = {name: 'ServerInfo', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct ServerInfo</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.id">id</a><a href="#structfield.name">name</a><a href="#structfield.icon">icon</a><a href="#structfield.owner">owner</a><a href="#structfield.permissions">permissions</a></div><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.decode">decode</a><a href="#method.icon_url">icon_url</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Debug">Debug</a><a href="#impl-Clone">Clone</a></div></div><p class='location'><a href='../index.html'>discord</a>::<wbr><a href='index.html'>model</a></p><script>window.sidebarCurrent = {name: 'ServerInfo', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,47 +54,60 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>discord</a>::<wbr><a href='index.html'>model</a>::<wbr><a class='struct' href=''>ServerInfo</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>discord</a>::<wbr><a href='index.html'>model</a>::<wbr><a class="struct" href=''>ServerInfo</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1429' class='srclink' href='../../src/discord/model.rs.html#233-239' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../../src/discord/model.rs.html#233-239' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct ServerInfo {
-    pub id: <a class='struct' href='../../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>,
-    pub name: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>,
-    pub icon: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;,
-    pub owner: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a>,
-    pub permissions: <a class='struct' href='../../discord/model/permissions/struct.Permissions.html' title='discord::model::permissions::Permissions'>Permissions</a>,
+    pub id: <a class="struct" href="../../discord/model/struct.ServerId.html" title="struct discord::model::ServerId">ServerId</a>,
+    pub name: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>,
+    pub icon: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;,
+    pub owner: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>,
+    pub permissions: <a class="struct" href="../../discord/model/permissions/struct.Permissions.html" title="struct discord::model::permissions::Permissions">Permissions</a>,
 }</pre><div class='docblock'><p>The basic information about a server only</p>
-</div><h2 class='fields'>Fields</h2><span id='structfield.id' class='structfield'>
-                           <span id='id.v' class='invisible'>
-                           <code>id: <a class='struct' href='../../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.name' class='structfield'>
-                           <span id='name.v' class='invisible'>
-                           <code>name: <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.icon' class='structfield'>
-                           <span id='icon.v' class='invisible'>
-                           <code>icon: <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code>
-                           </span></span><span class='stab '></span><span id='structfield.owner' class='structfield'>
-                           <span id='owner.v' class='invisible'>
-                           <code>owner: <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.bool.html'>bool</a></code>
-                           </span></span><span class='stab '></span><span id='structfield.permissions' class='structfield'>
-                           <span id='permissions.v' class='invisible'>
-                           <code>permissions: <a class='struct' href='../../discord/model/permissions/struct.Permissions.html' title='discord::model::permissions::Permissions'>Permissions</a></code>
-                           </span></span><span class='stab '></span><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../discord/model/struct.ServerInfo.html' title='discord::model::ServerInfo'>ServerInfo</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1453' class='srclink' href='../../src/discord/model.rs.html#241-260' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.decode' class='method'><span id='decode.v' class='invisible'><code>fn <a href='#method.decode' class='fnname'>decode</a>(value: <a class='enum' href='../../serde_json/value/enum.Value.html' title='serde_json::value::Value'>Value</a>) -&gt; <a class='type' href='../../discord/type.Result.html' title='discord::Result'>Result</a>&lt;Self&gt;</code></span></h4>
-<h4 id='method.icon_url' class='method'><span id='icon_url.v' class='invisible'><code>fn <a href='#method.icon_url' class='fnname'>icon_url</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;</code></span></h4>
-<div class='docblock'><p>Returns the formatted URL of the server&#39;s icon.</p>
-
+</div><h2 id='fields' class='fields small-section-header'>
+                       Fields<a href='#fields' class='anchor'></a></h2><span id="structfield.id" class="structfield small-section-header">
+                           <a href="#structfield.id" class="anchor field"></a>
+                           <span id="id.v" class='invisible'>
+                           <code>id: <a class="struct" href="../../discord/model/struct.ServerId.html" title="struct discord::model::ServerId">ServerId</a></code>
+                           </span></span><span id="structfield.name" class="structfield small-section-header">
+                           <a href="#structfield.name" class="anchor field"></a>
+                           <span id="name.v" class='invisible'>
+                           <code>name: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a></code>
+                           </span></span><span id="structfield.icon" class="structfield small-section-header">
+                           <a href="#structfield.icon" class="anchor field"></a>
+                           <span id="icon.v" class='invisible'>
+                           <code>icon: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;</code>
+                           </span></span><span id="structfield.owner" class="structfield small-section-header">
+                           <a href="#structfield.owner" class="anchor field"></a>
+                           <span id="owner.v" class='invisible'>
+                           <code>owner: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a></code>
+                           </span></span><span id="structfield.permissions" class="structfield small-section-header">
+                           <a href="#structfield.permissions" class="anchor field"></a>
+                           <span id="permissions.v" class='invisible'>
+                           <code>permissions: <a class="struct" href="../../discord/model/permissions/struct.Permissions.html" title="struct discord::model::permissions::Permissions">Permissions</a></code>
+                           </span></span>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../discord/model/struct.ServerInfo.html" title="struct discord::model::ServerInfo">ServerInfo</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/discord/model.rs.html#241-260' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.decode' class="method"><span id='decode.v' class='invisible'><code>pub fn <a href='#method.decode' class='fnname'>decode</a>(value: <a class="enum" href="../../serde_json/value/enum.Value.html" title="enum serde_json::value::Value">Value</a>) -&gt; <a class="type" href="../../discord/type.Result.html" title="type discord::Result">Result</a>&lt;Self&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/discord/model.rs.html#242-251' title='goto source code'>[src]</a></span></h4>
+<h4 id='method.icon_url' class="method"><span id='icon_url.v' class='invisible'><code>pub fn <a href='#method.icon_url' class='fnname'>icon_url</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/discord/model.rs.html#256-259' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Returns the formatted URL of the server's icon.</p>
 <p>Returns None if the server does not have an icon.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../../discord/model/struct.ServerInfo.html' title='discord::model::ServerInfo'>ServerInfo</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1435' class='srclink' href='../../src/discord/model.rs.html#232' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
-<div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../../discord/model/struct.ServerInfo.html' title='discord::model::ServerInfo'>ServerInfo</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1445' class='srclink' href='../../src/discord/model.rs.html#232' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../../discord/model/struct.ServerInfo.html' title='discord::model::ServerInfo'>ServerInfo</a></code></span></h4>
+</div></div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../../discord/model/struct.ServerInfo.html" title="struct discord::model::ServerInfo">ServerInfo</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/discord/model.rs.html#232' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/discord/model.rs.html#232' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter. <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt">Read more</a></p>
+</div></div><h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../../discord/model/struct.ServerInfo.html" title="struct discord::model::ServerInfo">ServerInfo</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/discord/model.rs.html#232' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../../discord/model/struct.ServerInfo.html" title="struct discord::model::ServerInfo">ServerInfo</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/discord/model.rs.html#232' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self)</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/clone.rs.html#112-114' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
@@ -97,18 +122,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -140,11 +169,8 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "discord";
-        window.playgroundUrl = "";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

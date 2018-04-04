@@ -9,14 +9,18 @@
 
     <title>mod.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,7 +54,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -293,256 +305,256 @@
 <span id="249">249</span>
 <span id="250">250</span>
 <span id="251">251</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Contains the WebSocket client.</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! Contains the WebSocket client.</span>
 
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::<span class='ident'>TcpStream</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>marker</span>::<span class='ident'>PhantomData</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='prelude-ty'>Result</span> <span class='kw'>as</span> <span class='ident'>IoResult</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">net</span>::<span class="ident">TcpStream</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">marker</span>::<span class="ident">PhantomData</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="prelude-ty">Result</span> <span class="kw">as</span> <span class="ident">IoResult</span>;
 
-<span class='kw'>use</span> <span class='ident'>ws</span>;
-<span class='kw'>use</span> <span class='ident'>ws</span>::<span class='ident'>util</span>::<span class='ident'>url</span>::<span class='ident'>ToWebSocketUrlComponents</span>;
-<span class='kw'>use</span> <span class='ident'>ws</span>::<span class='ident'>receiver</span>::{<span class='ident'>DataFrameIterator</span>, <span class='ident'>MessageIterator</span>};
-<span class='kw'>use</span> <span class='ident'>result</span>::<span class='ident'>WebSocketResult</span>;
-<span class='kw'>use</span> <span class='ident'>stream</span>::<span class='ident'>WebSocketStream</span>;
-<span class='kw'>use</span> <span class='ident'>dataframe</span>::<span class='ident'>DataFrame</span>;
-<span class='kw'>use</span> <span class='ident'>ws</span>::<span class='ident'>dataframe</span>::<span class='ident'>DataFrame</span> <span class='kw'>as</span> <span class='ident'>DataFrameable</span>;
+<span class="kw">use</span> <span class="ident">ws</span>;
+<span class="kw">use</span> <span class="ident">ws</span>::<span class="ident">util</span>::<span class="ident">url</span>::<span class="ident">ToWebSocketUrlComponents</span>;
+<span class="kw">use</span> <span class="ident">ws</span>::<span class="ident">receiver</span>::{<span class="ident">DataFrameIterator</span>, <span class="ident">MessageIterator</span>};
+<span class="kw">use</span> <span class="ident">result</span>::<span class="ident">WebSocketResult</span>;
+<span class="kw">use</span> <span class="ident">stream</span>::<span class="ident">WebSocketStream</span>;
+<span class="kw">use</span> <span class="ident">dataframe</span>::<span class="ident">DataFrame</span>;
+<span class="kw">use</span> <span class="ident">ws</span>::<span class="ident">dataframe</span>::<span class="ident">DataFrame</span> <span class="kw">as</span> <span class="ident">DataFrameable</span>;
 
-<span class='kw'>use</span> <span class='ident'>openssl</span>::<span class='ident'>ssl</span>::{<span class='ident'>SslContext</span>, <span class='ident'>SslMethod</span>, <span class='ident'>SslStream</span>};
+<span class="kw">use</span> <span class="ident">openssl</span>::<span class="ident">ssl</span>::{<span class="ident">SslContext</span>, <span class="ident">SslMethod</span>, <span class="ident">SslStream</span>};
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>request</span>::<span class='ident'>Request</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='self'>self</span>::<span class='ident'>response</span>::<span class='ident'>Response</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">request</span>::<span class="ident">Request</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">response</span>::<span class="ident">Response</span>;
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>sender</span>::<span class='ident'>Sender</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>receiver</span>::<span class='ident'>Receiver</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">sender</span>::<span class="ident">Sender</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">receiver</span>::<span class="ident">Receiver</span>;
 
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>request</span>;
-<span class='kw'>pub</span> <span class='kw'>mod</span> <span class='ident'>response</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">request</span>;
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">response</span>;
 
-<span class='doccomment'>/// Represents a WebSocket client, which can send and receive messages/data frames.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// `D` is the data frame type, `S` is the type implementing `Sender&lt;D&gt;` and `R`</span>
-<span class='doccomment'>/// is the type implementing `Receiver&lt;D&gt;`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// For most cases, the data frame type will be `dataframe::DataFrame`, the Sender</span>
-<span class='doccomment'>/// type will be `client::Sender&lt;stream::WebSocketStream&gt;` and the receiver type</span>
-<span class='doccomment'>/// will be `client::Receiver&lt;stream::WebSocketStream&gt;`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// A `Client` can be split into a `Sender` and a `Receiver` which can then be moved</span>
-<span class='doccomment'>/// to different threads, often using a send loop and receiver loop concurrently,</span>
-<span class='doccomment'>/// as shown in the client example in `examples/client.rs`.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///#Connecting to a Server</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///```no_run</span>
-<span class='doccomment'>///extern crate websocket;</span>
-<span class='doccomment'>///# fn main() {</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///use websocket::{Client, Message};</span>
-<span class='doccomment'>///use websocket::client::request::Url;</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///let url = Url::parse(&quot;ws://127.0.0.1:1234&quot;).unwrap(); // Get the URL</span>
-<span class='doccomment'>///let request = Client::connect(url).unwrap(); // Connect to the server</span>
-<span class='doccomment'>///let response = request.send().unwrap(); // Send the request</span>
-<span class='doccomment'>///response.validate().unwrap(); // Ensure the response is valid</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///let mut client = response.begin(); // Get a Client</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///let message = Message::text(&quot;Hello, World!&quot;);</span>
-<span class='doccomment'>///client.send_message(&amp;message).unwrap(); // Send message</span>
-<span class='doccomment'>///# }</span>
-<span class='doccomment'>///```</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Client</span><span class='op'>&lt;</span><span class='ident'>F</span>, <span class='ident'>S</span>, <span class='ident'>R</span><span class='op'>&gt;</span> {
-	<span class='ident'>sender</span>: <span class='ident'>S</span>,
-	<span class='ident'>receiver</span>: <span class='ident'>R</span>,
-	<span class='ident'>_dataframe</span>: <span class='ident'>PhantomData</span><span class='op'>&lt;</span><span class='kw'>fn</span>(<span class='ident'>F</span>)<span class='op'>&gt;</span>
+<span class="doccomment">/// Represents a WebSocket client, which can send and receive messages/data frames.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// `D` is the data frame type, `S` is the type implementing `Sender&lt;D&gt;` and `R`</span>
+<span class="doccomment">/// is the type implementing `Receiver&lt;D&gt;`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// For most cases, the data frame type will be `dataframe::DataFrame`, the Sender</span>
+<span class="doccomment">/// type will be `client::Sender&lt;stream::WebSocketStream&gt;` and the receiver type</span>
+<span class="doccomment">/// will be `client::Receiver&lt;stream::WebSocketStream&gt;`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// A `Client` can be split into a `Sender` and a `Receiver` which can then be moved</span>
+<span class="doccomment">/// to different threads, often using a send loop and receiver loop concurrently,</span>
+<span class="doccomment">/// as shown in the client example in `examples/client.rs`.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///#Connecting to a Server</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///```no_run</span>
+<span class="doccomment">///extern crate websocket;</span>
+<span class="doccomment">///# fn main() {</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///use websocket::{Client, Message};</span>
+<span class="doccomment">///use websocket::client::request::Url;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///let url = Url::parse(&quot;ws://127.0.0.1:1234&quot;).unwrap(); // Get the URL</span>
+<span class="doccomment">///let request = Client::connect(url).unwrap(); // Connect to the server</span>
+<span class="doccomment">///let response = request.send().unwrap(); // Send the request</span>
+<span class="doccomment">///response.validate().unwrap(); // Ensure the response is valid</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///let mut client = response.begin(); // Get a Client</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///let message = Message::text(&quot;Hello, World!&quot;);</span>
+<span class="doccomment">///client.send_message(&amp;message).unwrap(); // Send message</span>
+<span class="doccomment">///# }</span>
+<span class="doccomment">///```</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">S</span>, <span class="ident">R</span><span class="op">&gt;</span> {
+	<span class="ident">sender</span>: <span class="ident">S</span>,
+	<span class="ident">receiver</span>: <span class="ident">R</span>,
+	<span class="ident">_dataframe</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="kw">fn</span>(<span class="ident">F</span>)<span class="op">&gt;</span>
 }
 
-<span class='kw'>impl</span> <span class='ident'>Client</span><span class='op'>&lt;</span><span class='ident'>DataFrame</span>, <span class='ident'>Sender</span><span class='op'>&lt;</span><span class='ident'>WebSocketStream</span><span class='op'>&gt;</span>, <span class='ident'>Receiver</span><span class='op'>&lt;</span><span class='ident'>WebSocketStream</span><span class='op'>&gt;&gt;</span> {
-	<span class='doccomment'>/// Connects to the given ws:// or wss:// URL and return a Request to be sent.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// A connection is established, however the request is not sent to</span>
-	<span class='doccomment'>/// the server until a call to ```send()```.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>connect</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>ToWebSocketUrlComponents</span><span class='op'>&gt;</span>(<span class='ident'>components</span>: <span class='ident'>T</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span><span class='ident'>Request</span><span class='op'>&lt;</span><span class='ident'>WebSocketStream</span>, <span class='ident'>WebSocketStream</span><span class='op'>&gt;&gt;</span> {
-		<span class='kw'>let</span> <span class='ident'>context</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>SslContext</span>::<span class='ident'>new</span>(<span class='ident'>SslMethod</span>::<span class='ident'>Tlsv1</span>));
-		<span class='ident'>Client</span>::<span class='ident'>connect_ssl_context</span>(<span class='ident'>components</span>, <span class='kw-2'>&amp;</span><span class='ident'>context</span>)
+<span class="kw">impl</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">DataFrame</span>, <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">WebSocketStream</span><span class="op">&gt;</span>, <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">WebSocketStream</span><span class="op">&gt;&gt;</span> {
+	<span class="doccomment">/// Connects to the given ws:// or wss:// URL and return a Request to be sent.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// A connection is established, however the request is not sent to</span>
+	<span class="doccomment">/// the server until a call to ```send()```.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">connect</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ToWebSocketUrlComponents</span><span class="op">&gt;</span>(<span class="ident">components</span>: <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="ident">WebSocketStream</span>, <span class="ident">WebSocketStream</span><span class="op">&gt;&gt;</span> {
+		<span class="kw">let</span> <span class="ident">context</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">SslContext</span>::<span class="ident">new</span>(<span class="ident">SslMethod</span>::<span class="ident">Tlsv1</span>));
+		<span class="ident">Client</span>::<span class="ident">connect_ssl_context</span>(<span class="ident">components</span>, <span class="kw-2">&amp;</span><span class="ident">context</span>)
 	}
-	<span class='doccomment'>/// Connects to the specified wss:// URL using the given SSL context.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// If a ws:// URL is supplied, a normal, non-secure connection is established</span>
-	<span class='doccomment'>/// and the context parameter is ignored.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// A connection is established, however the request is not sent to</span>
-	<span class='doccomment'>/// the server until a call to ```send()```.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>connect_ssl_context</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>ToWebSocketUrlComponents</span><span class='op'>&gt;</span>(<span class='ident'>components</span>: <span class='ident'>T</span>, <span class='ident'>context</span>: <span class='kw-2'>&amp;</span><span class='ident'>SslContext</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span><span class='ident'>Request</span><span class='op'>&lt;</span><span class='ident'>WebSocketStream</span>, <span class='ident'>WebSocketStream</span><span class='op'>&gt;&gt;</span> {
-		<span class='kw'>let</span> (<span class='ident'>host</span>, <span class='ident'>resource_name</span>, <span class='ident'>secure</span>) <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>components</span>.<span class='ident'>to_components</span>());
+	<span class="doccomment">/// Connects to the specified wss:// URL using the given SSL context.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// If a ws:// URL is supplied, a normal, non-secure connection is established</span>
+	<span class="doccomment">/// and the context parameter is ignored.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// A connection is established, however the request is not sent to</span>
+	<span class="doccomment">/// the server until a call to ```send()```.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">connect_ssl_context</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ToWebSocketUrlComponents</span><span class="op">&gt;</span>(<span class="ident">components</span>: <span class="ident">T</span>, <span class="ident">context</span>: <span class="kw-2">&amp;</span><span class="ident">SslContext</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="ident">WebSocketStream</span>, <span class="ident">WebSocketStream</span><span class="op">&gt;&gt;</span> {
+		<span class="kw">let</span> (<span class="ident">host</span>, <span class="ident">resource_name</span>, <span class="ident">secure</span>) <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">components</span>.<span class="ident">to_components</span>());
 
-		<span class='kw'>let</span> <span class='ident'>connection</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>TcpStream</span>::<span class='ident'>connect</span>(
-			(<span class='kw-2'>&amp;</span><span class='ident'>host</span>.<span class='ident'>hostname</span>[..], <span class='ident'>host</span>.<span class='ident'>port</span>.<span class='ident'>unwrap_or</span>(<span class='kw'>if</span> <span class='ident'>secure</span> { <span class='number'>443</span> } <span class='kw'>else</span> { <span class='number'>80</span> }))
+		<span class="kw">let</span> <span class="ident">connection</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">TcpStream</span>::<span class="ident">connect</span>(
+			(<span class="kw-2">&amp;</span><span class="ident">host</span>.<span class="ident">hostname</span>[..], <span class="ident">host</span>.<span class="ident">port</span>.<span class="ident">unwrap_or</span>(<span class="kw">if</span> <span class="ident">secure</span> { <span class="number">443</span> } <span class="kw">else</span> { <span class="number">80</span> }))
 		));
 
-		<span class='kw'>let</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>secure</span> {
-			<span class='kw'>let</span> <span class='ident'>sslstream</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>SslStream</span>::<span class='ident'>connect</span>(<span class='ident'>context</span>, <span class='ident'>connection</span>));
-			<span class='ident'>WebSocketStream</span>::<span class='ident'>Ssl</span>(<span class='ident'>sslstream</span>)
+		<span class="kw">let</span> <span class="ident">stream</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">secure</span> {
+			<span class="kw">let</span> <span class="ident">sslstream</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">SslStream</span>::<span class="ident">connect</span>(<span class="ident">context</span>, <span class="ident">connection</span>));
+			<span class="ident">WebSocketStream</span>::<span class="ident">Ssl</span>(<span class="ident">sslstream</span>)
 		}
-		<span class='kw'>else</span> {
-			<span class='ident'>WebSocketStream</span>::<span class='ident'>Tcp</span>(<span class='ident'>connection</span>)
+		<span class="kw">else</span> {
+			<span class="ident">WebSocketStream</span>::<span class="ident">Tcp</span>(<span class="ident">connection</span>)
 		};
 
-		<span class='ident'>Request</span>::<span class='ident'>new</span>((<span class='ident'>host</span>, <span class='ident'>resource_name</span>, <span class='ident'>secure</span>), <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>stream</span>.<span class='ident'>try_clone</span>()), <span class='ident'>stream</span>)
+		<span class="ident">Request</span>::<span class="ident">new</span>((<span class="ident">host</span>, <span class="ident">resource_name</span>, <span class="ident">secure</span>), <span class="macro">try</span><span class="macro">!</span>(<span class="ident">stream</span>.<span class="ident">try_clone</span>()), <span class="ident">stream</span>)
 	}
 
-    <span class='doccomment'>/// Shuts down the sending half of the client connection, will cause all pending</span>
-    <span class='doccomment'>/// and future IO to return immediately with an appropriate value.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>shutdown_sender</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>IoResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>sender</span>.<span class='ident'>shutdown</span>()
+    <span class="doccomment">/// Shuts down the sending half of the client connection, will cause all pending</span>
+    <span class="doccomment">/// and future IO to return immediately with an appropriate value.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shutdown_sender</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">shutdown</span>()
     }
 
-    <span class='doccomment'>/// Shuts down the receiving half of the client connection, will cause all pending</span>
-    <span class='doccomment'>/// and future IO to return immediately with an appropriate value.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>shutdown_receiver</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>IoResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>receiver</span>.<span class='ident'>shutdown</span>()
+    <span class="doccomment">/// Shuts down the receiving half of the client connection, will cause all pending</span>
+    <span class="doccomment">/// and future IO to return immediately with an appropriate value.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shutdown_receiver</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">shutdown</span>()
     }
 
-    <span class='doccomment'>/// Shuts down the client connection, will cause all pending and future IO to</span>
-    <span class='doccomment'>/// return immediately with an appropriate value.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>shutdown</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>IoResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-        <span class='self'>self</span>.<span class='ident'>receiver</span>.<span class='ident'>shutdown_all</span>()
+    <span class="doccomment">/// Shuts down the client connection, will cause all pending and future IO to</span>
+    <span class="doccomment">/// return immediately with an appropriate value.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shutdown</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">IoResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">shutdown_all</span>()
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>F</span>: <span class='ident'>DataFrameable</span>, <span class='ident'>S</span>: <span class='ident'>ws</span>::<span class='ident'>Sender</span>, <span class='ident'>R</span>: <span class='ident'>ws</span>::<span class='ident'>Receiver</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;&gt;</span> <span class='ident'>Client</span><span class='op'>&lt;</span><span class='ident'>F</span>, <span class='ident'>S</span>, <span class='ident'>R</span><span class='op'>&gt;</span> {
-	<span class='doccomment'>/// Creates a Client from the given Sender and Receiver.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// Essentially the opposite of `Client.split()`.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>sender</span>: <span class='ident'>S</span>, <span class='ident'>receiver</span>: <span class='ident'>R</span>) <span class='op'>-&gt;</span> <span class='ident'>Client</span><span class='op'>&lt;</span><span class='ident'>F</span>, <span class='ident'>S</span>, <span class='ident'>R</span><span class='op'>&gt;</span> {
-		<span class='ident'>Client</span> {
-			<span class='ident'>sender</span>: <span class='ident'>sender</span>,
-			<span class='ident'>receiver</span>: <span class='ident'>receiver</span>,
-			<span class='ident'>_dataframe</span>: <span class='ident'>PhantomData</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span>: <span class="ident">DataFrameable</span>, <span class="ident">S</span>: <span class="ident">ws</span>::<span class="ident">Sender</span>, <span class="ident">R</span>: <span class="ident">ws</span>::<span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;&gt;</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">S</span>, <span class="ident">R</span><span class="op">&gt;</span> {
+	<span class="doccomment">/// Creates a Client from the given Sender and Receiver.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// Essentially the opposite of `Client.split()`.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">sender</span>: <span class="ident">S</span>, <span class="ident">receiver</span>: <span class="ident">R</span>) <span class="op">-&gt;</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">S</span>, <span class="ident">R</span><span class="op">&gt;</span> {
+		<span class="ident">Client</span> {
+			<span class="ident">sender</span>: <span class="ident">sender</span>,
+			<span class="ident">receiver</span>: <span class="ident">receiver</span>,
+			<span class="ident">_dataframe</span>: <span class="ident">PhantomData</span>
 		}
 	}
-	<span class='doccomment'>/// Sends a single data frame to the remote endpoint.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>send_dataframe</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>dataframe</span>: <span class='kw-2'>&amp;</span><span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>
-	<span class='kw'>where</span> <span class='ident'>D</span>: <span class='ident'>DataFrameable</span> {
-		<span class='self'>self</span>.<span class='ident'>sender</span>.<span class='ident'>send_dataframe</span>(<span class='ident'>dataframe</span>)
+	<span class="doccomment">/// Sends a single data frame to the remote endpoint.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send_dataframe</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">dataframe</span>: <span class="kw-2">&amp;</span><span class="ident">D</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+	<span class="kw">where</span> <span class="ident">D</span>: <span class="ident">DataFrameable</span> {
+		<span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">send_dataframe</span>(<span class="ident">dataframe</span>)
 	}
-	<span class='doccomment'>/// Sends a single message to the remote endpoint.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>send_message</span><span class='op'>&lt;</span><span class='lifetime'>&#39;m</span>, <span class='ident'>M</span>, <span class='ident'>D</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>message</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;m</span> <span class='ident'>M</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>
-	<span class='kw'>where</span> <span class='ident'>M</span>: <span class='ident'>ws</span>::<span class='ident'>Message</span><span class='op'>&lt;</span><span class='lifetime'>&#39;m</span>, <span class='ident'>D</span><span class='op'>&gt;</span>, <span class='ident'>D</span>: <span class='ident'>DataFrameable</span> {
-		<span class='self'>self</span>.<span class='ident'>sender</span>.<span class='ident'>send_message</span>(<span class='ident'>message</span>)
+	<span class="doccomment">/// Sends a single message to the remote endpoint.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send_message</span><span class="op">&lt;</span><span class="lifetime">&#39;m</span>, <span class="ident">M</span>, <span class="ident">D</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">message</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;m</span> <span class="ident">M</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+	<span class="kw">where</span> <span class="ident">M</span>: <span class="ident">ws</span>::<span class="ident">Message</span><span class="op">&lt;</span><span class="lifetime">&#39;m</span>, <span class="ident">D</span><span class="op">&gt;</span>, <span class="ident">D</span>: <span class="ident">DataFrameable</span> {
+		<span class="self">self</span>.<span class="ident">sender</span>.<span class="ident">send_message</span>(<span class="ident">message</span>)
 	}
-	<span class='doccomment'>/// Reads a single data frame from the remote endpoint.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>recv_dataframe</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span><span class='ident'>F</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>receiver</span>.<span class='ident'>recv_dataframe</span>()
+	<span class="doccomment">/// Reads a single data frame from the remote endpoint.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">recv_dataframe</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span><span class="ident">F</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">recv_dataframe</span>()
 	}
-	<span class='doccomment'>/// Returns an iterator over incoming data frames.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>incoming_dataframes</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>DataFrameIterator</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>R</span>, <span class='ident'>F</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>receiver</span>.<span class='ident'>incoming_dataframes</span>()
+	<span class="doccomment">/// Returns an iterator over incoming data frames.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">incoming_dataframes</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">DataFrameIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span>, <span class="ident">F</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">incoming_dataframes</span>()
 	}
-	<span class='doccomment'>/// Reads a single message from this receiver.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>recv_message</span><span class='op'>&lt;</span><span class='lifetime'>&#39;m</span>, <span class='ident'>M</span>, <span class='ident'>I</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span><span class='ident'>M</span><span class='op'>&gt;</span>
-	<span class='kw'>where</span> <span class='ident'>M</span>: <span class='ident'>ws</span>::<span class='ident'>Message</span><span class='op'>&lt;</span><span class='lifetime'>&#39;m</span>, <span class='ident'>F</span>, <span class='ident'>DataFrameIterator</span> <span class='op'>=</span> <span class='ident'>I</span><span class='op'>&gt;</span>, <span class='ident'>I</span>: <span class='ident'>Iterator</span><span class='op'>&lt;</span><span class='ident'>Item</span> <span class='op'>=</span> <span class='ident'>F</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>receiver</span>.<span class='ident'>recv_message</span>()
+	<span class="doccomment">/// Reads a single message from this receiver.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">recv_message</span><span class="op">&lt;</span><span class="lifetime">&#39;m</span>, <span class="ident">M</span>, <span class="ident">I</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span><span class="ident">M</span><span class="op">&gt;</span>
+	<span class="kw">where</span> <span class="ident">M</span>: <span class="ident">ws</span>::<span class="ident">Message</span><span class="op">&lt;</span><span class="lifetime">&#39;m</span>, <span class="ident">F</span>, <span class="ident">DataFrameIterator</span> <span class="op">=</span> <span class="ident">I</span><span class="op">&gt;</span>, <span class="ident">I</span>: <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">F</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">recv_message</span>()
 	}
-	<span class='doccomment'>/// Returns an iterator over incoming messages.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>///```no_run</span>
-	<span class='doccomment'>///# extern crate websocket;</span>
-	<span class='doccomment'>///# fn main() {</span>
-	<span class='doccomment'>///use websocket::{Client, Message};</span>
-	<span class='doccomment'>///# use websocket::client::request::Url;</span>
-	<span class='doccomment'>///# let url = Url::parse(&quot;ws://127.0.0.1:1234&quot;).unwrap(); // Get the URL</span>
-	<span class='doccomment'>///# let request = Client::connect(url).unwrap(); // Connect to the server</span>
-	<span class='doccomment'>///# let response = request.send().unwrap(); // Send the request</span>
-	<span class='doccomment'>///# response.validate().unwrap(); // Ensure the response is valid</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>///let mut client = response.begin(); // Get a Client</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>///for message in client.incoming_messages() {</span>
-    <span class='doccomment'>///    let message: Message = message.unwrap();</span>
-	<span class='doccomment'>///    println!(&quot;Recv: {:?}&quot;, message);</span>
-	<span class='doccomment'>///}</span>
-	<span class='doccomment'>///# }</span>
-	<span class='doccomment'>///```</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// Note that since this method mutably borrows the `Client`, it may be necessary to</span>
-	<span class='doccomment'>/// first `split()` the `Client` and call `incoming_messages()` on the returned</span>
-	<span class='doccomment'>/// `Receiver` to be able to send messages within an iteration.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>///```no_run</span>
-	<span class='doccomment'>///# extern crate websocket;</span>
-	<span class='doccomment'>///# fn main() {</span>
-	<span class='doccomment'>///use websocket::{Client, Message, Sender, Receiver};</span>
-	<span class='doccomment'>///# use websocket::client::request::Url;</span>
-	<span class='doccomment'>///# let url = Url::parse(&quot;ws://127.0.0.1:1234&quot;).unwrap(); // Get the URL</span>
-	<span class='doccomment'>///# let request = Client::connect(url).unwrap(); // Connect to the server</span>
-	<span class='doccomment'>///# let response = request.send().unwrap(); // Send the request</span>
-	<span class='doccomment'>///# response.validate().unwrap(); // Ensure the response is valid</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>///let client = response.begin(); // Get a Client</span>
-	<span class='doccomment'>///let (mut sender, mut receiver) = client.split(); // Split the Client</span>
-	<span class='doccomment'>///for message in receiver.incoming_messages() {</span>
-    <span class='doccomment'>///    let message: Message = message.unwrap();</span>
-	<span class='doccomment'>///    // Echo the message back</span>
-	<span class='doccomment'>///    sender.send_message(&amp;message).unwrap();</span>
-	<span class='doccomment'>///}</span>
-	<span class='doccomment'>///# }</span>
-	<span class='doccomment'>///```</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>incoming_messages</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>M</span>, <span class='ident'>D</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>MessageIterator</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>R</span>, <span class='ident'>D</span>, <span class='ident'>F</span>, <span class='ident'>M</span><span class='op'>&gt;</span>
-	<span class='kw'>where</span> <span class='ident'>M</span>: <span class='ident'>ws</span>::<span class='ident'>Message</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>D</span><span class='op'>&gt;</span>,
-          <span class='ident'>D</span>: <span class='ident'>DataFrameable</span>
+	<span class="doccomment">/// Returns an iterator over incoming messages.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">///```no_run</span>
+	<span class="doccomment">///# extern crate websocket;</span>
+	<span class="doccomment">///# fn main() {</span>
+	<span class="doccomment">///use websocket::{Client, Message};</span>
+	<span class="doccomment">///# use websocket::client::request::Url;</span>
+	<span class="doccomment">///# let url = Url::parse(&quot;ws://127.0.0.1:1234&quot;).unwrap(); // Get the URL</span>
+	<span class="doccomment">///# let request = Client::connect(url).unwrap(); // Connect to the server</span>
+	<span class="doccomment">///# let response = request.send().unwrap(); // Send the request</span>
+	<span class="doccomment">///# response.validate().unwrap(); // Ensure the response is valid</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">///let mut client = response.begin(); // Get a Client</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">///for message in client.incoming_messages() {</span>
+    <span class="doccomment">///    let message: Message = message.unwrap();</span>
+	<span class="doccomment">///    println!(&quot;Recv: {:?}&quot;, message);</span>
+	<span class="doccomment">///}</span>
+	<span class="doccomment">///# }</span>
+	<span class="doccomment">///```</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// Note that since this method mutably borrows the `Client`, it may be necessary to</span>
+	<span class="doccomment">/// first `split()` the `Client` and call `incoming_messages()` on the returned</span>
+	<span class="doccomment">/// `Receiver` to be able to send messages within an iteration.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">///```no_run</span>
+	<span class="doccomment">///# extern crate websocket;</span>
+	<span class="doccomment">///# fn main() {</span>
+	<span class="doccomment">///use websocket::{Client, Message, Sender, Receiver};</span>
+	<span class="doccomment">///# use websocket::client::request::Url;</span>
+	<span class="doccomment">///# let url = Url::parse(&quot;ws://127.0.0.1:1234&quot;).unwrap(); // Get the URL</span>
+	<span class="doccomment">///# let request = Client::connect(url).unwrap(); // Connect to the server</span>
+	<span class="doccomment">///# let response = request.send().unwrap(); // Send the request</span>
+	<span class="doccomment">///# response.validate().unwrap(); // Ensure the response is valid</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">///let client = response.begin(); // Get a Client</span>
+	<span class="doccomment">///let (mut sender, mut receiver) = client.split(); // Split the Client</span>
+	<span class="doccomment">///for message in receiver.incoming_messages() {</span>
+    <span class="doccomment">///    let message: Message = message.unwrap();</span>
+	<span class="doccomment">///    // Echo the message back</span>
+	<span class="doccomment">///    sender.send_message(&amp;message).unwrap();</span>
+	<span class="doccomment">///}</span>
+	<span class="doccomment">///# }</span>
+	<span class="doccomment">///```</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">incoming_messages</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">M</span>, <span class="ident">D</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">MessageIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">R</span>, <span class="ident">D</span>, <span class="ident">F</span>, <span class="ident">M</span><span class="op">&gt;</span>
+	<span class="kw">where</span> <span class="ident">M</span>: <span class="ident">ws</span>::<span class="ident">Message</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">D</span><span class="op">&gt;</span>,
+          <span class="ident">D</span>: <span class="ident">DataFrameable</span>
     {
-		<span class='self'>self</span>.<span class='ident'>receiver</span>.<span class='ident'>incoming_messages</span>()
+		<span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">incoming_messages</span>()
 	}
-	<span class='doccomment'>/// Returns a reference to the underlying Sender.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_sender</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>S</span> {
-		<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>sender</span>
+	<span class="doccomment">/// Returns a reference to the underlying Sender.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_sender</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">S</span> {
+		<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">sender</span>
 	}
-	<span class='doccomment'>/// Returns a reference to the underlying Receiver.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_receiver</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>R</span> {
-		<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>receiver</span>
+	<span class="doccomment">/// Returns a reference to the underlying Receiver.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_receiver</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">R</span> {
+		<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">receiver</span>
 	}
-	<span class='doccomment'>/// Returns a mutable reference to the underlying Sender.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mut_sender</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>S</span> {
-		<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>sender</span>
+	<span class="doccomment">/// Returns a mutable reference to the underlying Sender.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mut_sender</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">S</span> {
+		<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">sender</span>
 	}
-	<span class='doccomment'>/// Returns a mutable reference to the underlying Receiver.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mut_receiver</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>R</span> {
-		<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>receiver</span>
+	<span class="doccomment">/// Returns a mutable reference to the underlying Receiver.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mut_receiver</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">R</span> {
+		<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">receiver</span>
 	}
-	<span class='doccomment'>/// Split this client into its constituent Sender and Receiver pair.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// This allows the Sender and Receiver to be sent to different threads.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>///```no_run</span>
-	<span class='doccomment'>///# extern crate websocket;</span>
-	<span class='doccomment'>///# fn main() {</span>
-	<span class='doccomment'>///use websocket::{Client, Message, Sender, Receiver};</span>
-	<span class='doccomment'>///use std::thread;</span>
-	<span class='doccomment'>///# use websocket::client::request::Url;</span>
-	<span class='doccomment'>///# let url = Url::parse(&quot;ws://127.0.0.1:1234&quot;).unwrap(); // Get the URL</span>
-	<span class='doccomment'>///# let request = Client::connect(url).unwrap(); // Connect to the server</span>
-	<span class='doccomment'>///# let response = request.send().unwrap(); // Send the request</span>
-	<span class='doccomment'>///# response.validate().unwrap(); // Ensure the response is valid</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>///let client = response.begin(); // Get a Client</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>///let (mut sender, mut receiver) = client.split();</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>///thread::spawn(move || {</span>
-	<span class='doccomment'>///    for message in receiver.incoming_messages() {</span>
-    <span class='doccomment'>///        let message: Message = message.unwrap();</span>
-	<span class='doccomment'>///        println!(&quot;Recv: {:?}&quot;, message);</span>
-	<span class='doccomment'>///    }</span>
-	<span class='doccomment'>///});</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>///let message = Message::text(&quot;Hello, World!&quot;);</span>
-	<span class='doccomment'>///sender.send_message(&amp;message).unwrap();</span>
-	<span class='doccomment'>///# }</span>
-	<span class='doccomment'>///```</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>split</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>S</span>, <span class='ident'>R</span>) {
-		(<span class='self'>self</span>.<span class='ident'>sender</span>, <span class='self'>self</span>.<span class='ident'>receiver</span>)
+	<span class="doccomment">/// Split this client into its constituent Sender and Receiver pair.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// This allows the Sender and Receiver to be sent to different threads.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">///```no_run</span>
+	<span class="doccomment">///# extern crate websocket;</span>
+	<span class="doccomment">///# fn main() {</span>
+	<span class="doccomment">///use websocket::{Client, Message, Sender, Receiver};</span>
+	<span class="doccomment">///use std::thread;</span>
+	<span class="doccomment">///# use websocket::client::request::Url;</span>
+	<span class="doccomment">///# let url = Url::parse(&quot;ws://127.0.0.1:1234&quot;).unwrap(); // Get the URL</span>
+	<span class="doccomment">///# let request = Client::connect(url).unwrap(); // Connect to the server</span>
+	<span class="doccomment">///# let response = request.send().unwrap(); // Send the request</span>
+	<span class="doccomment">///# response.validate().unwrap(); // Ensure the response is valid</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">///let client = response.begin(); // Get a Client</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">///let (mut sender, mut receiver) = client.split();</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">///thread::spawn(move || {</span>
+	<span class="doccomment">///    for message in receiver.incoming_messages() {</span>
+    <span class="doccomment">///        let message: Message = message.unwrap();</span>
+	<span class="doccomment">///        println!(&quot;Recv: {:?}&quot;, message);</span>
+	<span class="doccomment">///    }</span>
+	<span class="doccomment">///});</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">///let message = Message::text(&quot;Hello, World!&quot;);</span>
+	<span class="doccomment">///sender.send_message(&amp;message).unwrap();</span>
+	<span class="doccomment">///# }</span>
+	<span class="doccomment">///```</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">split</span>(<span class="self">self</span>) <span class="op">-&gt;</span> (<span class="ident">S</span>, <span class="ident">R</span>) {
+		(<span class="self">self</span>.<span class="ident">sender</span>, <span class="self">self</span>.<span class="ident">receiver</span>)
 	}
 }
 </pre>
@@ -559,18 +571,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -602,11 +618,8 @@
     <script>
         window.rootPath = "../../../";
         window.currentCrate = "websocket";
-        window.playgroundUrl = "";
     </script>
-    <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
-    
     <script defer src="../../../search-index.js"></script>
 </body>
 </html>

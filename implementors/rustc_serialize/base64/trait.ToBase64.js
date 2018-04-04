@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors["rustc_serialize"] = [];implementors["hyper"] = [];implementors["websocket"] = [];implementors["dishub"] = [];
+implementors["rustc_serialize"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

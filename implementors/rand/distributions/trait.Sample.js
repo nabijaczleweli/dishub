@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors["lazy_static"] = [];implementors["regex_syntax"] = [];implementors["libc"] = [];implementors["num"] = [];implementors["phf"] = [];implementors["rand"] = [];implementors["openssl"] = [];implementors["chrono"] = [];implementors["serde"] = [];implementors["mime_guess"] = [];implementors["hyper"] = [];implementors["websocket"] = [];implementors["websocket"] = [];implementors["dishub"] = [];implementors["dishub"] = [];
+implementors["rand"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

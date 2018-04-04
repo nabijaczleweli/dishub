@@ -9,14 +9,18 @@
 
     <title>error.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,7 +54,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -178,140 +190,140 @@
 <span id="134">134</span>
 <span id="135">135</span>
 <span id="136">136</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Error</span> <span class='kw'>as</span> <span class='ident'>IoError</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>::<span class='ident'>Error</span> <span class='kw'>as</span> <span class='ident'>StdError</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Display</span>;
-<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>Error</span> <span class='kw'>as</span> <span class='ident'>HyperError</span>;
-<span class='kw'>use</span> <span class='ident'>serde_json</span>::<span class='ident'>Error</span> <span class='kw'>as</span> <span class='ident'>JsonError</span>;
-<span class='kw'>use</span> <span class='ident'>serde_json</span>::<span class='ident'>Value</span>;
-<span class='kw'>use</span> <span class='ident'>websocket</span>::<span class='ident'>result</span>::<span class='ident'>WebSocketError</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;voice&quot;</span>)]</span>
-<span class='kw'>use</span> <span class='ident'>opus</span>::<span class='ident'>Error</span> <span class='kw'>as</span> <span class='ident'>OpusError</span>;
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">IoError</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">error</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">StdError</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Display</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">HyperError</span>;
+<span class="kw">use</span> <span class="ident">serde_json</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">JsonError</span>;
+<span class="kw">use</span> <span class="ident">serde_json</span>::<span class="ident">Value</span>;
+<span class="kw">use</span> <span class="ident">websocket</span>::<span class="ident">result</span>::<span class="ident">WebSocketError</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;voice&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">opus</span>::<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">OpusError</span>;
 
-<span class='doccomment'>/// Discord API `Result` alias type.</span>
-<span class='kw'>pub</span> <span class='kw'>type</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span><span class='op'>&gt;</span> <span class='op'>=</span> ::<span class='ident'>std</span>::<span class='ident'>result</span>::<span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>T</span>, <span class='ident'>Error</span><span class='op'>&gt;</span>;
+<span class="doccomment">/// Discord API `Result` alias type.</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="op">=</span> ::<span class="ident">std</span>::<span class="ident">result</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
 
-<span class='doccomment'>/// Discord API error type.</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Error</span> {
-	<span class='doccomment'>/// A `hyper` crate error</span>
-	<span class='ident'>Hyper</span>(<span class='ident'>HyperError</span>),
-	<span class='doccomment'>/// A `serde_json` crate error</span>
-	<span class='ident'>Json</span>(<span class='ident'>JsonError</span>),
-	<span class='doccomment'>/// A `websocket` crate error</span>
-	<span class='ident'>WebSocket</span>(<span class='ident'>WebSocketError</span>),
-	<span class='doccomment'>/// A `std::io` module error</span>
-	<span class='ident'>Io</span>(<span class='ident'>IoError</span>),
-	<span class='doccomment'>/// An error in the Opus library, with the function name and error code</span>
-	<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;voice&quot;</span>)]</span>
-	<span class='ident'>Opus</span>(<span class='ident'>OpusError</span>),
-	<span class='doccomment'>/// A websocket connection was closed, possibly with a message</span>
-	<span class='ident'>Closed</span>(<span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>u16</span><span class='op'>&gt;</span>, <span class='ident'>String</span>),
-	<span class='doccomment'>/// A json decoding error, with a description and the offending value</span>
-	<span class='ident'>Decode</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>, <span class='ident'>Value</span>),
-	<span class='doccomment'>/// A generic non-success response from the REST API</span>
-	<span class='ident'>Status</span>(::<span class='ident'>hyper</span>::<span class='ident'>status</span>::<span class='ident'>StatusCode</span>, <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Value</span><span class='op'>&gt;</span>),
-	<span class='doccomment'>/// A rate limit error, with how many milliseconds to wait before retrying</span>
-	<span class='ident'>RateLimited</span>(<span class='ident'>u64</span>),
-	<span class='doccomment'>/// A Discord protocol error, with a description</span>
-	<span class='ident'>Protocol</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>),
-	<span class='doccomment'>/// A command execution failure, with a command name and output</span>
-	<span class='ident'>Command</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>, ::<span class='ident'>std</span>::<span class='ident'>process</span>::<span class='ident'>Output</span>),
-	<span class='doccomment'>/// A miscellaneous error, with a description</span>
-	<span class='ident'>Other</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>),
+<span class="doccomment">/// Discord API error type.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span> {
+	<span class="doccomment">/// A `hyper` crate error</span>
+	<span class="ident">Hyper</span>(<span class="ident">HyperError</span>),
+	<span class="doccomment">/// A `serde_json` crate error</span>
+	<span class="ident">Json</span>(<span class="ident">JsonError</span>),
+	<span class="doccomment">/// A `websocket` crate error</span>
+	<span class="ident">WebSocket</span>(<span class="ident">WebSocketError</span>),
+	<span class="doccomment">/// A `std::io` module error</span>
+	<span class="ident">Io</span>(<span class="ident">IoError</span>),
+	<span class="doccomment">/// An error in the Opus library, with the function name and error code</span>
+	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;voice&quot;</span>)]</span>
+	<span class="ident">Opus</span>(<span class="ident">OpusError</span>),
+	<span class="doccomment">/// A websocket connection was closed, possibly with a message</span>
+	<span class="ident">Closed</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>, <span class="ident">String</span>),
+	<span class="doccomment">/// A json decoding error, with a description and the offending value</span>
+	<span class="ident">Decode</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">Value</span>),
+	<span class="doccomment">/// A generic non-success response from the REST API</span>
+	<span class="ident">Status</span>(::<span class="ident">hyper</span>::<span class="ident">status</span>::<span class="ident">StatusCode</span>, <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span>),
+	<span class="doccomment">/// A rate limit error, with how many milliseconds to wait before retrying</span>
+	<span class="ident">RateLimited</span>(<span class="ident">u64</span>),
+	<span class="doccomment">/// A Discord protocol error, with a description</span>
+	<span class="ident">Protocol</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>),
+	<span class="doccomment">/// A command execution failure, with a command name and output</span>
+	<span class="ident">Command</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, ::<span class="ident">std</span>::<span class="ident">process</span>::<span class="ident">Output</span>),
+	<span class="doccomment">/// A miscellaneous error, with a description</span>
+	<span class="ident">Other</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>),
 }
 
-<span class='kw'>impl</span> <span class='ident'>Error</span> {
-	<span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>from_response</span>(<span class='ident'>response</span>: ::<span class='ident'>hyper</span>::<span class='ident'>client</span>::<span class='ident'>Response</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-		<span class='kw'>let</span> <span class='ident'>status</span> <span class='op'>=</span> <span class='ident'>response</span>.<span class='ident'>status</span>;
-		<span class='kw'>let</span> <span class='ident'>value</span> <span class='op'>=</span> ::<span class='ident'>serde_json</span>::<span class='ident'>from_reader</span>(<span class='ident'>response</span>).<span class='ident'>ok</span>();
-		<span class='kw'>if</span> <span class='ident'>status</span> <span class='op'>==</span> ::<span class='ident'>hyper</span>::<span class='ident'>status</span>::<span class='ident'>StatusCode</span>::<span class='ident'>TooManyRequests</span> {
-			<span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>Value</span>::<span class='ident'>Object</span>(<span class='kw-2'>ref</span> <span class='ident'>map</span>)) <span class='op'>=</span> <span class='ident'>value</span> {
-				<span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>delay</span>) <span class='op'>=</span> <span class='ident'>map</span>.<span class='ident'>get</span>(<span class='string'>&quot;retry_after&quot;</span>).<span class='ident'>and_then</span>(<span class='op'>|</span><span class='ident'>v</span><span class='op'>|</span> <span class='ident'>v</span>.<span class='ident'>as_u64</span>()) {
-					<span class='kw'>return</span> <span class='ident'>Error</span>::<span class='ident'>RateLimited</span>(<span class='ident'>delay</span>)
+<span class="kw">impl</span> <span class="ident">Error</span> {
+	<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_response</span>(<span class="ident">response</span>: ::<span class="ident">hyper</span>::<span class="ident">client</span>::<span class="ident">Response</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+		<span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="ident">response</span>.<span class="ident">status</span>;
+		<span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> ::<span class="ident">serde_json</span>::<span class="ident">from_reader</span>(<span class="ident">response</span>).<span class="ident">ok</span>();
+		<span class="kw">if</span> <span class="ident">status</span> <span class="op">==</span> ::<span class="ident">hyper</span>::<span class="ident">status</span>::<span class="ident">StatusCode</span>::<span class="ident">TooManyRequests</span> {
+			<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">Value</span>::<span class="ident">Object</span>(<span class="kw-2">ref</span> <span class="ident">map</span>)) <span class="op">=</span> <span class="ident">value</span> {
+				<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">delay</span>) <span class="op">=</span> <span class="ident">map</span>.<span class="ident">get</span>(<span class="string">&quot;retry_after&quot;</span>).<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">v</span>.<span class="ident">as_u64</span>()) {
+					<span class="kw">return</span> <span class="ident">Error</span>::<span class="ident">RateLimited</span>(<span class="ident">delay</span>)
 				}
 			}
 		}
-		<span class='ident'>Error</span>::<span class='ident'>Status</span>(<span class='ident'>status</span>, <span class='ident'>value</span>)
+		<span class="ident">Error</span>::<span class="ident">Status</span>(<span class="ident">status</span>, <span class="ident">value</span>)
 	}
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>IoError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-	<span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>err</span>: <span class='ident'>IoError</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-		<span class='ident'>Error</span>::<span class='ident'>Io</span>(<span class='ident'>err</span>)
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">IoError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">IoError</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+		<span class="ident">Error</span>::<span class="ident">Io</span>(<span class="ident">err</span>)
 	}
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>HyperError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-	<span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>err</span>: <span class='ident'>HyperError</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-		<span class='ident'>Error</span>::<span class='ident'>Hyper</span>(<span class='ident'>err</span>)
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">HyperError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">HyperError</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+		<span class="ident">Error</span>::<span class="ident">Hyper</span>(<span class="ident">err</span>)
 	}
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>JsonError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-	<span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>err</span>: <span class='ident'>JsonError</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-		<span class='ident'>Error</span>::<span class='ident'>Json</span>(<span class='ident'>err</span>)
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">JsonError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">JsonError</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+		<span class="ident">Error</span>::<span class="ident">Json</span>(<span class="ident">err</span>)
 	}
 }
 
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>WebSocketError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-	<span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>err</span>: <span class='ident'>WebSocketError</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-		<span class='ident'>Error</span>::<span class='ident'>WebSocket</span>(<span class='ident'>err</span>)
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">WebSocketError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">WebSocketError</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+		<span class="ident">Error</span>::<span class="ident">WebSocket</span>(<span class="ident">err</span>)
 	}
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;voice&quot;</span>)]</span>
-<span class='kw'>impl</span> <span class='ident'>From</span><span class='op'>&lt;</span><span class='ident'>OpusError</span><span class='op'>&gt;</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-	<span class='kw'>fn</span> <span class='ident'>from</span>(<span class='ident'>err</span>: <span class='ident'>OpusError</span>) <span class='op'>-&gt;</span> <span class='ident'>Error</span> {
-		<span class='ident'>Error</span>::<span class='ident'>Opus</span>(<span class='ident'>err</span>)
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;voice&quot;</span>)]</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">OpusError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+	<span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">OpusError</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+		<span class="ident">Error</span>::<span class="ident">Opus</span>(<span class="ident">err</span>)
 	}
 }
 
-<span class='kw'>impl</span> <span class='ident'>Display</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-	<span class='kw'>fn</span> <span class='ident'>fmt</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>f</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> ::<span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='ident'>Formatter</span>) <span class='op'>-&gt;</span> ::<span class='ident'>std</span>::<span class='ident'>fmt</span>::<span class='prelude-ty'>Result</span> {
-		<span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-			<span class='ident'>Error</span>::<span class='ident'>Hyper</span>(<span class='kw-2'>ref</span> <span class='ident'>inner</span>) <span class='op'>=&gt;</span> <span class='ident'>inner</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>),
-			<span class='ident'>Error</span>::<span class='ident'>Json</span>(<span class='kw-2'>ref</span> <span class='ident'>inner</span>) <span class='op'>=&gt;</span> <span class='ident'>inner</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>),
-			<span class='ident'>Error</span>::<span class='ident'>WebSocket</span>(<span class='kw-2'>ref</span> <span class='ident'>inner</span>) <span class='op'>=&gt;</span> <span class='ident'>inner</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>),
-			<span class='ident'>Error</span>::<span class='ident'>Io</span>(<span class='kw-2'>ref</span> <span class='ident'>inner</span>) <span class='op'>=&gt;</span> <span class='ident'>inner</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>),
-			<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;voice&quot;</span>)]</span>
-			<span class='ident'>Error</span>::<span class='ident'>Opus</span>(<span class='kw-2'>ref</span> <span class='ident'>inner</span>) <span class='op'>=&gt;</span> <span class='ident'>inner</span>.<span class='ident'>fmt</span>(<span class='ident'>f</span>),
-			<span class='ident'>Error</span>::<span class='ident'>Command</span>(<span class='ident'>cmd</span>, _) <span class='op'>=&gt;</span> <span class='macro'>write</span><span class='macro'>!</span>(<span class='ident'>f</span>, <span class='string'>&quot;Command failed: {}&quot;</span>, <span class='ident'>cmd</span>),
-			_ <span class='op'>=&gt;</span> <span class='ident'>f</span>.<span class='ident'>write_str</span>(<span class='self'>self</span>.<span class='ident'>description</span>()),
+<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Error</span> {
+	<span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ::<span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> ::<span class="ident">std</span>::<span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+		<span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+			<span class="ident">Error</span>::<span class="ident">Hyper</span>(<span class="kw-2">ref</span> <span class="ident">inner</span>) <span class="op">=&gt;</span> <span class="ident">inner</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+			<span class="ident">Error</span>::<span class="ident">Json</span>(<span class="kw-2">ref</span> <span class="ident">inner</span>) <span class="op">=&gt;</span> <span class="ident">inner</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+			<span class="ident">Error</span>::<span class="ident">WebSocket</span>(<span class="kw-2">ref</span> <span class="ident">inner</span>) <span class="op">=&gt;</span> <span class="ident">inner</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+			<span class="ident">Error</span>::<span class="ident">Io</span>(<span class="kw-2">ref</span> <span class="ident">inner</span>) <span class="op">=&gt;</span> <span class="ident">inner</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+			<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;voice&quot;</span>)]</span>
+			<span class="ident">Error</span>::<span class="ident">Opus</span>(<span class="kw-2">ref</span> <span class="ident">inner</span>) <span class="op">=&gt;</span> <span class="ident">inner</span>.<span class="ident">fmt</span>(<span class="ident">f</span>),
+			<span class="ident">Error</span>::<span class="ident">Command</span>(<span class="ident">cmd</span>, _) <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;Command failed: {}&quot;</span>, <span class="ident">cmd</span>),
+			_ <span class="op">=&gt;</span> <span class="ident">f</span>.<span class="ident">write_str</span>(<span class="self">self</span>.<span class="ident">description</span>()),
 		}
 	}
 }
 
-<span class='kw'>impl</span> <span class='ident'>StdError</span> <span class='kw'>for</span> <span class='ident'>Error</span> {
-	<span class='kw'>fn</span> <span class='ident'>description</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>str</span> {
-		<span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-			<span class='ident'>Error</span>::<span class='ident'>Hyper</span>(<span class='kw-2'>ref</span> <span class='ident'>inner</span>) <span class='op'>=&gt;</span> <span class='ident'>inner</span>.<span class='ident'>description</span>(),
-			<span class='ident'>Error</span>::<span class='ident'>Json</span>(<span class='kw-2'>ref</span> <span class='ident'>inner</span>) <span class='op'>=&gt;</span> <span class='ident'>inner</span>.<span class='ident'>description</span>(),
-			<span class='ident'>Error</span>::<span class='ident'>WebSocket</span>(<span class='kw-2'>ref</span> <span class='ident'>inner</span>) <span class='op'>=&gt;</span> <span class='ident'>inner</span>.<span class='ident'>description</span>(),
-			<span class='ident'>Error</span>::<span class='ident'>Io</span>(<span class='kw-2'>ref</span> <span class='ident'>inner</span>) <span class='op'>=&gt;</span> <span class='ident'>inner</span>.<span class='ident'>description</span>(),
-			<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;voice&quot;</span>)]</span>
-			<span class='ident'>Error</span>::<span class='ident'>Opus</span>(<span class='kw-2'>ref</span> <span class='ident'>inner</span>) <span class='op'>=&gt;</span> <span class='ident'>inner</span>.<span class='ident'>description</span>(),
-			<span class='ident'>Error</span>::<span class='ident'>Closed</span>(_, _) <span class='op'>=&gt;</span> <span class='string'>&quot;Connection closed&quot;</span>,
-			<span class='ident'>Error</span>::<span class='ident'>Decode</span>(<span class='ident'>msg</span>, _) <span class='op'>|</span>
-			<span class='ident'>Error</span>::<span class='ident'>Protocol</span>(<span class='ident'>msg</span>) <span class='op'>|</span>
-			<span class='ident'>Error</span>::<span class='ident'>Other</span>(<span class='ident'>msg</span>) <span class='op'>=&gt;</span> <span class='ident'>msg</span>,
-			<span class='ident'>Error</span>::<span class='ident'>Status</span>(<span class='ident'>status</span>, _) <span class='op'>=&gt;</span> <span class='ident'>status</span>.<span class='ident'>canonical_reason</span>().<span class='ident'>unwrap_or</span>(<span class='string'>&quot;Unknown bad HTTP status&quot;</span>),
-			<span class='ident'>Error</span>::<span class='ident'>RateLimited</span>(_) <span class='op'>=&gt;</span> <span class='string'>&quot;Rate limited&quot;</span>,
-			<span class='ident'>Error</span>::<span class='ident'>Command</span>(_, _) <span class='op'>=&gt;</span> <span class='string'>&quot;Command failed&quot;</span>,
+<span class="kw">impl</span> <span class="ident">StdError</span> <span class="kw">for</span> <span class="ident">Error</span> {
+	<span class="kw">fn</span> <span class="ident">description</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+		<span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+			<span class="ident">Error</span>::<span class="ident">Hyper</span>(<span class="kw-2">ref</span> <span class="ident">inner</span>) <span class="op">=&gt;</span> <span class="ident">inner</span>.<span class="ident">description</span>(),
+			<span class="ident">Error</span>::<span class="ident">Json</span>(<span class="kw-2">ref</span> <span class="ident">inner</span>) <span class="op">=&gt;</span> <span class="ident">inner</span>.<span class="ident">description</span>(),
+			<span class="ident">Error</span>::<span class="ident">WebSocket</span>(<span class="kw-2">ref</span> <span class="ident">inner</span>) <span class="op">=&gt;</span> <span class="ident">inner</span>.<span class="ident">description</span>(),
+			<span class="ident">Error</span>::<span class="ident">Io</span>(<span class="kw-2">ref</span> <span class="ident">inner</span>) <span class="op">=&gt;</span> <span class="ident">inner</span>.<span class="ident">description</span>(),
+			<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;voice&quot;</span>)]</span>
+			<span class="ident">Error</span>::<span class="ident">Opus</span>(<span class="kw-2">ref</span> <span class="ident">inner</span>) <span class="op">=&gt;</span> <span class="ident">inner</span>.<span class="ident">description</span>(),
+			<span class="ident">Error</span>::<span class="ident">Closed</span>(_, _) <span class="op">=&gt;</span> <span class="string">&quot;Connection closed&quot;</span>,
+			<span class="ident">Error</span>::<span class="ident">Decode</span>(<span class="ident">msg</span>, _) <span class="op">|</span>
+			<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="ident">msg</span>) <span class="op">|</span>
+			<span class="ident">Error</span>::<span class="ident">Other</span>(<span class="ident">msg</span>) <span class="op">=&gt;</span> <span class="ident">msg</span>,
+			<span class="ident">Error</span>::<span class="ident">Status</span>(<span class="ident">status</span>, _) <span class="op">=&gt;</span> <span class="ident">status</span>.<span class="ident">canonical_reason</span>().<span class="ident">unwrap_or</span>(<span class="string">&quot;Unknown bad HTTP status&quot;</span>),
+			<span class="ident">Error</span>::<span class="ident">RateLimited</span>(_) <span class="op">=&gt;</span> <span class="string">&quot;Rate limited&quot;</span>,
+			<span class="ident">Error</span>::<span class="ident">Command</span>(_, _) <span class="op">=&gt;</span> <span class="string">&quot;Command failed&quot;</span>,
 		}
 	}
 
-	<span class='kw'>fn</span> <span class='ident'>cause</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>StdError</span><span class='op'>&gt;</span> {
-		<span class='kw'>match</span> <span class='op'>*</span><span class='self'>self</span> {
-			<span class='ident'>Error</span>::<span class='ident'>Hyper</span>(<span class='kw-2'>ref</span> <span class='ident'>inner</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>inner</span>),
-			<span class='ident'>Error</span>::<span class='ident'>Json</span>(<span class='kw-2'>ref</span> <span class='ident'>inner</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>inner</span>),
-			<span class='ident'>Error</span>::<span class='ident'>WebSocket</span>(<span class='kw-2'>ref</span> <span class='ident'>inner</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>inner</span>),
-			<span class='ident'>Error</span>::<span class='ident'>Io</span>(<span class='kw-2'>ref</span> <span class='ident'>inner</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>inner</span>),
-			<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;voice&quot;</span>)]</span>
-			<span class='ident'>Error</span>::<span class='ident'>Opus</span>(<span class='kw-2'>ref</span> <span class='ident'>inner</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Some</span>(<span class='ident'>inner</span>),
-			_ <span class='op'>=&gt;</span> <span class='prelude-val'>None</span>,
+	<span class="kw">fn</span> <span class="ident">cause</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">StdError</span><span class="op">&gt;</span> {
+		<span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
+			<span class="ident">Error</span>::<span class="ident">Hyper</span>(<span class="kw-2">ref</span> <span class="ident">inner</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">inner</span>),
+			<span class="ident">Error</span>::<span class="ident">Json</span>(<span class="kw-2">ref</span> <span class="ident">inner</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">inner</span>),
+			<span class="ident">Error</span>::<span class="ident">WebSocket</span>(<span class="kw-2">ref</span> <span class="ident">inner</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">inner</span>),
+			<span class="ident">Error</span>::<span class="ident">Io</span>(<span class="kw-2">ref</span> <span class="ident">inner</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">inner</span>),
+			<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;voice&quot;</span>)]</span>
+			<span class="ident">Error</span>::<span class="ident">Opus</span>(<span class="kw-2">ref</span> <span class="ident">inner</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">inner</span>),
+			_ <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
 		}
 	}
 }
@@ -329,18 +341,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -372,11 +388,8 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "discord";
-        window.playgroundUrl = "";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

@@ -9,14 +9,18 @@
 
     <title>request.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,7 +54,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -186,149 +198,149 @@
 <span id="142">142</span>
 <span id="143">143</span>
 <span id="144">144</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Structs for client-side (outbound) WebSocket requests</span>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::{<span class='ident'>Read</span>, <span class='ident'>Write</span>};
+</pre><pre class="rust ">
+<span class="doccomment">//! Structs for client-side (outbound) WebSocket requests</span>
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="ident">Read</span>, <span class="ident">Write</span>};
 
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>url</span>::<span class='ident'>Url</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
 
-<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>version</span>::<span class='ident'>HttpVersion</span>;
-<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>buffer</span>::<span class='ident'>BufReader</span>;
-<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>header</span>::<span class='ident'>Headers</span>;
-<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>header</span>::{<span class='ident'>Connection</span>, <span class='ident'>ConnectionOption</span>};
-<span class='kw'>use</span> <span class='ident'>hyper</span>::<span class='ident'>header</span>::{<span class='ident'>Upgrade</span>, <span class='ident'>Protocol</span>, <span class='ident'>ProtocolName</span>};
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">version</span>::<span class="ident">HttpVersion</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">buffer</span>::<span class="ident">BufReader</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::<span class="ident">Headers</span>;
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::{<span class="ident">Connection</span>, <span class="ident">ConnectionOption</span>};
+<span class="kw">use</span> <span class="ident">hyper</span>::<span class="ident">header</span>::{<span class="ident">Upgrade</span>, <span class="ident">Protocol</span>, <span class="ident">ProtocolName</span>};
 
-<span class='kw'>use</span> <span class='ident'>unicase</span>::<span class='ident'>UniCase</span>;
+<span class="kw">use</span> <span class="ident">unicase</span>::<span class="ident">UniCase</span>;
 
-<span class='kw'>use</span> <span class='ident'>header</span>::{<span class='ident'>WebSocketKey</span>, <span class='ident'>WebSocketVersion</span>, <span class='ident'>WebSocketProtocol</span>, <span class='ident'>WebSocketExtensions</span>, <span class='ident'>Origin</span>};
-<span class='kw'>use</span> <span class='ident'>result</span>::<span class='ident'>WebSocketResult</span>;
-<span class='kw'>use</span> <span class='ident'>client</span>::<span class='ident'>response</span>::<span class='ident'>Response</span>;
-<span class='kw'>use</span> <span class='ident'>ws</span>::<span class='ident'>util</span>::<span class='ident'>url</span>::<span class='ident'>ToWebSocketUrlComponents</span>;
+<span class="kw">use</span> <span class="ident">header</span>::{<span class="ident">WebSocketKey</span>, <span class="ident">WebSocketVersion</span>, <span class="ident">WebSocketProtocol</span>, <span class="ident">WebSocketExtensions</span>, <span class="ident">Origin</span>};
+<span class="kw">use</span> <span class="ident">result</span>::<span class="ident">WebSocketResult</span>;
+<span class="kw">use</span> <span class="ident">client</span>::<span class="ident">response</span>::<span class="ident">Response</span>;
+<span class="kw">use</span> <span class="ident">ws</span>::<span class="ident">util</span>::<span class="ident">url</span>::<span class="ident">ToWebSocketUrlComponents</span>;
 
-<span class='doccomment'>/// Represents a WebSocket request.</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// Note that nothing is written to the internal Writer until the `send()` method is called.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Request</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Read</span>, <span class='ident'>W</span>: <span class='ident'>Write</span><span class='op'>&gt;</span> {
-    <span class='doccomment'>/// The HTTP version of this request.</span>
-    <span class='kw'>pub</span> <span class='ident'>version</span>: <span class='ident'>HttpVersion</span>,
-	<span class='doccomment'>/// The headers of this request.</span>
-	<span class='kw'>pub</span> <span class='ident'>headers</span>: <span class='ident'>Headers</span>,
+<span class="doccomment">/// Represents a WebSocket request.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Note that nothing is written to the internal Writer until the `send()` method is called.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Request</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span>, <span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// The HTTP version of this request.</span>
+    <span class="kw">pub</span> <span class="ident">version</span>: <span class="ident">HttpVersion</span>,
+	<span class="doccomment">/// The headers of this request.</span>
+	<span class="kw">pub</span> <span class="ident">headers</span>: <span class="ident">Headers</span>,
 	
-    <span class='ident'>resource_name</span>: <span class='ident'>String</span>,
-	<span class='ident'>reader</span>: <span class='ident'>BufReader</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>,
-	<span class='ident'>writer</span>: <span class='ident'>W</span>,
+    <span class="ident">resource_name</span>: <span class="ident">String</span>,
+	<span class="ident">reader</span>: <span class="ident">BufReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>,
+	<span class="ident">writer</span>: <span class="ident">W</span>,
 }
 
-<span class='kw'>unsafe</span> <span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>W</span><span class='op'>&gt;</span> <span class='ident'>Send</span> <span class='kw'>for</span> <span class='ident'>Request</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>W</span><span class='op'>&gt;</span> <span class='kw'>where</span> <span class='ident'>R</span>: <span class='ident'>Read</span> <span class='op'>+</span> <span class='ident'>Send</span>, <span class='ident'>W</span>: <span class='ident'>Write</span> <span class='op'>+</span> <span class='ident'>Send</span> { }
+<span class="kw">unsafe</span> <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">W</span><span class="op">&gt;</span> <span class="ident">Send</span> <span class="kw">for</span> <span class="ident">Request</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">W</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">R</span>: <span class="ident">Read</span> <span class="op">+</span> <span class="ident">Send</span>, <span class="ident">W</span>: <span class="ident">Write</span> <span class="op">+</span> <span class="ident">Send</span> { }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='ident'>R</span>: <span class='ident'>Read</span>, <span class='ident'>W</span>: <span class='ident'>Write</span><span class='op'>&gt;</span> <span class='ident'>Request</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>W</span><span class='op'>&gt;</span> {
-	<span class='doccomment'>/// Creates a new client-side request.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// In general `Client::connect()` should be used for connecting to servers.</span>
-	<span class='doccomment'>/// However, if the request is to be written to a different Writer, this function</span>
-	<span class='doccomment'>/// may be used.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span><span class='op'>&lt;</span><span class='ident'>T</span>: <span class='ident'>ToWebSocketUrlComponents</span><span class='op'>&gt;</span>(<span class='ident'>components</span>: <span class='ident'>T</span>, <span class='ident'>reader</span>: <span class='ident'>R</span>, <span class='ident'>writer</span>: <span class='ident'>W</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span><span class='ident'>Request</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>W</span><span class='op'>&gt;&gt;</span> {
-		<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>headers</span> <span class='op'>=</span> <span class='ident'>Headers</span>::<span class='ident'>new</span>();
-		<span class='kw'>let</span> (<span class='ident'>host</span>, <span class='ident'>resource_name</span>, _) <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>components</span>.<span class='ident'>to_components</span>());
-		<span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>host</span>);
-		<span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>Connection</span>(<span class='macro'>vec</span><span class='macro'>!</span>[
-			<span class='ident'>ConnectionOption</span>::<span class='ident'>ConnectionHeader</span>(<span class='ident'>UniCase</span>(<span class='string'>&quot;Upgrade&quot;</span>.<span class='ident'>to_string</span>()))
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Read</span>, <span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span> <span class="ident">Request</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">W</span><span class="op">&gt;</span> {
+	<span class="doccomment">/// Creates a new client-side request.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// In general `Client::connect()` should be used for connecting to servers.</span>
+	<span class="doccomment">/// However, if the request is to be written to a different Writer, this function</span>
+	<span class="doccomment">/// may be used.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">ToWebSocketUrlComponents</span><span class="op">&gt;</span>(<span class="ident">components</span>: <span class="ident">T</span>, <span class="ident">reader</span>: <span class="ident">R</span>, <span class="ident">writer</span>: <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">W</span><span class="op">&gt;&gt;</span> {
+		<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">headers</span> <span class="op">=</span> <span class="ident">Headers</span>::<span class="ident">new</span>();
+		<span class="kw">let</span> (<span class="ident">host</span>, <span class="ident">resource_name</span>, _) <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">components</span>.<span class="ident">to_components</span>());
+		<span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">host</span>);
+		<span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">Connection</span>(<span class="macro">vec</span><span class="macro">!</span>[
+			<span class="ident">ConnectionOption</span>::<span class="ident">ConnectionHeader</span>(<span class="ident">UniCase</span>(<span class="string">&quot;Upgrade&quot;</span>.<span class="ident">to_string</span>()))
 		]));
-		<span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>Upgrade</span>(<span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>Protocol</span>{
-			<span class='ident'>name</span>: <span class='ident'>ProtocolName</span>::<span class='ident'>WebSocket</span>,
-			<span class='ident'>version</span>: <span class='prelude-val'>None</span>
+		<span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">Upgrade</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Protocol</span>{
+			<span class="ident">name</span>: <span class="ident">ProtocolName</span>::<span class="ident">WebSocket</span>,
+			<span class="ident">version</span>: <span class="prelude-val">None</span>
 		}]));
-		<span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>WebSocketVersion</span>::<span class='ident'>WebSocket13</span>);
-		<span class='ident'>headers</span>.<span class='ident'>set</span>(<span class='ident'>WebSocketKey</span>::<span class='ident'>new</span>());
+		<span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">WebSocketVersion</span>::<span class="ident">WebSocket13</span>);
+		<span class="ident">headers</span>.<span class="ident">set</span>(<span class="ident">WebSocketKey</span>::<span class="ident">new</span>());
 		
-		<span class='prelude-val'>Ok</span>(<span class='ident'>Request</span> {
-			<span class='ident'>version</span>: <span class='ident'>HttpVersion</span>::<span class='ident'>Http11</span>,
-			<span class='ident'>headers</span>: <span class='ident'>headers</span>,
-			<span class='ident'>resource_name</span>: <span class='ident'>resource_name</span>,
-			<span class='ident'>reader</span>: <span class='ident'>BufReader</span>::<span class='ident'>new</span>(<span class='ident'>reader</span>),
-			<span class='ident'>writer</span>: <span class='ident'>writer</span>
+		<span class="prelude-val">Ok</span>(<span class="ident">Request</span> {
+			<span class="ident">version</span>: <span class="ident">HttpVersion</span>::<span class="ident">Http11</span>,
+			<span class="ident">headers</span>: <span class="ident">headers</span>,
+			<span class="ident">resource_name</span>: <span class="ident">resource_name</span>,
+			<span class="ident">reader</span>: <span class="ident">BufReader</span>::<span class="ident">new</span>(<span class="ident">reader</span>),
+			<span class="ident">writer</span>: <span class="ident">writer</span>
 		})
 	}
-	<span class='doccomment'>/// Short-cut to obtain the WebSocketKey value.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>key</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>WebSocketKey</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>headers</span>.<span class='ident'>get</span>()
+	<span class="doccomment">/// Short-cut to obtain the WebSocketKey value.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">WebSocketKey</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">get</span>()
 	}
-	<span class='doccomment'>/// Short-cut to obtain the WebSocketVersion value.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>version</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>WebSocketVersion</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>headers</span>.<span class='ident'>get</span>()
+	<span class="doccomment">/// Short-cut to obtain the WebSocketVersion value.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">WebSocketVersion</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">get</span>()
 	}
-	<span class='doccomment'>/// Short-cut to obtain the WebSocketProtocol value.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>protocol</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>WebSocketProtocol</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>headers</span>.<span class='ident'>get</span>()
+	<span class="doccomment">/// Short-cut to obtain the WebSocketProtocol value.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">protocol</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">WebSocketProtocol</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">get</span>()
 	}
-	<span class='doccomment'>/// Short-cut to obtain the WebSocketExtensions value.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>extensions</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>WebSocketExtensions</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>headers</span>.<span class='ident'>get</span>()
+	<span class="doccomment">/// Short-cut to obtain the WebSocketExtensions value.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">extensions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">WebSocketExtensions</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">get</span>()
 	}
-	<span class='doccomment'>/// Short-cut to obtain the Origin value.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>origin</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>Origin</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>headers</span>.<span class='ident'>get</span>()
+	<span class="doccomment">/// Short-cut to obtain the Origin value.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">origin</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Origin</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">get</span>()
 	}
-	<span class='doccomment'>/// Short-cut to obtain a mutable reference to the WebSocketKey value.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// Note that to add a header that does not already exist, ```Request.headers.set()```</span>
-	<span class='doccomment'>/// must be used.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>key_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>WebSocketKey</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>headers</span>.<span class='ident'>get_mut</span>()
+	<span class="doccomment">/// Short-cut to obtain a mutable reference to the WebSocketKey value.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// Note that to add a header that does not already exist, ```Request.headers.set()```</span>
+	<span class="doccomment">/// must be used.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">key_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">WebSocketKey</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">get_mut</span>()
 	}
-	<span class='doccomment'>/// Short-cut to obtain a mutable reference to the WebSocketVersion value.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// Note that to add a header that does not already exist, ```Request.headers.set()```</span>
-	<span class='doccomment'>/// must be used.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>version_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>WebSocketVersion</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>headers</span>.<span class='ident'>get_mut</span>()
+	<span class="doccomment">/// Short-cut to obtain a mutable reference to the WebSocketVersion value.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// Note that to add a header that does not already exist, ```Request.headers.set()```</span>
+	<span class="doccomment">/// must be used.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">version_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">WebSocketVersion</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">get_mut</span>()
 	}
-	<span class='doccomment'>/// Short-cut to obtaina mutable reference to  the WebSocketProtocol value.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// Note that to add a header that does not already exist, ```Request.headers.set()```</span>
-	<span class='doccomment'>/// must be used.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>protocol_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>WebSocketProtocol</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>headers</span>.<span class='ident'>get_mut</span>()
+	<span class="doccomment">/// Short-cut to obtaina mutable reference to  the WebSocketProtocol value.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// Note that to add a header that does not already exist, ```Request.headers.set()```</span>
+	<span class="doccomment">/// must be used.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">protocol_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">WebSocketProtocol</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">get_mut</span>()
 	}
-	<span class='doccomment'>/// Short-cut to obtain a mutable reference to the WebSocketExtensions value.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// Note that to add a header that does not already exist, ```Request.headers.set()```</span>
-	<span class='doccomment'>/// must be used.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>extensions_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>WebSocketExtensions</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>headers</span>.<span class='ident'>get_mut</span>()
+	<span class="doccomment">/// Short-cut to obtain a mutable reference to the WebSocketExtensions value.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// Note that to add a header that does not already exist, ```Request.headers.set()```</span>
+	<span class="doccomment">/// must be used.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">extensions_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">WebSocketExtensions</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">get_mut</span>()
 	}
-	<span class='doccomment'>/// Short-cut to obtain a mutable reference to the Origin value.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// Note that to add a header that does not already exist, ```Request.headers.set()```</span>
-	<span class='doccomment'>/// must be used.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>origin_mut</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>Origin</span><span class='op'>&gt;</span> {
-		<span class='self'>self</span>.<span class='ident'>headers</span>.<span class='ident'>get_mut</span>()
+	<span class="doccomment">/// Short-cut to obtain a mutable reference to the Origin value.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// Note that to add a header that does not already exist, ```Request.headers.set()```</span>
+	<span class="doccomment">/// must be used.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">origin_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Origin</span><span class="op">&gt;</span> {
+		<span class="self">self</span>.<span class="ident">headers</span>.<span class="ident">get_mut</span>()
 	}
-	<span class='doccomment'>/// Returns a reference to the inner Reader.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_reader</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>BufReader</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span> {
-		<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>reader</span>
+	<span class="doccomment">/// Returns a reference to the inner Reader.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_reader</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">BufReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
+		<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">reader</span>
 	}
-	<span class='doccomment'>/// Returns a reference to the inner Writer.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_writer</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='ident'>W</span> {
-		<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>writer</span>
+	<span class="doccomment">/// Returns a reference to the inner Writer.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_writer</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">W</span> {
+		<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">writer</span>
 	}
-	<span class='doccomment'>/// Returns a mutable reference to the inner Reader.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mut_reader</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>BufReader</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span> {
-		<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>reader</span>
+	<span class="doccomment">/// Returns a mutable reference to the inner Reader.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mut_reader</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">BufReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
+		<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">reader</span>
 	}
-	<span class='doccomment'>/// Returns a mutable reference to the inner Writer.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>get_mut_writer</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span> {
-		<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>
+	<span class="doccomment">/// Returns a mutable reference to the inner Writer.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mut_writer</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span> {
+		<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">writer</span>
 	}
-	<span class='doccomment'>/// Return the inner Reader and Writer.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>into_inner</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> (<span class='ident'>BufReader</span><span class='op'>&lt;</span><span class='ident'>R</span><span class='op'>&gt;</span>, <span class='ident'>W</span>) {
-		(<span class='self'>self</span>.<span class='ident'>reader</span>, <span class='self'>self</span>.<span class='ident'>writer</span>)
+	<span class="doccomment">/// Return the inner Reader and Writer.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">into_inner</span>(<span class="self">self</span>) <span class="op">-&gt;</span> (<span class="ident">BufReader</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span>, <span class="ident">W</span>) {
+		(<span class="self">self</span>.<span class="ident">reader</span>, <span class="self">self</span>.<span class="ident">writer</span>)
 	}
-	<span class='doccomment'>/// Sends the request to the server and returns a response.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>send</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span><span class='ident'>Response</span><span class='op'>&lt;</span><span class='ident'>R</span>, <span class='ident'>W</span><span class='op'>&gt;&gt;</span> {
-		<span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>, <span class='string'>&quot;GET {} {}\r\n&quot;</span>, <span class='self'>self</span>.<span class='ident'>resource_name</span>, <span class='self'>self</span>.<span class='ident'>version</span>));
-		<span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>write</span><span class='macro'>!</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>.<span class='ident'>writer</span>, <span class='string'>&quot;{}\r\n&quot;</span>, <span class='self'>self</span>.<span class='ident'>headers</span>));
-		<span class='ident'>Response</span>::<span class='ident'>read</span>(<span class='self'>self</span>)
+	<span class="doccomment">/// Sends the request to the server and returns a response.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span>(<span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">W</span><span class="op">&gt;&gt;</span> {
+		<span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;GET {} {}\r\n&quot;</span>, <span class="self">self</span>.<span class="ident">resource_name</span>, <span class="self">self</span>.<span class="ident">version</span>));
+		<span class="macro">try</span><span class="macro">!</span>(<span class="macro">write</span><span class="macro">!</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">writer</span>, <span class="string">&quot;{}\r\n&quot;</span>, <span class="self">self</span>.<span class="ident">headers</span>));
+		<span class="ident">Response</span>::<span class="ident">read</span>(<span class="self">self</span>)
 	}
 }
 </pre>
@@ -345,18 +357,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -388,11 +404,8 @@
     <script>
         window.rootPath = "../../../";
         window.currentCrate = "websocket";
-        window.playgroundUrl = "";
     </script>
-    <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
-    
     <script defer src="../../../search-index.js"></script>
 </body>
 </html>

@@ -9,14 +9,18 @@
 
     <title>dishub::ops::github::poll_user_events_new - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc fn">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         <p class='location'><a href='../../index.html'>dishub</a>::<wbr><a href='../index.html'>ops</a>::<wbr><a href='index.html'>github</a></p><script>window.sidebarCurrent = {name: 'poll_user_events_new', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,27 +54,23 @@
         </form>
     </nav>
 
-    <section id='main' class="content fn">
-<h1 class='fqn'><span class='in-band'>Function <a href='../../index.html'>dishub</a>::<wbr><a href='../index.html'>ops</a>::<wbr><a href='index.html'>github</a>::<wbr><a class='fn' href=''>poll_user_events_new</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Function <a href='../../index.html'>dishub</a>::<wbr><a href='../index.html'>ops</a>::<wbr><a href='index.html'>github</a>::<wbr><a class="fn" href=''>poll_user_events_new</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1583' class='srclink' href='../../../src/dishub/src/ops/github.rs.html#83-85' title='goto source code'>[src]</a></span></h1>
-<pre class='rust fn'>pub fn poll_user_events_new(uname: &amp;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.str.html'>str</a>, tokens: &amp;<a class='struct' href='../../../dishub/ops/struct.AppTokens.html' title='dishub::ops::AppTokens'>AppTokens</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>, <a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>, <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>,&nbsp;<a class='enum' href='../../../dishub/enum.Error.html' title='dishub::Error'>Error</a>&gt;</pre><div class='docblock'><p>Get the events for a user when you don&#39;t have an ETag (which is to say - for the first time).</p>
-
+               </span><a class='srclink' href='../../../src/dishub/ops/github.rs.html#83-85' title='goto source code'>[src]</a></span></h1>
+<pre class='rust fn'>pub fn poll_user_events_new(<br>&nbsp;&nbsp;&nbsp;&nbsp;uname: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, <br>&nbsp;&nbsp;&nbsp;&nbsp;tokens: &amp;<a class="struct" href="../../../dishub/ops/struct.AppTokens.html" title="struct dishub::ops::AppTokens">AppTokens</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>, <a class="enum" href="../../../dishub/enum.Error.html" title="enum dishub::Error">Error</a>&gt;</pre><div class='docblock'><p>Get the events for a user when you don't have an ETag (which is to say - for the first time).</p>
 <p>The returned tuple contains:</p>
-
 <ul>
 <li>The raw JSON response,</li>
-<li>The event bundle&#39;s ETag,</li>
+<li>The event bundle's ETag,</li>
 <li>The next minimum amount of milliseconds polling the same event queue is permitted.</li>
 </ul>
-
 <p>You should use this only once and use <code>poll_user_events_update()</code> afterwards.</p>
-
-<h1 id='examples' class='section-header'><a href='#examples'>Examples</a></h1>
-<pre class='rust rust-example-rendered'>
-<span class='kw'>let</span> (<span class='ident'>response</span>, <span class='ident'>etag</span>, <span class='ident'>next</span>) <span class='op'>=</span> <span class='ident'>poll_user_events_new</span>(<span class='string'>&quot;nabijaczleweli&quot;</span>, <span class='kw-2'>&amp;</span><span class='ident'>tokens</span>).<span class='ident'>unwrap</span>();<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+<h1 id="examples" class="section-header"><a href="#examples">Examples</a></h1>
+<pre class="rust rust-example-rendered">
+<span class="kw">let</span> (<span class="ident">response</span>, <span class="ident">etag</span>, <span class="ident">next</span>) <span class="op">=</span> <span class="ident">poll_user_events_new</span>(<span class="string">&quot;nabijaczleweli&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">tokens</span>).<span class="ident">unwrap</span>();</pre>
 </div></section>
     <section id='search' class="content hidden"></section>
 
@@ -76,18 +84,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -119,11 +131,8 @@
     <script>
         window.rootPath = "../../../";
         window.currentCrate = "dishub";
-        window.playgroundUrl = "";
     </script>
-    <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
-    
     <script defer src="../../../search-index.js"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors["num_traits"] = [];implementors["num"] = [];implementors["chrono"] = [];implementors["dishub"] = [];
+implementors["num_traits"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

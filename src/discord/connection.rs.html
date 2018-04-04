@@ -9,14 +9,18 @@
 
     <title>connection.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,7 +54,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -530,494 +542,494 @@
 <span id="486">486</span>
 <span id="487">487</span>
 <span id="488">488</span>
-</pre><pre class='rust '>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>sync</span>::<span class='ident'>mpsc</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;voice&quot;</span>)]</span>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>collections</span>::<span class='ident'>HashMap</span>;
+</pre><pre class="rust ">
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">mpsc</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;voice&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
 
-<span class='kw'>use</span> <span class='ident'>websocket</span>::<span class='ident'>client</span>::{<span class='ident'>Client</span>, <span class='ident'>Sender</span>, <span class='ident'>Receiver</span>};
-<span class='kw'>use</span> <span class='ident'>websocket</span>::<span class='ident'>stream</span>::<span class='ident'>WebSocketStream</span>;
+<span class="kw">use</span> <span class="ident">websocket</span>::<span class="ident">client</span>::{<span class="ident">Client</span>, <span class="ident">Sender</span>, <span class="ident">Receiver</span>};
+<span class="kw">use</span> <span class="ident">websocket</span>::<span class="ident">stream</span>::<span class="ident">WebSocketStream</span>;
 
-<span class='kw'>use</span> <span class='ident'>serde_json</span>;
-<span class='kw'>use</span> <span class='ident'>serde_json</span>::<span class='ident'>builder</span>::<span class='ident'>ObjectBuilder</span>;
+<span class="kw">use</span> <span class="ident">serde_json</span>;
+<span class="kw">use</span> <span class="ident">serde_json</span>::<span class="ident">builder</span>::<span class="ident">ObjectBuilder</span>;
 
-<span class='kw'>use</span> <span class='ident'>model</span>::<span class='op'>*</span>;
-<span class='kw'>use</span> <span class='ident'>internal</span>::<span class='ident'>Status</span>;
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;voice&quot;</span>)]</span>
-<span class='kw'>use</span> <span class='ident'>voice</span>::<span class='ident'>VoiceConnection</span>;
-<span class='kw'>use</span> {<span class='prelude-ty'>Result</span>, <span class='ident'>Error</span>, <span class='ident'>SenderExt</span>, <span class='ident'>ReceiverExt</span>};
+<span class="kw">use</span> <span class="ident">model</span>::<span class="kw-2">*</span>;
+<span class="kw">use</span> <span class="ident">internal</span>::<span class="ident">Status</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;voice&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">voice</span>::<span class="ident">VoiceConnection</span>;
+<span class="kw">use</span> {<span class="prelude-ty">Result</span>, <span class="ident">Error</span>, <span class="ident">SenderExt</span>, <span class="ident">ReceiverExt</span>};
 
-<span class='kw'>const</span> <span class='ident'>GATEWAY_VERSION</span>: <span class='ident'>u64</span> <span class='op'>=</span> <span class='number'>6</span>;
+<span class="kw">const</span> <span class="ident">GATEWAY_VERSION</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="number">6</span>;
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;voice&quot;</span>)]</span>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>finish_connection</span> {
-	($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name1</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>val1</span>:<span class='ident'>expr</span>),<span class='op'>*</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name2</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>val2</span>:<span class='ident'>expr</span>,)<span class='op'>*</span>) <span class='op'>=&gt;</span> { <span class='ident'>Connection</span> {
-		$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name1</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>val1</span>,)<span class='op'>*</span>
-		$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name2</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>val2</span>,)<span class='op'>*</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;voice&quot;</span>)]</span>
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">finish_connection</span> {
+	($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name1</span>:<span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">val1</span>:<span class="ident">expr</span>),<span class="kw-2">*</span>; $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name2</span>:<span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">val2</span>:<span class="ident">expr</span>,)<span class="kw-2">*</span>) <span class="op">=&gt;</span> { <span class="ident">Connection</span> {
+		$(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name1</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">val1</span>,)<span class="op">*</span>
+		$(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name2</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">val2</span>,)<span class="op">*</span>
 	}}
 }
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;voice&quot;</span>))]</span>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>finish_connection</span> {
-	($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name1</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>val1</span>:<span class='ident'>expr</span>),<span class='op'>*</span>; $(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name2</span>:<span class='ident'>ident</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>val2</span>:<span class='ident'>expr</span>,)<span class='op'>*</span>) <span class='op'>=&gt;</span> { <span class='ident'>Connection</span> {
-		$(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>name1</span>: <span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>val1</span>,)<span class='op'>*</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;voice&quot;</span>))]</span>
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">finish_connection</span> {
+	($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name1</span>:<span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">val1</span>:<span class="ident">expr</span>),<span class="kw-2">*</span>; $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name2</span>:<span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">val2</span>:<span class="ident">expr</span>,)<span class="kw-2">*</span>) <span class="op">=&gt;</span> { <span class="ident">Connection</span> {
+		$(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">name1</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">val1</span>,)<span class="op">*</span>
 	}}
 }
 
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;voice&quot;</span>)]</span>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>voice_only</span> {
-	(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>b</span>:<span class='ident'>block</span>) <span class='op'>=&gt;</span> {<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>b</span>}
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;voice&quot;</span>)]</span>
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">voice_only</span> {
+	(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>:<span class="ident">block</span>) <span class="op">=&gt;</span> {<span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>}
 }
-<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>not</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;voice&quot;</span>))]</span>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>voice_only</span> {
-	(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>b</span>:<span class='ident'>block</span>) <span class='op'>=&gt;</span> {}
-}
-
-<span class='doccomment'>/// Websocket connection to the Discord servers.</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Connection</span> {
-	<span class='ident'>keepalive_channel</span>: <span class='ident'>mpsc</span>::<span class='ident'>Sender</span><span class='op'>&lt;</span><span class='ident'>Status</span><span class='op'>&gt;</span>,
-	<span class='ident'>receiver</span>: <span class='ident'>Receiver</span><span class='op'>&lt;</span><span class='ident'>WebSocketStream</span><span class='op'>&gt;</span>,
-	<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;voice&quot;</span>)]</span>
-	<span class='ident'>voice_handles</span>: <span class='ident'>HashMap</span><span class='op'>&lt;</span><span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>ServerId</span><span class='op'>&gt;</span>, <span class='ident'>VoiceConnection</span><span class='op'>&gt;</span>,
-	<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;voice&quot;</span>)]</span>
-	<span class='ident'>user_id</span>: <span class='ident'>UserId</span>,
-	<span class='ident'>ws_url</span>: <span class='ident'>String</span>,
-	<span class='ident'>token</span>: <span class='ident'>String</span>,
-	<span class='ident'>session_id</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>,
-	<span class='ident'>last_sequence</span>: <span class='ident'>u64</span>,
-	<span class='ident'>shard_info</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>[<span class='ident'>u8</span>; <span class='number'>2</span>]<span class='op'>&gt;</span>,
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;voice&quot;</span>))]</span>
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">voice_only</span> {
+	(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>:<span class="ident">block</span>) <span class="op">=&gt;</span> {}
 }
 
-<span class='kw'>impl</span> <span class='ident'>Connection</span> {
-	<span class='doccomment'>/// Establish a connection to the Discord websocket servers.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// Returns both the `Connection` and the `ReadyEvent` which is always the</span>
-	<span class='doccomment'>/// first event received and contains initial state information.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// Usually called internally by `Discord::connect`, which provides both</span>
-	<span class='doccomment'>/// the token and URL and an optional user-given shard ID and total shard</span>
-	<span class='doccomment'>/// count.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>base_url</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>token</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>shard_info</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>[<span class='ident'>u8</span>; <span class='number'>2</span>]<span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>(<span class='ident'>Connection</span>, <span class='ident'>ReadyEvent</span>)<span class='op'>&gt;</span> {
-		<span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Gateway: {}&quot;</span>, <span class='ident'>base_url</span>);
-		<span class='comment'>// establish the websocket connection</span>
-		<span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>build_gateway_url</span>(<span class='ident'>base_url</span>));
-		<span class='kw'>let</span> <span class='ident'>response</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>connect</span>(<span class='ident'>url</span>)).<span class='ident'>send</span>());
-		<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>response</span>.<span class='ident'>validate</span>());
-		<span class='kw'>let</span> (<span class='kw-2'>mut</span> <span class='ident'>sender</span>, <span class='kw-2'>mut</span> <span class='ident'>receiver</span>) <span class='op'>=</span> <span class='ident'>response</span>.<span class='ident'>begin</span>().<span class='ident'>split</span>();
+<span class="doccomment">/// Websocket connection to the Discord servers.</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Connection</span> {
+	<span class="ident">keepalive_channel</span>: <span class="ident">mpsc</span>::<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Status</span><span class="op">&gt;</span>,
+	<span class="ident">receiver</span>: <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">WebSocketStream</span><span class="op">&gt;</span>,
+	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;voice&quot;</span>)]</span>
+	<span class="ident">voice_handles</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ServerId</span><span class="op">&gt;</span>, <span class="ident">VoiceConnection</span><span class="op">&gt;</span>,
+	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;voice&quot;</span>)]</span>
+	<span class="ident">user_id</span>: <span class="ident">UserId</span>,
+	<span class="ident">ws_url</span>: <span class="ident">String</span>,
+	<span class="ident">token</span>: <span class="ident">String</span>,
+	<span class="ident">session_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+	<span class="ident">last_sequence</span>: <span class="ident">u64</span>,
+	<span class="ident">shard_info</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>[<span class="ident">u8</span>; <span class="number">2</span>]<span class="op">&gt;</span>,
+}
 
-		<span class='comment'>// send the handshake</span>
-		<span class='kw'>let</span> <span class='ident'>identify</span> <span class='op'>=</span> <span class='ident'>identify</span>(<span class='ident'>token</span>, <span class='ident'>shard_info</span>);
-		<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>sender</span>.<span class='ident'>send_json</span>(<span class='kw-2'>&amp;</span><span class='ident'>identify</span>));
+<span class="kw">impl</span> <span class="ident">Connection</span> {
+	<span class="doccomment">/// Establish a connection to the Discord websocket servers.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// Returns both the `Connection` and the `ReadyEvent` which is always the</span>
+	<span class="doccomment">/// first event received and contains initial state information.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// Usually called internally by `Discord::connect`, which provides both</span>
+	<span class="doccomment">/// the token and URL and an optional user-given shard ID and total shard</span>
+	<span class="doccomment">/// count.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">base_url</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">shard_info</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>[<span class="ident">u8</span>; <span class="number">2</span>]<span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="ident">Connection</span>, <span class="ident">ReadyEvent</span>)<span class="op">&gt;</span> {
+		<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Gateway: {}&quot;</span>, <span class="ident">base_url</span>);
+		<span class="comment">// establish the websocket connection</span>
+		<span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">build_gateway_url</span>(<span class="ident">base_url</span>));
+		<span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">Client</span>::<span class="ident">connect</span>(<span class="ident">url</span>)).<span class="ident">send</span>());
+		<span class="macro">try</span><span class="macro">!</span>(<span class="ident">response</span>.<span class="ident">validate</span>());
+		<span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">sender</span>, <span class="kw-2">mut</span> <span class="ident">receiver</span>) <span class="op">=</span> <span class="ident">response</span>.<span class="ident">begin</span>().<span class="ident">split</span>();
 
-		<span class='comment'>// read the Hello and spawn the keepalive thread</span>
-		<span class='kw'>let</span> <span class='ident'>heartbeat_interval</span>;
-		<span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>receiver</span>.<span class='ident'>recv_json</span>(<span class='ident'>GatewayEvent</span>::<span class='ident'>decode</span>)) {
-			<span class='ident'>GatewayEvent</span>::<span class='ident'>Hello</span>(<span class='ident'>interval</span>) <span class='op'>=&gt;</span> <span class='ident'>heartbeat_interval</span> <span class='op'>=</span> <span class='ident'>interval</span>,
-			<span class='ident'>other</span> <span class='op'>=&gt;</span> {
-				<span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Unexpected event: {:?}&quot;</span>, <span class='ident'>other</span>);
-				<span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>Protocol</span>(<span class='string'>&quot;Expected Hello during handshake&quot;</span>))
+		<span class="comment">// send the handshake</span>
+		<span class="kw">let</span> <span class="ident">identify</span> <span class="op">=</span> <span class="ident">identify</span>(<span class="ident">token</span>, <span class="ident">shard_info</span>);
+		<span class="macro">try</span><span class="macro">!</span>(<span class="ident">sender</span>.<span class="ident">send_json</span>(<span class="kw-2">&amp;</span><span class="ident">identify</span>));
+
+		<span class="comment">// read the Hello and spawn the keepalive thread</span>
+		<span class="kw">let</span> <span class="ident">heartbeat_interval</span>;
+		<span class="kw">match</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">receiver</span>.<span class="ident">recv_json</span>(<span class="ident">GatewayEvent</span>::<span class="ident">decode</span>)) {
+			<span class="ident">GatewayEvent</span>::<span class="ident">Hello</span>(<span class="ident">interval</span>) <span class="op">=&gt;</span> <span class="ident">heartbeat_interval</span> <span class="op">=</span> <span class="ident">interval</span>,
+			<span class="ident">other</span> <span class="op">=&gt;</span> {
+				<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Unexpected event: {:?}&quot;</span>, <span class="ident">other</span>);
+				<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="string">&quot;Expected Hello during handshake&quot;</span>))
 			}
 		}
 
-		<span class='kw'>let</span> (<span class='ident'>tx</span>, <span class='ident'>rx</span>) <span class='op'>=</span> <span class='ident'>mpsc</span>::<span class='ident'>channel</span>();
-		<span class='macro'>try</span><span class='macro'>!</span>(::<span class='ident'>std</span>::<span class='ident'>thread</span>::<span class='ident'>Builder</span>::<span class='ident'>new</span>()
-			.<span class='ident'>name</span>(<span class='string'>&quot;Discord Keepalive&quot;</span>.<span class='ident'>into</span>())
-			.<span class='ident'>spawn</span>(<span class='kw'>move</span> <span class='op'>||</span> <span class='ident'>keepalive</span>(<span class='ident'>heartbeat_interval</span>, <span class='ident'>sender</span>, <span class='ident'>rx</span>)));
+		<span class="kw">let</span> (<span class="ident">tx</span>, <span class="ident">rx</span>) <span class="op">=</span> <span class="ident">mpsc</span>::<span class="ident">channel</span>();
+		<span class="macro">try</span><span class="macro">!</span>(::<span class="ident">std</span>::<span class="ident">thread</span>::<span class="ident">Builder</span>::<span class="ident">new</span>()
+			.<span class="ident">name</span>(<span class="string">&quot;Discord Keepalive&quot;</span>.<span class="ident">into</span>())
+			.<span class="ident">spawn</span>(<span class="kw">move</span> <span class="op">||</span> <span class="ident">keepalive</span>(<span class="ident">heartbeat_interval</span>, <span class="ident">sender</span>, <span class="ident">rx</span>)));
 
-		<span class='comment'>// read the Ready event</span>
-		<span class='kw'>let</span> <span class='ident'>sequence</span>;
-		<span class='kw'>let</span> <span class='ident'>ready</span>;
-		<span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>receiver</span>.<span class='ident'>recv_json</span>(<span class='ident'>GatewayEvent</span>::<span class='ident'>decode</span>)) {
-			<span class='ident'>GatewayEvent</span>::<span class='ident'>Dispatch</span>(<span class='ident'>seq</span>, <span class='ident'>Event</span>::<span class='ident'>Ready</span>(<span class='ident'>event</span>)) <span class='op'>=&gt;</span> {
-				<span class='ident'>sequence</span> <span class='op'>=</span> <span class='ident'>seq</span>;
-				<span class='ident'>ready</span> <span class='op'>=</span> <span class='ident'>event</span>;
+		<span class="comment">// read the Ready event</span>
+		<span class="kw">let</span> <span class="ident">sequence</span>;
+		<span class="kw">let</span> <span class="ident">ready</span>;
+		<span class="kw">match</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">receiver</span>.<span class="ident">recv_json</span>(<span class="ident">GatewayEvent</span>::<span class="ident">decode</span>)) {
+			<span class="ident">GatewayEvent</span>::<span class="ident">Dispatch</span>(<span class="ident">seq</span>, <span class="ident">Event</span>::<span class="ident">Ready</span>(<span class="ident">event</span>)) <span class="op">=&gt;</span> {
+				<span class="ident">sequence</span> <span class="op">=</span> <span class="ident">seq</span>;
+				<span class="ident">ready</span> <span class="op">=</span> <span class="ident">event</span>;
 			},
-			<span class='ident'>GatewayEvent</span>::<span class='ident'>InvalidateSession</span> <span class='op'>=&gt;</span> {
-				<span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Session invalidated, reidentifying&quot;</span>);
-				<span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>tx</span>.<span class='ident'>send</span>(<span class='ident'>Status</span>::<span class='ident'>SendMessage</span>(<span class='ident'>identify</span>));
-				<span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>receiver</span>.<span class='ident'>recv_json</span>(<span class='ident'>GatewayEvent</span>::<span class='ident'>decode</span>)) {
-					<span class='ident'>GatewayEvent</span>::<span class='ident'>Dispatch</span>(<span class='ident'>seq</span>, <span class='ident'>Event</span>::<span class='ident'>Ready</span>(<span class='ident'>event</span>)) <span class='op'>=&gt;</span> {
-						<span class='ident'>sequence</span> <span class='op'>=</span> <span class='ident'>seq</span>;
-						<span class='ident'>ready</span> <span class='op'>=</span> <span class='ident'>event</span>;
+			<span class="ident">GatewayEvent</span>::<span class="ident">InvalidateSession</span> <span class="op">=&gt;</span> {
+				<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Session invalidated, reidentifying&quot;</span>);
+				<span class="kw">let</span> _ <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">identify</span>));
+				<span class="kw">match</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">receiver</span>.<span class="ident">recv_json</span>(<span class="ident">GatewayEvent</span>::<span class="ident">decode</span>)) {
+					<span class="ident">GatewayEvent</span>::<span class="ident">Dispatch</span>(<span class="ident">seq</span>, <span class="ident">Event</span>::<span class="ident">Ready</span>(<span class="ident">event</span>)) <span class="op">=&gt;</span> {
+						<span class="ident">sequence</span> <span class="op">=</span> <span class="ident">seq</span>;
+						<span class="ident">ready</span> <span class="op">=</span> <span class="ident">event</span>;
 					}
-					<span class='ident'>other</span> <span class='op'>=&gt;</span> {
-						<span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Unexpected event: {:?}&quot;</span>, <span class='ident'>other</span>);
-						<span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>Protocol</span>(<span class='string'>&quot;Expected Ready during handshake&quot;</span>))
+					<span class="ident">other</span> <span class="op">=&gt;</span> {
+						<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Unexpected event: {:?}&quot;</span>, <span class="ident">other</span>);
+						<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="string">&quot;Expected Ready during handshake&quot;</span>))
 					}
 				}
 			}
-			<span class='ident'>other</span> <span class='op'>=&gt;</span> {
-				<span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Unexpected event: {:?}&quot;</span>, <span class='ident'>other</span>);
-				<span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>Protocol</span>(<span class='string'>&quot;Expected Ready or InvalidateSession during handshake&quot;</span>))
+			<span class="ident">other</span> <span class="op">=&gt;</span> {
+				<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Unexpected event: {:?}&quot;</span>, <span class="ident">other</span>);
+				<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="string">&quot;Expected Ready or InvalidateSession during handshake&quot;</span>))
 			}
 		}
-		<span class='kw'>if</span> <span class='ident'>ready</span>.<span class='ident'>version</span> <span class='op'>!=</span> <span class='ident'>GATEWAY_VERSION</span> {
-			<span class='macro'>warn</span><span class='macro'>!</span>(<span class='string'>&quot;Got protocol version {} instead of {}&quot;</span>, <span class='ident'>ready</span>.<span class='ident'>version</span>, <span class='ident'>GATEWAY_VERSION</span>);
+		<span class="kw">if</span> <span class="ident">ready</span>.<span class="ident">version</span> <span class="op">!=</span> <span class="ident">GATEWAY_VERSION</span> {
+			<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;Got protocol version {} instead of {}&quot;</span>, <span class="ident">ready</span>.<span class="ident">version</span>, <span class="ident">GATEWAY_VERSION</span>);
 		}
-		<span class='kw'>let</span> <span class='ident'>session_id</span> <span class='op'>=</span> <span class='ident'>ready</span>.<span class='ident'>session_id</span>.<span class='ident'>clone</span>();
+		<span class="kw">let</span> <span class="ident">session_id</span> <span class="op">=</span> <span class="ident">ready</span>.<span class="ident">session_id</span>.<span class="ident">clone</span>();
 
-		<span class='comment'>// return the connection</span>
-		<span class='prelude-val'>Ok</span>((<span class='macro'>finish_connection</span><span class='macro'>!</span>(
-			<span class='ident'>keepalive_channel</span>: <span class='ident'>tx</span>,
-			<span class='ident'>receiver</span>: <span class='ident'>receiver</span>,
-			<span class='ident'>ws_url</span>: <span class='ident'>base_url</span>.<span class='ident'>to_owned</span>(),
-			<span class='ident'>token</span>: <span class='ident'>token</span>.<span class='ident'>to_owned</span>(),
-			<span class='ident'>session_id</span>: <span class='prelude-val'>Some</span>(<span class='ident'>session_id</span>),
-			<span class='ident'>last_sequence</span>: <span class='ident'>sequence</span>,
-			<span class='ident'>shard_info</span>: <span class='ident'>shard_info</span>;
-			<span class='comment'>// voice only</span>
-			<span class='ident'>user_id</span>: <span class='ident'>ready</span>.<span class='ident'>user</span>.<span class='ident'>id</span>,
-			<span class='ident'>voice_handles</span>: <span class='ident'>HashMap</span>::<span class='ident'>new</span>(),
-		), <span class='ident'>ready</span>))
+		<span class="comment">// return the connection</span>
+		<span class="prelude-val">Ok</span>((<span class="macro">finish_connection</span><span class="macro">!</span>(
+			<span class="ident">keepalive_channel</span>: <span class="ident">tx</span>,
+			<span class="ident">receiver</span>: <span class="ident">receiver</span>,
+			<span class="ident">ws_url</span>: <span class="ident">base_url</span>.<span class="ident">to_owned</span>(),
+			<span class="ident">token</span>: <span class="ident">token</span>.<span class="ident">to_owned</span>(),
+			<span class="ident">session_id</span>: <span class="prelude-val">Some</span>(<span class="ident">session_id</span>),
+			<span class="ident">last_sequence</span>: <span class="ident">sequence</span>,
+			<span class="ident">shard_info</span>: <span class="ident">shard_info</span>;
+			<span class="comment">// voice only</span>
+			<span class="ident">user_id</span>: <span class="ident">ready</span>.<span class="ident">user</span>.<span class="ident">id</span>,
+			<span class="ident">voice_handles</span>: <span class="ident">HashMap</span>::<span class="ident">new</span>(),
+		), <span class="ident">ready</span>))
 	}
 
-	<span class='doccomment'>/// Change the game information that this client reports as playing.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_game</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>game</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Game</span><span class='op'>&gt;</span>) {
-		<span class='self'>self</span>.<span class='ident'>set_presence</span>(<span class='ident'>game</span>, <span class='ident'>OnlineStatus</span>::<span class='ident'>Online</span>, <span class='bool-val'>false</span>)
+	<span class="doccomment">/// Change the game information that this client reports as playing.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_game</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">game</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Game</span><span class="op">&gt;</span>) {
+		<span class="self">self</span>.<span class="ident">set_presence</span>(<span class="ident">game</span>, <span class="ident">OnlineStatus</span>::<span class="ident">Online</span>, <span class="bool-val">false</span>)
 	}
 
-	<span class='doccomment'>/// Set the client to be playing this game, with defaults used for any</span>
-	<span class='doccomment'>/// extended information.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_game_name</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>name</span>: <span class='ident'>String</span>) {
-		<span class='self'>self</span>.<span class='ident'>set_presence</span>(<span class='prelude-val'>Some</span>(<span class='ident'>Game</span>::<span class='ident'>playing</span>(<span class='ident'>name</span>)), <span class='ident'>OnlineStatus</span>::<span class='ident'>Online</span>, <span class='bool-val'>false</span>);
+	<span class="doccomment">/// Set the client to be playing this game, with defaults used for any</span>
+	<span class="doccomment">/// extended information.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_game_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="ident">String</span>) {
+		<span class="self">self</span>.<span class="ident">set_presence</span>(<span class="prelude-val">Some</span>(<span class="ident">Game</span>::<span class="ident">playing</span>(<span class="ident">name</span>)), <span class="ident">OnlineStatus</span>::<span class="ident">Online</span>, <span class="bool-val">false</span>);
 	}
 
-	<span class='doccomment'>/// Sets the active presence of the client, including game and/or status</span>
-	<span class='doccomment'>/// information.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// `afk` will help Discord determine where to send notifications.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>set_presence</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>game</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Game</span><span class='op'>&gt;</span>, <span class='ident'>status</span>: <span class='ident'>OnlineStatus</span>, <span class='ident'>afk</span>: <span class='ident'>bool</span>) {
-		<span class='kw'>let</span> <span class='ident'>status</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>status</span> {
-			<span class='ident'>OnlineStatus</span>::<span class='ident'>Offline</span> <span class='op'>=&gt;</span> <span class='ident'>OnlineStatus</span>::<span class='ident'>Invisible</span>,
-			<span class='ident'>other</span> <span class='op'>=&gt;</span> <span class='ident'>other</span>,
+	<span class="doccomment">/// Sets the active presence of the client, including game and/or status</span>
+	<span class="doccomment">/// information.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// `afk` will help Discord determine where to send notifications.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_presence</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">game</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Game</span><span class="op">&gt;</span>, <span class="ident">status</span>: <span class="ident">OnlineStatus</span>, <span class="ident">afk</span>: <span class="ident">bool</span>) {
+		<span class="kw">let</span> <span class="ident">status</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">status</span> {
+			<span class="ident">OnlineStatus</span>::<span class="ident">Offline</span> <span class="op">=&gt;</span> <span class="ident">OnlineStatus</span>::<span class="ident">Invisible</span>,
+			<span class="ident">other</span> <span class="op">=&gt;</span> <span class="ident">other</span>,
 		};
-		<span class='kw'>let</span> <span class='ident'>msg</span> <span class='op'>=</span> <span class='ident'>ObjectBuilder</span>::<span class='ident'>new</span>()
-			.<span class='ident'>insert</span>(<span class='string'>&quot;op&quot;</span>, <span class='number'>3</span>)
-			.<span class='ident'>insert_object</span>(<span class='string'>&quot;d&quot;</span>, <span class='kw'>move</span> <span class='op'>|</span><span class='kw-2'>mut</span> <span class='ident'>object</span><span class='op'>|</span> {
-				<span class='ident'>object</span> <span class='op'>=</span> <span class='ident'>object</span>.<span class='ident'>insert</span>(<span class='string'>&quot;afk&quot;</span>, <span class='ident'>afk</span>)
-					.<span class='ident'>insert</span>(<span class='string'>&quot;since&quot;</span>, <span class='number'>0</span>)
-					.<span class='ident'>insert</span>(<span class='string'>&quot;status&quot;</span>, <span class='ident'>status</span>.<span class='ident'>name</span>());
-				<span class='kw'>match</span> <span class='ident'>game</span> {
-					<span class='prelude-val'>Some</span>(<span class='ident'>game</span>) <span class='op'>=&gt;</span> <span class='ident'>object</span>.<span class='ident'>insert_object</span>(<span class='string'>&quot;game&quot;</span>, <span class='kw'>move</span> <span class='op'>|</span><span class='ident'>o</span><span class='op'>|</span> <span class='ident'>o</span>.<span class='ident'>insert</span>(<span class='string'>&quot;name&quot;</span>, <span class='ident'>game</span>.<span class='ident'>name</span>)),
-					<span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='ident'>object</span>.<span class='ident'>insert</span>(<span class='string'>&quot;game&quot;</span>, <span class='ident'>serde_json</span>::<span class='ident'>Value</span>::<span class='ident'>Null</span>),
+		<span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">ObjectBuilder</span>::<span class="ident">new</span>()
+			.<span class="ident">insert</span>(<span class="string">&quot;op&quot;</span>, <span class="number">3</span>)
+			.<span class="ident">insert_object</span>(<span class="string">&quot;d&quot;</span>, <span class="kw">move</span> <span class="op">|</span><span class="kw-2">mut</span> <span class="ident">object</span><span class="op">|</span> {
+				<span class="ident">object</span> <span class="op">=</span> <span class="ident">object</span>.<span class="ident">insert</span>(<span class="string">&quot;afk&quot;</span>, <span class="ident">afk</span>)
+					.<span class="ident">insert</span>(<span class="string">&quot;since&quot;</span>, <span class="number">0</span>)
+					.<span class="ident">insert</span>(<span class="string">&quot;status&quot;</span>, <span class="ident">status</span>.<span class="ident">name</span>());
+				<span class="kw">match</span> <span class="ident">game</span> {
+					<span class="prelude-val">Some</span>(<span class="ident">game</span>) <span class="op">=&gt;</span> <span class="ident">object</span>.<span class="ident">insert_object</span>(<span class="string">&quot;game&quot;</span>, <span class="kw">move</span> <span class="op">|</span><span class="ident">o</span><span class="op">|</span> <span class="ident">o</span>.<span class="ident">insert</span>(<span class="string">&quot;name&quot;</span>, <span class="ident">game</span>.<span class="ident">name</span>)),
+					<span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">object</span>.<span class="ident">insert</span>(<span class="string">&quot;game&quot;</span>, <span class="ident">serde_json</span>::<span class="ident">Value</span>::<span class="ident">Null</span>),
 				}
 			})
-			.<span class='ident'>build</span>();
-		<span class='kw'>let</span> _ <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>keepalive_channel</span>.<span class='ident'>send</span>(<span class='ident'>Status</span>::<span class='ident'>SendMessage</span>(<span class='ident'>msg</span>));
+			.<span class="ident">build</span>();
+		<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">msg</span>));
 	}
 
-	<span class='doccomment'>/// Get a handle to the voice connection for a server.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// Pass `None` to get the handle for group and one-on-one calls.</span>
-	<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;voice&quot;</span>)]</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>voice</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>server_id</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>ServerId</span><span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>VoiceConnection</span> {
-		<span class='kw'>let</span> <span class='ident'>Connection</span> { <span class='kw-2'>ref</span> <span class='kw-2'>mut</span> <span class='ident'>voice_handles</span>, <span class='ident'>user_id</span>, <span class='kw-2'>ref</span> <span class='ident'>keepalive_channel</span>, .. } <span class='op'>=</span> <span class='op'>*</span><span class='self'>self</span>;
-		<span class='ident'>voice_handles</span>.<span class='ident'>entry</span>(<span class='ident'>server_id</span>).<span class='ident'>or_insert_with</span>(<span class='op'>||</span>
-			<span class='ident'>VoiceConnection</span>::<span class='ident'>__new</span>(<span class='ident'>server_id</span>, <span class='ident'>user_id</span>, <span class='ident'>keepalive_channel</span>.<span class='ident'>clone</span>())
+	<span class="doccomment">/// Get a handle to the voice connection for a server.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// Pass `None` to get the handle for group and one-on-one calls.</span>
+	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;voice&quot;</span>)]</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">voice</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">server_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ServerId</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">VoiceConnection</span> {
+		<span class="kw">let</span> <span class="ident">Connection</span> { <span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">voice_handles</span>, <span class="ident">user_id</span>, <span class="kw-2">ref</span> <span class="ident">keepalive_channel</span>, .. } <span class="op">=</span> <span class="kw-2">*</span><span class="self">self</span>;
+		<span class="ident">voice_handles</span>.<span class="ident">entry</span>(<span class="ident">server_id</span>).<span class="ident">or_insert_with</span>(<span class="op">||</span>
+			<span class="ident">VoiceConnection</span>::<span class="ident">__new</span>(<span class="ident">server_id</span>, <span class="ident">user_id</span>, <span class="ident">keepalive_channel</span>.<span class="ident">clone</span>())
 		)
 	}
 
-	<span class='doccomment'>/// Drop the voice connection for a server, forgetting all settings.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// Calling `.voice(server_id).disconnect()` will disconnect from voice but retain the mute</span>
-	<span class='doccomment'>/// and deaf status, audio source, and audio receiver.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// Pass `None` to drop the connection for group and one-on-one calls.</span>
-	<span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>feature</span><span class='op'>=</span><span class='string'>&quot;voice&quot;</span>)]</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>drop_voice</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>server_id</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>ServerId</span><span class='op'>&gt;</span>) {
-		<span class='self'>self</span>.<span class='ident'>voice_handles</span>.<span class='ident'>remove</span>(<span class='kw-2'>&amp;</span><span class='ident'>server_id</span>);
+	<span class="doccomment">/// Drop the voice connection for a server, forgetting all settings.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// Calling `.voice(server_id).disconnect()` will disconnect from voice but retain the mute</span>
+	<span class="doccomment">/// and deaf status, audio source, and audio receiver.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// Pass `None` to drop the connection for group and one-on-one calls.</span>
+	<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;voice&quot;</span>)]</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">drop_voice</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">server_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ServerId</span><span class="op">&gt;</span>) {
+		<span class="self">self</span>.<span class="ident">voice_handles</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">server_id</span>);
 	}
 
-	<span class='doccomment'>/// Receive an event over the websocket, blocking until one is available.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>recv_event</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span> {
-		<span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>receiver</span>.<span class='ident'>recv_json</span>(<span class='ident'>GatewayEvent</span>::<span class='ident'>decode</span>) {
-			<span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>WebSocket</span>(<span class='ident'>err</span>)) <span class='op'>=&gt;</span> {
-				<span class='macro'>warn</span><span class='macro'>!</span>(<span class='string'>&quot;Websocket error, reconnecting: {:?}&quot;</span>, <span class='ident'>err</span>);
-				<span class='comment'>// Try resuming if we haven&#39;t received an InvalidateSession</span>
-				<span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>session_id</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>session_id</span>.<span class='ident'>clone</span>() {
-					<span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>resume</span>(<span class='ident'>session_id</span>) {
-						<span class='prelude-val'>Ok</span>(<span class='ident'>event</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='ident'>event</span>),
-						<span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Failed to resume: {:?}&quot;</span>, <span class='ident'>e</span>),
+	<span class="doccomment">/// Receive an event over the websocket, blocking until one is available.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">recv_event</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span> {
+		<span class="kw">match</span> <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">recv_json</span>(<span class="ident">GatewayEvent</span>::<span class="ident">decode</span>) {
+			<span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">WebSocket</span>(<span class="ident">err</span>)) <span class="op">=&gt;</span> {
+				<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;Websocket error, reconnecting: {:?}&quot;</span>, <span class="ident">err</span>);
+				<span class="comment">// Try resuming if we haven&#39;t received an InvalidateSession</span>
+				<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">session_id</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">session_id</span>.<span class="ident">clone</span>() {
+					<span class="kw">match</span> <span class="self">self</span>.<span class="ident">resume</span>(<span class="ident">session_id</span>) {
+						<span class="prelude-val">Ok</span>(<span class="ident">event</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">event</span>),
+						<span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Failed to resume: {:?}&quot;</span>, <span class="ident">e</span>),
 					}
 				}
-				<span class='self'>self</span>.<span class='ident'>reconnect</span>().<span class='ident'>map</span>(<span class='ident'>Event</span>::<span class='ident'>Ready</span>)
+				<span class="self">self</span>.<span class="ident">reconnect</span>().<span class="ident">map</span>(<span class="ident">Event</span>::<span class="ident">Ready</span>)
 			}
-			<span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>Closed</span>(<span class='ident'>num</span>, <span class='ident'>message</span>)) <span class='op'>=&gt;</span> {
-				<span class='macro'>warn</span><span class='macro'>!</span>(<span class='string'>&quot;Closure, reconnecting: {:?}: {}&quot;</span>, <span class='ident'>num</span>, <span class='ident'>message</span>);
-				<span class='comment'>// Try resuming if we haven&#39;t received a 1000, a 4006, or an InvalidateSession</span>
-				<span class='kw'>if</span> <span class='ident'>num</span> <span class='op'>!=</span> <span class='prelude-val'>Some</span>(<span class='number'>1000</span>) <span class='op'>&amp;&amp;</span> <span class='ident'>num</span> <span class='op'>!=</span> <span class='prelude-val'>Some</span>(<span class='number'>4006</span>) {
-					<span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>session_id</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>session_id</span>.<span class='ident'>clone</span>() {
-						<span class='kw'>match</span> <span class='self'>self</span>.<span class='ident'>resume</span>(<span class='ident'>session_id</span>) {
-							<span class='prelude-val'>Ok</span>(<span class='ident'>event</span>) <span class='op'>=&gt;</span> <span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='ident'>event</span>),
-							<span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Failed to resume: {:?}&quot;</span>, <span class='ident'>e</span>),
+			<span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Closed</span>(<span class="ident">num</span>, <span class="ident">message</span>)) <span class="op">=&gt;</span> {
+				<span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;Closure, reconnecting: {:?}: {}&quot;</span>, <span class="ident">num</span>, <span class="ident">message</span>);
+				<span class="comment">// Try resuming if we haven&#39;t received a 1000, a 4006, or an InvalidateSession</span>
+				<span class="kw">if</span> <span class="ident">num</span> <span class="op">!=</span> <span class="prelude-val">Some</span>(<span class="number">1000</span>) <span class="op">&amp;&amp;</span> <span class="ident">num</span> <span class="op">!=</span> <span class="prelude-val">Some</span>(<span class="number">4006</span>) {
+					<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">session_id</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">session_id</span>.<span class="ident">clone</span>() {
+						<span class="kw">match</span> <span class="self">self</span>.<span class="ident">resume</span>(<span class="ident">session_id</span>) {
+							<span class="prelude-val">Ok</span>(<span class="ident">event</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">event</span>),
+							<span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Failed to resume: {:?}&quot;</span>, <span class="ident">e</span>),
 						}
 					}
 				}
-				<span class='self'>self</span>.<span class='ident'>reconnect</span>().<span class='ident'>map</span>(<span class='ident'>Event</span>::<span class='ident'>Ready</span>)
+				<span class="self">self</span>.<span class="ident">reconnect</span>().<span class="ident">map</span>(<span class="ident">Event</span>::<span class="ident">Ready</span>)
 			}
-			<span class='prelude-val'>Err</span>(<span class='ident'>error</span>) <span class='op'>=&gt;</span> <span class='prelude-val'>Err</span>(<span class='ident'>error</span>),
-			<span class='prelude-val'>Ok</span>(<span class='ident'>GatewayEvent</span>::<span class='ident'>Hello</span>(<span class='ident'>interval</span>)) <span class='op'>=&gt;</span> {
-				<span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Mysterious late-game hello: {}&quot;</span>, <span class='ident'>interval</span>);
-				<span class='self'>self</span>.<span class='ident'>recv_event</span>()
+			<span class="prelude-val">Err</span>(<span class="ident">error</span>) <span class="op">=&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">error</span>),
+			<span class="prelude-val">Ok</span>(<span class="ident">GatewayEvent</span>::<span class="ident">Hello</span>(<span class="ident">interval</span>)) <span class="op">=&gt;</span> {
+				<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Mysterious late-game hello: {}&quot;</span>, <span class="ident">interval</span>);
+				<span class="self">self</span>.<span class="ident">recv_event</span>()
 			}
-			<span class='prelude-val'>Ok</span>(<span class='ident'>GatewayEvent</span>::<span class='ident'>Dispatch</span>(<span class='ident'>sequence</span>, <span class='ident'>event</span>)) <span class='op'>=&gt;</span> {
-				<span class='self'>self</span>.<span class='ident'>last_sequence</span> <span class='op'>=</span> <span class='ident'>sequence</span>;
-				<span class='kw'>let</span> _ <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>keepalive_channel</span>.<span class='ident'>send</span>(<span class='ident'>Status</span>::<span class='ident'>Sequence</span>(<span class='ident'>sequence</span>));
-				<span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>Event</span>::<span class='ident'>Resumed</span> { <span class='ident'>heartbeat_interval</span>, .. } <span class='op'>=</span> <span class='ident'>event</span> {
-					<span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Resumed successfully&quot;</span>);
-					<span class='kw'>let</span> _ <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>keepalive_channel</span>.<span class='ident'>send</span>(<span class='ident'>Status</span>::<span class='ident'>ChangeInterval</span>(<span class='ident'>heartbeat_interval</span>));
+			<span class="prelude-val">Ok</span>(<span class="ident">GatewayEvent</span>::<span class="ident">Dispatch</span>(<span class="ident">sequence</span>, <span class="ident">event</span>)) <span class="op">=&gt;</span> {
+				<span class="self">self</span>.<span class="ident">last_sequence</span> <span class="op">=</span> <span class="ident">sequence</span>;
+				<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">Sequence</span>(<span class="ident">sequence</span>));
+				<span class="kw">if</span> <span class="kw">let</span> <span class="ident">Event</span>::<span class="ident">Resumed</span> { <span class="ident">heartbeat_interval</span>, .. } <span class="op">=</span> <span class="ident">event</span> {
+					<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Resumed successfully&quot;</span>);
+					<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">ChangeInterval</span>(<span class="ident">heartbeat_interval</span>));
 				}
-				<span class='macro'>voice_only</span><span class='macro'>!</span> {{
-					<span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>Event</span>::<span class='ident'>VoiceStateUpdate</span>(<span class='ident'>server_id</span>, <span class='kw-2'>ref</span> <span class='ident'>voice_state</span>) <span class='op'>=</span> <span class='ident'>event</span> {
-						<span class='self'>self</span>.<span class='ident'>voice</span>(<span class='ident'>server_id</span>).<span class='ident'>__update_state</span>(<span class='ident'>voice_state</span>);
+				<span class="macro">voice_only</span><span class="macro">!</span> {{
+					<span class="kw">if</span> <span class="kw">let</span> <span class="ident">Event</span>::<span class="ident">VoiceStateUpdate</span>(<span class="ident">server_id</span>, <span class="kw-2">ref</span> <span class="ident">voice_state</span>) <span class="op">=</span> <span class="ident">event</span> {
+						<span class="self">self</span>.<span class="ident">voice</span>(<span class="ident">server_id</span>).<span class="ident">__update_state</span>(<span class="ident">voice_state</span>);
 					}
-					<span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>Event</span>::<span class='ident'>VoiceServerUpdate</span> { <span class='ident'>server_id</span>, <span class='ident'>channel_id</span>: _, <span class='kw-2'>ref</span> <span class='ident'>endpoint</span>, <span class='kw-2'>ref</span> <span class='ident'>token</span> } <span class='op'>=</span> <span class='ident'>event</span> {
-						<span class='self'>self</span>.<span class='ident'>voice</span>(<span class='ident'>server_id</span>).<span class='ident'>__update_server</span>(<span class='ident'>endpoint</span>, <span class='ident'>token</span>);
+					<span class="kw">if</span> <span class="kw">let</span> <span class="ident">Event</span>::<span class="ident">VoiceServerUpdate</span> { <span class="ident">server_id</span>, <span class="ident">channel_id</span>: _, <span class="kw-2">ref</span> <span class="ident">endpoint</span>, <span class="kw-2">ref</span> <span class="ident">token</span> } <span class="op">=</span> <span class="ident">event</span> {
+						<span class="self">self</span>.<span class="ident">voice</span>(<span class="ident">server_id</span>).<span class="ident">__update_server</span>(<span class="ident">endpoint</span>, <span class="ident">token</span>);
 					}
 				}}
-				<span class='prelude-val'>Ok</span>(<span class='ident'>event</span>)
+				<span class="prelude-val">Ok</span>(<span class="ident">event</span>)
 			}
-			<span class='prelude-val'>Ok</span>(<span class='ident'>GatewayEvent</span>::<span class='ident'>Heartbeat</span>(<span class='ident'>sequence</span>)) <span class='op'>=&gt;</span> {
-				<span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Heartbeat received with seq {}&quot;</span>, <span class='ident'>sequence</span>);
-				<span class='kw'>let</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>ObjectBuilder</span>::<span class='ident'>new</span>()
-					.<span class='ident'>insert</span>(<span class='string'>&quot;op&quot;</span>, <span class='number'>1</span>)
-					.<span class='ident'>insert</span>(<span class='string'>&quot;d&quot;</span>, <span class='ident'>sequence</span>)
-					.<span class='ident'>build</span>();
-				<span class='kw'>let</span> _ <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>keepalive_channel</span>.<span class='ident'>send</span>(<span class='ident'>Status</span>::<span class='ident'>SendMessage</span>(<span class='ident'>map</span>));
-				<span class='self'>self</span>.<span class='ident'>recv_event</span>()
+			<span class="prelude-val">Ok</span>(<span class="ident">GatewayEvent</span>::<span class="ident">Heartbeat</span>(<span class="ident">sequence</span>)) <span class="op">=&gt;</span> {
+				<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Heartbeat received with seq {}&quot;</span>, <span class="ident">sequence</span>);
+				<span class="kw">let</span> <span class="ident">map</span> <span class="op">=</span> <span class="ident">ObjectBuilder</span>::<span class="ident">new</span>()
+					.<span class="ident">insert</span>(<span class="string">&quot;op&quot;</span>, <span class="number">1</span>)
+					.<span class="ident">insert</span>(<span class="string">&quot;d&quot;</span>, <span class="ident">sequence</span>)
+					.<span class="ident">build</span>();
+				<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">map</span>));
+				<span class="self">self</span>.<span class="ident">recv_event</span>()
 			}
-			<span class='prelude-val'>Ok</span>(<span class='ident'>GatewayEvent</span>::<span class='ident'>HeartbeatAck</span>) <span class='op'>=&gt;</span> {
-				<span class='self'>self</span>.<span class='ident'>recv_event</span>()
+			<span class="prelude-val">Ok</span>(<span class="ident">GatewayEvent</span>::<span class="ident">HeartbeatAck</span>) <span class="op">=&gt;</span> {
+				<span class="self">self</span>.<span class="ident">recv_event</span>()
 			}
-			<span class='prelude-val'>Ok</span>(<span class='ident'>GatewayEvent</span>::<span class='ident'>Reconnect</span>) <span class='op'>=&gt;</span> {
-				<span class='self'>self</span>.<span class='ident'>reconnect</span>().<span class='ident'>map</span>(<span class='ident'>Event</span>::<span class='ident'>Ready</span>)
+			<span class="prelude-val">Ok</span>(<span class="ident">GatewayEvent</span>::<span class="ident">Reconnect</span>) <span class="op">=&gt;</span> {
+				<span class="self">self</span>.<span class="ident">reconnect</span>().<span class="ident">map</span>(<span class="ident">Event</span>::<span class="ident">Ready</span>)
 			}
-			<span class='prelude-val'>Ok</span>(<span class='ident'>GatewayEvent</span>::<span class='ident'>InvalidateSession</span>) <span class='op'>=&gt;</span> {
-				<span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Session invalidated, reidentifying&quot;</span>);
-				<span class='self'>self</span>.<span class='ident'>session_id</span> <span class='op'>=</span> <span class='prelude-val'>None</span>;
-				<span class='kw'>let</span> _ <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>keepalive_channel</span>.<span class='ident'>send</span>(<span class='ident'>Status</span>::<span class='ident'>SendMessage</span>(<span class='ident'>identify</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>token</span>, <span class='self'>self</span>.<span class='ident'>shard_info</span>)));
-				<span class='self'>self</span>.<span class='ident'>recv_event</span>()
+			<span class="prelude-val">Ok</span>(<span class="ident">GatewayEvent</span>::<span class="ident">InvalidateSession</span>) <span class="op">=&gt;</span> {
+				<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Session invalidated, reidentifying&quot;</span>);
+				<span class="self">self</span>.<span class="ident">session_id</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+				<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">identify</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">token</span>, <span class="self">self</span>.<span class="ident">shard_info</span>)));
+				<span class="self">self</span>.<span class="ident">recv_event</span>()
 			}
 		}
 	}
 
-	<span class='doccomment'>/// Reconnect after receiving an OP7 RECONNECT</span>
-	<span class='kw'>fn</span> <span class='ident'>reconnect</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>ReadyEvent</span><span class='op'>&gt;</span> {
-		<span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Reconnecting...&quot;</span>);
-		<span class='comment'>// Make two attempts on the current known gateway URL</span>
-		<span class='kw'>for</span> _ <span class='kw'>in</span> <span class='number'>0</span>..<span class='number'>2</span> {
-			<span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Ok</span>((<span class='ident'>conn</span>, <span class='ident'>ready</span>)) <span class='op'>=</span> <span class='ident'>Connection</span>::<span class='ident'>new</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>ws_url</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>token</span>, <span class='self'>self</span>.<span class='ident'>shard_info</span>) {
-				<span class='macro'>try</span><span class='macro'>!</span>(::<span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>replace</span>(<span class='self'>self</span>, <span class='ident'>conn</span>).<span class='ident'>shutdown</span>());
-				<span class='self'>self</span>.<span class='ident'>session_id</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>ready</span>.<span class='ident'>session_id</span>.<span class='ident'>clone</span>());
-				<span class='kw'>return</span> <span class='prelude-val'>Ok</span>(<span class='ident'>ready</span>)
+	<span class="doccomment">/// Reconnect after receiving an OP7 RECONNECT</span>
+	<span class="kw">fn</span> <span class="ident">reconnect</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ReadyEvent</span><span class="op">&gt;</span> {
+		<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Reconnecting...&quot;</span>);
+		<span class="comment">// Make two attempts on the current known gateway URL</span>
+		<span class="kw">for</span> _ <span class="kw">in</span> <span class="number">0</span>..<span class="number">2</span> {
+			<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>((<span class="ident">conn</span>, <span class="ident">ready</span>)) <span class="op">=</span> <span class="ident">Connection</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">ws_url</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">token</span>, <span class="self">self</span>.<span class="ident">shard_info</span>) {
+				<span class="macro">try</span><span class="macro">!</span>(::<span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">replace</span>(<span class="self">self</span>, <span class="ident">conn</span>).<span class="ident">shutdown</span>());
+				<span class="self">self</span>.<span class="ident">session_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">ready</span>.<span class="ident">session_id</span>.<span class="ident">clone</span>());
+				<span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">ready</span>)
 			}
-			::<span class='ident'>sleep_ms</span>(<span class='number'>1000</span>);
+			::<span class="ident">sleep_ms</span>(<span class="number">1000</span>);
 		}
-		<span class='comment'>// If those fail, hit REST for a new endpoint</span>
-		<span class='kw'>let</span> (<span class='ident'>conn</span>, <span class='ident'>ready</span>) <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(::<span class='ident'>Discord</span>::<span class='ident'>from_token_raw</span>(<span class='self'>self</span>.<span class='ident'>token</span>.<span class='ident'>to_owned</span>()).<span class='ident'>connect</span>());
-		<span class='macro'>try</span><span class='macro'>!</span>(::<span class='ident'>std</span>::<span class='ident'>mem</span>::<span class='ident'>replace</span>(<span class='self'>self</span>, <span class='ident'>conn</span>).<span class='ident'>shutdown</span>());
-		<span class='self'>self</span>.<span class='ident'>session_id</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>ready</span>.<span class='ident'>session_id</span>.<span class='ident'>clone</span>());
-		<span class='prelude-val'>Ok</span>(<span class='ident'>ready</span>)
+		<span class="comment">// If those fail, hit REST for a new endpoint</span>
+		<span class="kw">let</span> (<span class="ident">conn</span>, <span class="ident">ready</span>) <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(::<span class="ident">Discord</span>::<span class="ident">from_token_raw</span>(<span class="self">self</span>.<span class="ident">token</span>.<span class="ident">to_owned</span>()).<span class="ident">connect</span>());
+		<span class="macro">try</span><span class="macro">!</span>(::<span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">replace</span>(<span class="self">self</span>, <span class="ident">conn</span>).<span class="ident">shutdown</span>());
+		<span class="self">self</span>.<span class="ident">session_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">ready</span>.<span class="ident">session_id</span>.<span class="ident">clone</span>());
+		<span class="prelude-val">Ok</span>(<span class="ident">ready</span>)
 	}
 
-	<span class='doccomment'>/// Resume using our existing session</span>
-	<span class='kw'>fn</span> <span class='ident'>resume</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>session_id</span>: <span class='ident'>String</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>Event</span><span class='op'>&gt;</span> {
-		<span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Resuming...&quot;</span>);
-		<span class='comment'>// close connection and re-establish</span>
-		<span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>receiver</span>.<span class='ident'>get_mut</span>().<span class='ident'>get_mut</span>().<span class='ident'>shutdown</span>(::<span class='ident'>std</span>::<span class='ident'>net</span>::<span class='ident'>Shutdown</span>::<span class='ident'>Both</span>));
-		<span class='kw'>let</span> <span class='ident'>url</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>build_gateway_url</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>ws_url</span>));
-		<span class='kw'>let</span> <span class='ident'>response</span> <span class='op'>=</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Client</span>::<span class='ident'>connect</span>(<span class='ident'>url</span>)).<span class='ident'>send</span>());
-		<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>response</span>.<span class='ident'>validate</span>());
-		<span class='kw'>let</span> (<span class='kw-2'>mut</span> <span class='ident'>sender</span>, <span class='kw-2'>mut</span> <span class='ident'>receiver</span>) <span class='op'>=</span> <span class='ident'>response</span>.<span class='ident'>begin</span>().<span class='ident'>split</span>();
+	<span class="doccomment">/// Resume using our existing session</span>
+	<span class="kw">fn</span> <span class="ident">resume</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">session_id</span>: <span class="ident">String</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Event</span><span class="op">&gt;</span> {
+		<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Resuming...&quot;</span>);
+		<span class="comment">// close connection and re-establish</span>
+		<span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">get_mut</span>().<span class="ident">get_mut</span>().<span class="ident">shutdown</span>(::<span class="ident">std</span>::<span class="ident">net</span>::<span class="ident">Shutdown</span>::<span class="ident">Both</span>));
+		<span class="kw">let</span> <span class="ident">url</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">build_gateway_url</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">ws_url</span>));
+		<span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="ident">Client</span>::<span class="ident">connect</span>(<span class="ident">url</span>)).<span class="ident">send</span>());
+		<span class="macro">try</span><span class="macro">!</span>(<span class="ident">response</span>.<span class="ident">validate</span>());
+		<span class="kw">let</span> (<span class="kw-2">mut</span> <span class="ident">sender</span>, <span class="kw-2">mut</span> <span class="ident">receiver</span>) <span class="op">=</span> <span class="ident">response</span>.<span class="ident">begin</span>().<span class="ident">split</span>();
 
-		<span class='comment'>// send the resume request</span>
-		<span class='kw'>let</span> <span class='ident'>resume</span> <span class='op'>=</span> <span class='ident'>ObjectBuilder</span>::<span class='ident'>new</span>()
-			.<span class='ident'>insert</span>(<span class='string'>&quot;op&quot;</span>, <span class='number'>6</span>)
-			.<span class='ident'>insert_object</span>(<span class='string'>&quot;d&quot;</span>, <span class='op'>|</span><span class='ident'>o</span><span class='op'>|</span> <span class='ident'>o</span>
-				.<span class='ident'>insert</span>(<span class='string'>&quot;seq&quot;</span>, <span class='self'>self</span>.<span class='ident'>last_sequence</span>)
-				.<span class='ident'>insert</span>(<span class='string'>&quot;token&quot;</span>, <span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>token</span>)
-				.<span class='ident'>insert</span>(<span class='string'>&quot;session_id&quot;</span>, <span class='ident'>session_id</span>)
+		<span class="comment">// send the resume request</span>
+		<span class="kw">let</span> <span class="ident">resume</span> <span class="op">=</span> <span class="ident">ObjectBuilder</span>::<span class="ident">new</span>()
+			.<span class="ident">insert</span>(<span class="string">&quot;op&quot;</span>, <span class="number">6</span>)
+			.<span class="ident">insert_object</span>(<span class="string">&quot;d&quot;</span>, <span class="op">|</span><span class="ident">o</span><span class="op">|</span> <span class="ident">o</span>
+				.<span class="ident">insert</span>(<span class="string">&quot;seq&quot;</span>, <span class="self">self</span>.<span class="ident">last_sequence</span>)
+				.<span class="ident">insert</span>(<span class="string">&quot;token&quot;</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">token</span>)
+				.<span class="ident">insert</span>(<span class="string">&quot;session_id&quot;</span>, <span class="ident">session_id</span>)
 			)
-			.<span class='ident'>build</span>();
-		<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>sender</span>.<span class='ident'>send_json</span>(<span class='kw-2'>&amp;</span><span class='ident'>resume</span>));
+			.<span class="ident">build</span>();
+		<span class="macro">try</span><span class="macro">!</span>(<span class="ident">sender</span>.<span class="ident">send_json</span>(<span class="kw-2">&amp;</span><span class="ident">resume</span>));
 
-		<span class='comment'>// TODO: when Discord has implemented it, observe the RESUMING event here</span>
-		<span class='kw'>let</span> <span class='ident'>first_event</span>;
-		<span class='kw'>loop</span> {
-			<span class='kw'>match</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>receiver</span>.<span class='ident'>recv_json</span>(<span class='ident'>GatewayEvent</span>::<span class='ident'>decode</span>)) {
-				<span class='ident'>GatewayEvent</span>::<span class='ident'>Dispatch</span>(<span class='ident'>seq</span>, <span class='ident'>event</span>) <span class='op'>=&gt;</span> {
-					<span class='kw'>if</span> <span class='kw'>let</span> <span class='ident'>Event</span>::<span class='ident'>Ready</span>(<span class='ident'>ReadyEvent</span> { <span class='kw-2'>ref</span> <span class='ident'>session_id</span>, .. }) <span class='op'>=</span> <span class='ident'>event</span> {
-						<span class='self'>self</span>.<span class='ident'>session_id</span> <span class='op'>=</span> <span class='prelude-val'>Some</span>(<span class='ident'>session_id</span>.<span class='ident'>clone</span>());
+		<span class="comment">// TODO: when Discord has implemented it, observe the RESUMING event here</span>
+		<span class="kw">let</span> <span class="ident">first_event</span>;
+		<span class="kw">loop</span> {
+			<span class="kw">match</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">receiver</span>.<span class="ident">recv_json</span>(<span class="ident">GatewayEvent</span>::<span class="ident">decode</span>)) {
+				<span class="ident">GatewayEvent</span>::<span class="ident">Dispatch</span>(<span class="ident">seq</span>, <span class="ident">event</span>) <span class="op">=&gt;</span> {
+					<span class="kw">if</span> <span class="kw">let</span> <span class="ident">Event</span>::<span class="ident">Ready</span>(<span class="ident">ReadyEvent</span> { <span class="kw-2">ref</span> <span class="ident">session_id</span>, .. }) <span class="op">=</span> <span class="ident">event</span> {
+						<span class="self">self</span>.<span class="ident">session_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">session_id</span>.<span class="ident">clone</span>());
 					}
-					<span class='self'>self</span>.<span class='ident'>last_sequence</span> <span class='op'>=</span> <span class='ident'>seq</span>;
-					<span class='ident'>first_event</span> <span class='op'>=</span> <span class='ident'>event</span>;
-					<span class='kw'>break</span>
+					<span class="self">self</span>.<span class="ident">last_sequence</span> <span class="op">=</span> <span class="ident">seq</span>;
+					<span class="ident">first_event</span> <span class="op">=</span> <span class="ident">event</span>;
+					<span class="kw">break</span>
 				},
-				<span class='ident'>GatewayEvent</span>::<span class='ident'>InvalidateSession</span> <span class='op'>=&gt;</span> {
-					<span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Session invalidated in resume, reidentifying&quot;</span>);
-					<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>sender</span>.<span class='ident'>send_json</span>(<span class='kw-2'>&amp;</span><span class='ident'>identify</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>.<span class='ident'>token</span>, <span class='self'>self</span>.<span class='ident'>shard_info</span>)));
+				<span class="ident">GatewayEvent</span>::<span class="ident">InvalidateSession</span> <span class="op">=&gt;</span> {
+					<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Session invalidated in resume, reidentifying&quot;</span>);
+					<span class="macro">try</span><span class="macro">!</span>(<span class="ident">sender</span>.<span class="ident">send_json</span>(<span class="kw-2">&amp;</span><span class="ident">identify</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">token</span>, <span class="self">self</span>.<span class="ident">shard_info</span>)));
 				}
-				<span class='ident'>other</span> <span class='op'>=&gt;</span> {
-					<span class='macro'>debug</span><span class='macro'>!</span>(<span class='string'>&quot;Unexpected event: {:?}&quot;</span>, <span class='ident'>other</span>);
-					<span class='kw'>return</span> <span class='prelude-val'>Err</span>(<span class='ident'>Error</span>::<span class='ident'>Protocol</span>(<span class='string'>&quot;Unexpected event during resume&quot;</span>))
+				<span class="ident">other</span> <span class="op">=&gt;</span> {
+					<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Unexpected event: {:?}&quot;</span>, <span class="ident">other</span>);
+					<span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Protocol</span>(<span class="string">&quot;Unexpected event during resume&quot;</span>))
 				}
 			}
 		}
 
-		<span class='comment'>// switch everything to the new connection</span>
-		<span class='self'>self</span>.<span class='ident'>receiver</span> <span class='op'>=</span> <span class='ident'>receiver</span>;
-		<span class='kw'>let</span> _ <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>keepalive_channel</span>.<span class='ident'>send</span>(<span class='ident'>Status</span>::<span class='ident'>ChangeSender</span>(<span class='ident'>sender</span>));
-		<span class='prelude-val'>Ok</span>(<span class='ident'>first_event</span>)
+		<span class="comment">// switch everything to the new connection</span>
+		<span class="self">self</span>.<span class="ident">receiver</span> <span class="op">=</span> <span class="ident">receiver</span>;
+		<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">ChangeSender</span>(<span class="ident">sender</span>));
+		<span class="prelude-val">Ok</span>(<span class="ident">first_event</span>)
 	}
 
-	<span class='doccomment'>/// Cleanly shut down the websocket connection. Optional.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>shutdown</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span> {
-		<span class='kw'>use</span> <span class='ident'>websocket</span>::{<span class='ident'>Sender</span> <span class='kw'>as</span> <span class='ident'>S</span>};
-		<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Write</span>;
+	<span class="doccomment">/// Cleanly shut down the websocket connection. Optional.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">shutdown</span>(<span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+		<span class="kw">use</span> <span class="ident">websocket</span>::{<span class="ident">Sender</span> <span class="kw">as</span> <span class="ident">S</span>};
+		<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Write</span>;
 
-		<span class='comment'>// Hacky horror: get the WebSocketStream from the Receiver and formally close it</span>
-		<span class='kw'>let</span> <span class='ident'>stream</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>receiver</span>.<span class='ident'>get_mut</span>().<span class='ident'>get_mut</span>();
-		<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>Sender</span>::<span class='ident'>new</span>(<span class='ident'>stream</span>.<span class='ident'>by_ref</span>(), <span class='bool-val'>true</span>)
-			.<span class='ident'>send_message</span>(<span class='kw-2'>&amp;</span>::<span class='ident'>websocket</span>::<span class='ident'>message</span>::<span class='ident'>Message</span>::<span class='ident'>close_because</span>(<span class='number'>1000</span>, <span class='string'>&quot;&quot;</span>)));
-		<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>stream</span>.<span class='ident'>flush</span>());
-		<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>stream</span>.<span class='ident'>shutdown</span>(::<span class='ident'>std</span>::<span class='ident'>net</span>::<span class='ident'>Shutdown</span>::<span class='ident'>Both</span>));
-		<span class='prelude-val'>Ok</span>(())
+		<span class="comment">// Hacky horror: get the WebSocketStream from the Receiver and formally close it</span>
+		<span class="kw">let</span> <span class="ident">stream</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">get_mut</span>().<span class="ident">get_mut</span>();
+		<span class="macro">try</span><span class="macro">!</span>(<span class="ident">Sender</span>::<span class="ident">new</span>(<span class="ident">stream</span>.<span class="ident">by_ref</span>(), <span class="bool-val">true</span>)
+			.<span class="ident">send_message</span>(<span class="kw-2">&amp;</span>::<span class="ident">websocket</span>::<span class="ident">message</span>::<span class="ident">Message</span>::<span class="ident">close_because</span>(<span class="number">1000</span>, <span class="string">&quot;&quot;</span>)));
+		<span class="macro">try</span><span class="macro">!</span>(<span class="ident">stream</span>.<span class="ident">flush</span>());
+		<span class="macro">try</span><span class="macro">!</span>(<span class="ident">stream</span>.<span class="ident">shutdown</span>(::<span class="ident">std</span>::<span class="ident">net</span>::<span class="ident">Shutdown</span>::<span class="ident">Both</span>));
+		<span class="prelude-val">Ok</span>(())
 	}
 
-	<span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>__download_members</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>servers</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>ServerId</span>]) {
-		<span class='kw'>let</span> <span class='ident'>msg</span> <span class='op'>=</span> <span class='ident'>ObjectBuilder</span>::<span class='ident'>new</span>()
-			.<span class='ident'>insert</span>(<span class='string'>&quot;op&quot;</span>, <span class='number'>8</span>)
-			.<span class='ident'>insert_object</span>(<span class='string'>&quot;d&quot;</span>, <span class='op'>|</span><span class='ident'>o</span><span class='op'>|</span> <span class='ident'>o</span>
-				.<span class='ident'>insert_array</span>(<span class='string'>&quot;guild_id&quot;</span>, <span class='op'>|</span><span class='ident'>a</span><span class='op'>|</span> <span class='ident'>servers</span>.<span class='ident'>iter</span>().<span class='ident'>fold</span>(<span class='ident'>a</span>, <span class='op'>|</span><span class='ident'>a</span>, <span class='ident'>s</span><span class='op'>|</span> <span class='ident'>a</span>.<span class='ident'>push</span>(<span class='ident'>s</span>.<span class='number'>0</span>)))
-				.<span class='ident'>insert</span>(<span class='string'>&quot;query&quot;</span>, <span class='string'>&quot;&quot;</span>)
-				.<span class='ident'>insert</span>(<span class='string'>&quot;limit&quot;</span>, <span class='number'>0</span>)
+	<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">__download_members</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">servers</span>: <span class="kw-2">&amp;</span>[<span class="ident">ServerId</span>]) {
+		<span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">ObjectBuilder</span>::<span class="ident">new</span>()
+			.<span class="ident">insert</span>(<span class="string">&quot;op&quot;</span>, <span class="number">8</span>)
+			.<span class="ident">insert_object</span>(<span class="string">&quot;d&quot;</span>, <span class="op">|</span><span class="ident">o</span><span class="op">|</span> <span class="ident">o</span>
+				.<span class="ident">insert_array</span>(<span class="string">&quot;guild_id&quot;</span>, <span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">servers</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="ident">a</span>, <span class="op">|</span><span class="ident">a</span>, <span class="ident">s</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">push</span>(<span class="ident">s</span>.<span class="number">0</span>)))
+				.<span class="ident">insert</span>(<span class="string">&quot;query&quot;</span>, <span class="string">&quot;&quot;</span>)
+				.<span class="ident">insert</span>(<span class="string">&quot;limit&quot;</span>, <span class="number">0</span>)
 			)
-			.<span class='ident'>build</span>();
-		<span class='kw'>let</span> _ <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>keepalive_channel</span>.<span class='ident'>send</span>(<span class='ident'>Status</span>::<span class='ident'>SendMessage</span>(<span class='ident'>msg</span>));
+			.<span class="ident">build</span>();
+		<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">msg</span>));
 	}
 
-	<span class='doccomment'>/// Requests a download of online member lists.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// It is recommended to avoid calling this method until the online member list</span>
-	<span class='doccomment'>/// is actually needed, especially for large servers, in order to save bandwidth</span>
-	<span class='doccomment'>/// and memory.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// Can be used with `State::all_servers`.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sync_servers</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>servers</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>ServerId</span>]) {
-		<span class='kw'>let</span> <span class='ident'>msg</span> <span class='op'>=</span> <span class='ident'>ObjectBuilder</span>::<span class='ident'>new</span>()
-			.<span class='ident'>insert</span>(<span class='string'>&quot;op&quot;</span>, <span class='number'>12</span>)
-			.<span class='ident'>insert_array</span>(<span class='string'>&quot;d&quot;</span>, <span class='op'>|</span><span class='ident'>a</span><span class='op'>|</span> <span class='ident'>servers</span>.<span class='ident'>iter</span>().<span class='ident'>fold</span>(<span class='ident'>a</span>, <span class='op'>|</span><span class='ident'>a</span>, <span class='ident'>s</span><span class='op'>|</span> <span class='ident'>a</span>.<span class='ident'>push</span>(<span class='ident'>s</span>.<span class='number'>0</span>)))
-			.<span class='ident'>build</span>();
-		<span class='kw'>let</span> _ <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>keepalive_channel</span>.<span class='ident'>send</span>(<span class='ident'>Status</span>::<span class='ident'>SendMessage</span>(<span class='ident'>msg</span>));
+	<span class="doccomment">/// Requests a download of online member lists.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// It is recommended to avoid calling this method until the online member list</span>
+	<span class="doccomment">/// is actually needed, especially for large servers, in order to save bandwidth</span>
+	<span class="doccomment">/// and memory.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// Can be used with `State::all_servers`.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sync_servers</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">servers</span>: <span class="kw-2">&amp;</span>[<span class="ident">ServerId</span>]) {
+		<span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">ObjectBuilder</span>::<span class="ident">new</span>()
+			.<span class="ident">insert</span>(<span class="string">&quot;op&quot;</span>, <span class="number">12</span>)
+			.<span class="ident">insert_array</span>(<span class="string">&quot;d&quot;</span>, <span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">servers</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="ident">a</span>, <span class="op">|</span><span class="ident">a</span>, <span class="ident">s</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">push</span>(<span class="ident">s</span>.<span class="number">0</span>)))
+			.<span class="ident">build</span>();
+		<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">msg</span>));
 	}
 
-	<span class='doccomment'>/// Request a synchronize of active calls for the specified channels.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// Can be used with `State::all_private_channels`.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>sync_calls</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>channels</span>: <span class='kw-2'>&amp;</span>[<span class='ident'>ChannelId</span>]) {
-		<span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='ident'>channel</span> <span class='kw'>in</span> <span class='ident'>channels</span> {
-			<span class='kw'>let</span> <span class='ident'>msg</span> <span class='op'>=</span> <span class='ident'>ObjectBuilder</span>::<span class='ident'>new</span>()
-				.<span class='ident'>insert</span>(<span class='string'>&quot;op&quot;</span>, <span class='number'>13</span>)
-				.<span class='ident'>insert_object</span>(<span class='string'>&quot;d&quot;</span>, <span class='op'>|</span><span class='ident'>o</span><span class='op'>|</span> <span class='ident'>o</span>
-					.<span class='ident'>insert</span>(<span class='string'>&quot;channel_id&quot;</span>, <span class='ident'>channel</span>.<span class='number'>0</span>)
+	<span class="doccomment">/// Request a synchronize of active calls for the specified channels.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// Can be used with `State::all_private_channels`.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">sync_calls</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">channels</span>: <span class="kw-2">&amp;</span>[<span class="ident">ChannelId</span>]) {
+		<span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">channel</span> <span class="kw">in</span> <span class="ident">channels</span> {
+			<span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">ObjectBuilder</span>::<span class="ident">new</span>()
+				.<span class="ident">insert</span>(<span class="string">&quot;op&quot;</span>, <span class="number">13</span>)
+				.<span class="ident">insert_object</span>(<span class="string">&quot;d&quot;</span>, <span class="op">|</span><span class="ident">o</span><span class="op">|</span> <span class="ident">o</span>
+					.<span class="ident">insert</span>(<span class="string">&quot;channel_id&quot;</span>, <span class="ident">channel</span>.<span class="number">0</span>)
 				)
-				.<span class='ident'>build</span>();
-			<span class='kw'>let</span> _ <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>keepalive_channel</span>.<span class='ident'>send</span>(<span class='ident'>Status</span>::<span class='ident'>SendMessage</span>(<span class='ident'>msg</span>));
+				.<span class="ident">build</span>();
+			<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">msg</span>));
 		}
 	}
 
-	<span class='doccomment'>/// Requests a download of all member information for large servers.</span>
-	<span class='doccomment'>///</span>
-	<span class='doccomment'>/// The members lists are cleared on call, and then refilled as chunks are received. When</span>
-	<span class='doccomment'>/// `unknown_members()` returns 0, the download has completed.</span>
-	<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>download_all_members</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>state</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> ::<span class='ident'>State</span>) {
-		<span class='kw'>if</span> <span class='ident'>state</span>.<span class='ident'>unknown_members</span>() <span class='op'>==</span> <span class='number'>0</span> { <span class='kw'>return</span> }
-		<span class='kw'>let</span> <span class='ident'>servers</span> <span class='op'>=</span> <span class='ident'>state</span>.<span class='ident'>__download_members</span>();
-		<span class='kw'>let</span> <span class='ident'>msg</span> <span class='op'>=</span> <span class='ident'>ObjectBuilder</span>::<span class='ident'>new</span>()
-			.<span class='ident'>insert</span>(<span class='string'>&quot;op&quot;</span>, <span class='number'>8</span>)
-			.<span class='ident'>insert_object</span>(<span class='string'>&quot;d&quot;</span>, <span class='op'>|</span><span class='ident'>o</span><span class='op'>|</span> <span class='ident'>o</span>
-				.<span class='ident'>insert_array</span>(<span class='string'>&quot;guild_id&quot;</span>, <span class='op'>|</span><span class='ident'>a</span><span class='op'>|</span> <span class='ident'>servers</span>.<span class='ident'>iter</span>().<span class='ident'>fold</span>(<span class='ident'>a</span>, <span class='op'>|</span><span class='ident'>a</span>, <span class='ident'>s</span><span class='op'>|</span> <span class='ident'>a</span>.<span class='ident'>push</span>(<span class='ident'>s</span>.<span class='number'>0</span>)))
-				.<span class='ident'>insert</span>(<span class='string'>&quot;query&quot;</span>, <span class='string'>&quot;&quot;</span>)
-				.<span class='ident'>insert</span>(<span class='string'>&quot;limit&quot;</span>, <span class='number'>0</span>)
+	<span class="doccomment">/// Requests a download of all member information for large servers.</span>
+	<span class="doccomment">///</span>
+	<span class="doccomment">/// The members lists are cleared on call, and then refilled as chunks are received. When</span>
+	<span class="doccomment">/// `unknown_members()` returns 0, the download has completed.</span>
+	<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">download_all_members</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">state</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> ::<span class="ident">State</span>) {
+		<span class="kw">if</span> <span class="ident">state</span>.<span class="ident">unknown_members</span>() <span class="op">==</span> <span class="number">0</span> { <span class="kw">return</span> }
+		<span class="kw">let</span> <span class="ident">servers</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">__download_members</span>();
+		<span class="kw">let</span> <span class="ident">msg</span> <span class="op">=</span> <span class="ident">ObjectBuilder</span>::<span class="ident">new</span>()
+			.<span class="ident">insert</span>(<span class="string">&quot;op&quot;</span>, <span class="number">8</span>)
+			.<span class="ident">insert_object</span>(<span class="string">&quot;d&quot;</span>, <span class="op">|</span><span class="ident">o</span><span class="op">|</span> <span class="ident">o</span>
+				.<span class="ident">insert_array</span>(<span class="string">&quot;guild_id&quot;</span>, <span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">servers</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="ident">a</span>, <span class="op">|</span><span class="ident">a</span>, <span class="ident">s</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">push</span>(<span class="ident">s</span>.<span class="number">0</span>)))
+				.<span class="ident">insert</span>(<span class="string">&quot;query&quot;</span>, <span class="string">&quot;&quot;</span>)
+				.<span class="ident">insert</span>(<span class="string">&quot;limit&quot;</span>, <span class="number">0</span>)
 			)
-			.<span class='ident'>build</span>();
-		<span class='kw'>let</span> _ <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>keepalive_channel</span>.<span class='ident'>send</span>(<span class='ident'>Status</span>::<span class='ident'>SendMessage</span>(<span class='ident'>msg</span>));
+			.<span class="ident">build</span>();
+		<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">msg</span>));
 	}
 }
 
-<span class='kw'>fn</span> <span class='ident'>identify</span>(<span class='ident'>token</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>, <span class='ident'>shard_info</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span>[<span class='ident'>u8</span>; <span class='number'>2</span>]<span class='op'>&gt;</span>) <span class='op'>-&gt;</span> <span class='ident'>serde_json</span>::<span class='ident'>Value</span> {
-	<span class='ident'>ObjectBuilder</span>::<span class='ident'>new</span>()
-		.<span class='ident'>insert</span>(<span class='string'>&quot;op&quot;</span>, <span class='number'>2</span>)
-		.<span class='ident'>insert_object</span>(<span class='string'>&quot;d&quot;</span>, <span class='op'>|</span><span class='kw-2'>mut</span> <span class='ident'>object</span><span class='op'>|</span> {
-			<span class='ident'>object</span> <span class='op'>=</span> <span class='ident'>object</span>
-				.<span class='ident'>insert</span>(<span class='string'>&quot;token&quot;</span>, <span class='ident'>token</span>)
-				.<span class='ident'>insert_object</span>(<span class='string'>&quot;properties&quot;</span>, <span class='op'>|</span><span class='ident'>object</span><span class='op'>|</span> <span class='ident'>object</span>
-					.<span class='ident'>insert</span>(<span class='string'>&quot;$os&quot;</span>, ::<span class='ident'>std</span>::<span class='ident'>env</span>::<span class='ident'>consts</span>::<span class='ident'>OS</span>)
-					.<span class='ident'>insert</span>(<span class='string'>&quot;$browser&quot;</span>, <span class='string'>&quot;Discord library for Rust&quot;</span>)
-					.<span class='ident'>insert</span>(<span class='string'>&quot;$device&quot;</span>, <span class='string'>&quot;discord-rs&quot;</span>)
-					.<span class='ident'>insert</span>(<span class='string'>&quot;$referring_domain&quot;</span>, <span class='string'>&quot;&quot;</span>)
-					.<span class='ident'>insert</span>(<span class='string'>&quot;$referrer&quot;</span>, <span class='string'>&quot;&quot;</span>)
+<span class="kw">fn</span> <span class="ident">identify</span>(<span class="ident">token</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">shard_info</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>[<span class="ident">u8</span>; <span class="number">2</span>]<span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">serde_json</span>::<span class="ident">Value</span> {
+	<span class="ident">ObjectBuilder</span>::<span class="ident">new</span>()
+		.<span class="ident">insert</span>(<span class="string">&quot;op&quot;</span>, <span class="number">2</span>)
+		.<span class="ident">insert_object</span>(<span class="string">&quot;d&quot;</span>, <span class="op">|</span><span class="kw-2">mut</span> <span class="ident">object</span><span class="op">|</span> {
+			<span class="ident">object</span> <span class="op">=</span> <span class="ident">object</span>
+				.<span class="ident">insert</span>(<span class="string">&quot;token&quot;</span>, <span class="ident">token</span>)
+				.<span class="ident">insert_object</span>(<span class="string">&quot;properties&quot;</span>, <span class="op">|</span><span class="ident">object</span><span class="op">|</span> <span class="ident">object</span>
+					.<span class="ident">insert</span>(<span class="string">&quot;$os&quot;</span>, ::<span class="ident">std</span>::<span class="ident">env</span>::<span class="ident">consts</span>::<span class="ident">OS</span>)
+					.<span class="ident">insert</span>(<span class="string">&quot;$browser&quot;</span>, <span class="string">&quot;Discord library for Rust&quot;</span>)
+					.<span class="ident">insert</span>(<span class="string">&quot;$device&quot;</span>, <span class="string">&quot;discord-rs&quot;</span>)
+					.<span class="ident">insert</span>(<span class="string">&quot;$referring_domain&quot;</span>, <span class="string">&quot;&quot;</span>)
+					.<span class="ident">insert</span>(<span class="string">&quot;$referrer&quot;</span>, <span class="string">&quot;&quot;</span>)
 				)
-				.<span class='ident'>insert</span>(<span class='string'>&quot;large_threshold&quot;</span>, <span class='number'>250</span>)
-				.<span class='ident'>insert</span>(<span class='string'>&quot;compress&quot;</span>, <span class='bool-val'>true</span>)
-				.<span class='ident'>insert</span>(<span class='string'>&quot;v&quot;</span>, <span class='ident'>GATEWAY_VERSION</span>);
+				.<span class="ident">insert</span>(<span class="string">&quot;large_threshold&quot;</span>, <span class="number">250</span>)
+				.<span class="ident">insert</span>(<span class="string">&quot;compress&quot;</span>, <span class="bool-val">true</span>)
+				.<span class="ident">insert</span>(<span class="string">&quot;v&quot;</span>, <span class="ident">GATEWAY_VERSION</span>);
 
-			<span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>shard_info</span>) <span class='op'>=</span> <span class='ident'>shard_info</span> {
-				<span class='ident'>object</span> <span class='op'>=</span> <span class='ident'>object</span>.<span class='ident'>insert_array</span>(<span class='string'>&quot;shard&quot;</span>, <span class='op'>|</span><span class='ident'>array</span><span class='op'>|</span> <span class='ident'>array</span>.<span class='ident'>push</span>(<span class='ident'>shard_info</span>[<span class='number'>0</span>]).<span class='ident'>push</span>(<span class='ident'>shard_info</span>[<span class='number'>1</span>]));
+			<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">shard_info</span>) <span class="op">=</span> <span class="ident">shard_info</span> {
+				<span class="ident">object</span> <span class="op">=</span> <span class="ident">object</span>.<span class="ident">insert_array</span>(<span class="string">&quot;shard&quot;</span>, <span class="op">|</span><span class="ident">array</span><span class="op">|</span> <span class="ident">array</span>.<span class="ident">push</span>(<span class="ident">shard_info</span>[<span class="number">0</span>]).<span class="ident">push</span>(<span class="ident">shard_info</span>[<span class="number">1</span>]));
 			}
 
-			<span class='ident'>object</span>
+			<span class="ident">object</span>
 		})
-		.<span class='ident'>build</span>()
+		.<span class="ident">build</span>()
 }
 
-<span class='attribute'>#[<span class='ident'>inline</span>]</span>
-<span class='kw'>fn</span> <span class='ident'>build_gateway_url</span>(<span class='ident'>base</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span>::<span class='ident'>websocket</span>::<span class='ident'>client</span>::<span class='ident'>request</span>::<span class='ident'>Url</span><span class='op'>&gt;</span> {
-	::<span class='ident'>websocket</span>::<span class='ident'>client</span>::<span class='ident'>request</span>::<span class='ident'>Url</span>::<span class='ident'>parse</span>(<span class='kw-2'>&amp;</span><span class='macro'>format</span><span class='macro'>!</span>(<span class='string'>&quot;{}?v={}&quot;</span>, <span class='ident'>base</span>, <span class='ident'>GATEWAY_VERSION</span>))
-		.<span class='ident'>map_err</span>(<span class='op'>|</span>_<span class='op'>|</span> <span class='ident'>Error</span>::<span class='ident'>Other</span>(<span class='string'>&quot;Invalid gateway URL&quot;</span>))
+<span class="attribute">#[<span class="ident">inline</span>]</span>
+<span class="kw">fn</span> <span class="ident">build_gateway_url</span>(<span class="ident">base</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>::<span class="ident">websocket</span>::<span class="ident">client</span>::<span class="ident">request</span>::<span class="ident">Url</span><span class="op">&gt;</span> {
+	::<span class="ident">websocket</span>::<span class="ident">client</span>::<span class="ident">request</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}?v={}&quot;</span>, <span class="ident">base</span>, <span class="ident">GATEWAY_VERSION</span>))
+		.<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">Error</span>::<span class="ident">Other</span>(<span class="string">&quot;Invalid gateway URL&quot;</span>))
 }
 
-<span class='kw'>fn</span> <span class='ident'>keepalive</span>(<span class='ident'>interval</span>: <span class='ident'>u64</span>, <span class='kw-2'>mut</span> <span class='ident'>sender</span>: <span class='ident'>Sender</span><span class='op'>&lt;</span><span class='ident'>WebSocketStream</span><span class='op'>&gt;</span>, <span class='ident'>channel</span>: <span class='ident'>mpsc</span>::<span class='ident'>Receiver</span><span class='op'>&lt;</span><span class='ident'>Status</span><span class='op'>&gt;</span>) {
-	<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>timer</span> <span class='op'>=</span> ::<span class='ident'>Timer</span>::<span class='ident'>new</span>(<span class='ident'>interval</span>);
-	<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>last_sequence</span> <span class='op'>=</span> <span class='number'>0</span>;
+<span class="kw">fn</span> <span class="ident">keepalive</span>(<span class="ident">interval</span>: <span class="ident">u64</span>, <span class="kw-2">mut</span> <span class="ident">sender</span>: <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">WebSocketStream</span><span class="op">&gt;</span>, <span class="ident">channel</span>: <span class="ident">mpsc</span>::<span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">Status</span><span class="op">&gt;</span>) {
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">timer</span> <span class="op">=</span> ::<span class="ident">Timer</span>::<span class="ident">new</span>(<span class="ident">interval</span>);
+	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">last_sequence</span> <span class="op">=</span> <span class="number">0</span>;
 
-	<span class='lifetime'>&#39;outer</span>: <span class='kw'>loop</span> {
-		::<span class='ident'>sleep_ms</span>(<span class='number'>100</span>);
+	<span class="lifetime">&#39;outer</span>: <span class="kw">loop</span> {
+		::<span class="ident">sleep_ms</span>(<span class="number">100</span>);
 
-		<span class='kw'>loop</span> {
-			<span class='kw'>match</span> <span class='ident'>channel</span>.<span class='ident'>try_recv</span>() {
-				<span class='prelude-val'>Ok</span>(<span class='ident'>Status</span>::<span class='ident'>SendMessage</span>(<span class='ident'>val</span>)) <span class='op'>=&gt;</span> {
-					<span class='kw'>match</span> <span class='ident'>sender</span>.<span class='ident'>send_json</span>(<span class='kw-2'>&amp;</span><span class='ident'>val</span>) {
-						<span class='prelude-val'>Ok</span>(()) <span class='op'>=&gt;</span> {},
-						<span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>warn</span><span class='macro'>!</span>(<span class='string'>&quot;Error sending gateway message: {:?}&quot;</span>, <span class='ident'>e</span>)
+		<span class="kw">loop</span> {
+			<span class="kw">match</span> <span class="ident">channel</span>.<span class="ident">try_recv</span>() {
+				<span class="prelude-val">Ok</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">val</span>)) <span class="op">=&gt;</span> {
+					<span class="kw">match</span> <span class="ident">sender</span>.<span class="ident">send_json</span>(<span class="kw-2">&amp;</span><span class="ident">val</span>) {
+						<span class="prelude-val">Ok</span>(()) <span class="op">=&gt;</span> {},
+						<span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;Error sending gateway message: {:?}&quot;</span>, <span class="ident">e</span>)
 					}
 				},
-				<span class='prelude-val'>Ok</span>(<span class='ident'>Status</span>::<span class='ident'>Sequence</span>(<span class='ident'>seq</span>)) <span class='op'>=&gt;</span> {
-					<span class='ident'>last_sequence</span> <span class='op'>=</span> <span class='ident'>seq</span>;
+				<span class="prelude-val">Ok</span>(<span class="ident">Status</span>::<span class="ident">Sequence</span>(<span class="ident">seq</span>)) <span class="op">=&gt;</span> {
+					<span class="ident">last_sequence</span> <span class="op">=</span> <span class="ident">seq</span>;
 				},
-				<span class='prelude-val'>Ok</span>(<span class='ident'>Status</span>::<span class='ident'>ChangeInterval</span>(<span class='ident'>interval</span>)) <span class='op'>=&gt;</span> {
-					<span class='ident'>timer</span> <span class='op'>=</span> ::<span class='ident'>Timer</span>::<span class='ident'>new</span>(<span class='ident'>interval</span>);
+				<span class="prelude-val">Ok</span>(<span class="ident">Status</span>::<span class="ident">ChangeInterval</span>(<span class="ident">interval</span>)) <span class="op">=&gt;</span> {
+					<span class="ident">timer</span> <span class="op">=</span> ::<span class="ident">Timer</span>::<span class="ident">new</span>(<span class="ident">interval</span>);
 				},
-				<span class='prelude-val'>Ok</span>(<span class='ident'>Status</span>::<span class='ident'>ChangeSender</span>(<span class='ident'>new_sender</span>)) <span class='op'>=&gt;</span> {
-					<span class='ident'>sender</span> <span class='op'>=</span> <span class='ident'>new_sender</span>;
+				<span class="prelude-val">Ok</span>(<span class="ident">Status</span>::<span class="ident">ChangeSender</span>(<span class="ident">new_sender</span>)) <span class="op">=&gt;</span> {
+					<span class="ident">sender</span> <span class="op">=</span> <span class="ident">new_sender</span>;
 				}
-				<span class='prelude-val'>Err</span>(<span class='ident'>mpsc</span>::<span class='ident'>TryRecvError</span>::<span class='ident'>Empty</span>) <span class='op'>=&gt;</span> <span class='kw'>break</span>,
-				<span class='prelude-val'>Err</span>(<span class='ident'>mpsc</span>::<span class='ident'>TryRecvError</span>::<span class='ident'>Disconnected</span>) <span class='op'>=&gt;</span> <span class='kw'>break</span> <span class='lifetime'>&#39;outer</span>,
+				<span class="prelude-val">Err</span>(<span class="ident">mpsc</span>::<span class="ident">TryRecvError</span>::<span class="ident">Empty</span>) <span class="op">=&gt;</span> <span class="kw">break</span>,
+				<span class="prelude-val">Err</span>(<span class="ident">mpsc</span>::<span class="ident">TryRecvError</span>::<span class="ident">Disconnected</span>) <span class="op">=&gt;</span> <span class="kw">break</span> <span class="lifetime">&#39;outer</span>,
 			}
 		}
 
-		<span class='kw'>if</span> <span class='ident'>timer</span>.<span class='ident'>check_tick</span>() {
-			<span class='kw'>let</span> <span class='ident'>map</span> <span class='op'>=</span> <span class='ident'>ObjectBuilder</span>::<span class='ident'>new</span>()
-				.<span class='ident'>insert</span>(<span class='string'>&quot;op&quot;</span>, <span class='number'>1</span>)
-				.<span class='ident'>insert</span>(<span class='string'>&quot;d&quot;</span>, <span class='ident'>last_sequence</span>)
-				.<span class='ident'>build</span>();
-			<span class='kw'>match</span> <span class='ident'>sender</span>.<span class='ident'>send_json</span>(<span class='kw-2'>&amp;</span><span class='ident'>map</span>) {
-				<span class='prelude-val'>Ok</span>(()) <span class='op'>=&gt;</span> {},
-				<span class='prelude-val'>Err</span>(<span class='ident'>e</span>) <span class='op'>=&gt;</span> <span class='macro'>warn</span><span class='macro'>!</span>(<span class='string'>&quot;Error sending gateway keeaplive: {:?}&quot;</span>, <span class='ident'>e</span>)
+		<span class="kw">if</span> <span class="ident">timer</span>.<span class="ident">check_tick</span>() {
+			<span class="kw">let</span> <span class="ident">map</span> <span class="op">=</span> <span class="ident">ObjectBuilder</span>::<span class="ident">new</span>()
+				.<span class="ident">insert</span>(<span class="string">&quot;op&quot;</span>, <span class="number">1</span>)
+				.<span class="ident">insert</span>(<span class="string">&quot;d&quot;</span>, <span class="ident">last_sequence</span>)
+				.<span class="ident">build</span>();
+			<span class="kw">match</span> <span class="ident">sender</span>.<span class="ident">send_json</span>(<span class="kw-2">&amp;</span><span class="ident">map</span>) {
+				<span class="prelude-val">Ok</span>(()) <span class="op">=&gt;</span> {},
+				<span class="prelude-val">Err</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="macro">warn</span><span class="macro">!</span>(<span class="string">&quot;Error sending gateway keeaplive: {:?}&quot;</span>, <span class="ident">e</span>)
 			}
 		}
 	}
-	<span class='kw'>let</span> _ <span class='op'>=</span> <span class='ident'>sender</span>.<span class='ident'>get_mut</span>().<span class='ident'>shutdown</span>(::<span class='ident'>std</span>::<span class='ident'>net</span>::<span class='ident'>Shutdown</span>::<span class='ident'>Both</span>);
+	<span class="kw">let</span> _ <span class="op">=</span> <span class="ident">sender</span>.<span class="ident">get_mut</span>().<span class="ident">shutdown</span>(::<span class="ident">std</span>::<span class="ident">net</span>::<span class="ident">Shutdown</span>::<span class="ident">Both</span>);
 }
 </pre>
 </section>
@@ -1033,18 +1045,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -1076,11 +1092,8 @@
     <script>
         window.rootPath = "../../";
         window.currentCrate = "discord";
-        window.playgroundUrl = "";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

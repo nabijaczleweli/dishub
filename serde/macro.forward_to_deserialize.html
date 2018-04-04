@@ -9,14 +9,18 @@
 
     <title>serde::forward_to_deserialize - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc macro">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         <p class='location'><a href='index.html'>serde</a></p><script>window.sidebarCurrent = {name: 'forward_to_deserialize', ty: 'macro', relpath: ''};</script><script defer src="sidebar-items.js"></script>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,35 +54,35 @@
         </form>
     </nav>
 
-    <section id='main' class="content macro">
-<h1 class='fqn'><span class='in-band'>Macro <a href='index.html'>serde</a>::<wbr><a class='macro' href=''>forward_to_deserialize</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Macro <a href='index.html'>serde</a>::<wbr><a class="macro" href=''>forward_to_deserialize</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-12597' class='srclink' href='../src/serde/macros.rs.html#175-179' title='goto source code'>[src]</a></span></h1>
-<pre class='rust macro'>
-<span class='macro'>macro_rules</span><span class='macro'>!</span> <span class='ident'>forward_to_deserialize</span> {
-    ($(<span class='macro-nonterminal'>$</span><span class='macro-nonterminal'>func</span>:<span class='ident'>ident</span>)<span class='op'>*</span>) <span class='op'>=&gt;</span> { ... };
+               </span><a class='srclink' href='../src/serde/macros.rs.html#175-179' title='goto source code'>[src]</a></span></h1>
+<pre class="rust macro">
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">forward_to_deserialize</span> {
+    ($(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">func</span>:<span class="ident">ident</span>)<span class="kw-2">*</span>) <span class="op">=&gt;</span> { ... };
 }</pre>
 <div class='docblock'><p>Helper to forward <code>Deserializer</code> methods to <code>Deserializer::deserialize</code>.
 Every given method ignores all arguments and forwards to <code>deserialize</code>.
 Note that <code>deserialize_enum</code> simply returns an <code>Error::invalid_type</code>; a
 better approach is tracked in <a href="https://github.com/serde-rs/serde/issues/521">serde-rs/serde#521</a>.</p>
 
-<pre class='rust rust-example-rendered'>
-<span class='kw'>impl</span> <span class='ident'>Deserializer</span> <span class='kw'>for</span> <span class='ident'>MyDeserializer</span> {
-    <span class='kw'>fn</span> <span class='ident'>deserialize</span><span class='op'>&lt;</span><span class='ident'>V</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>visitor</span>: <span class='ident'>V</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>V</span>::<span class='ident'>Value</span>, <span class='self'>Self</span>::<span class='ident'>Error</span><span class='op'>&gt;</span>
-        <span class='kw'>where</span> <span class='ident'>V</span>: <span class='ident'>Visitor</span>
+<div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><pre class="rust rust-example-rendered ignore">
+<span class="kw">impl</span> <span class="ident">Deserializer</span> <span class="kw">for</span> <span class="ident">MyDeserializer</span> {
+    <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">visitor</span>: <span class="ident">V</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">V</span>::<span class="ident">Value</span>, <span class="self">Self</span>::<span class="ident">Error</span><span class="op">&gt;</span>
+        <span class="kw">where</span> <span class="ident">V</span>: <span class="ident">Visitor</span>
     {
-        <span class='comment'>/* ... */</span>
+        <span class="comment">/* ... */</span>
     }
 
-    <span class='macro'>forward_to_deserialize</span><span class='macro'>!</span> {
-        <span class='ident'>bool</span> <span class='ident'>usize</span> <span class='ident'>u8</span> <span class='ident'>u16</span> <span class='ident'>u32</span> <span class='ident'>u64</span> <span class='ident'>isize</span> <span class='ident'>i8</span> <span class='ident'>i16</span> <span class='ident'>i32</span> <span class='ident'>i64</span> <span class='ident'>f32</span> <span class='ident'>f64</span> <span class='ident'>char</span> <span class='ident'>str</span> <span class='ident'>string</span>
-        <span class='ident'>unit</span> <span class='ident'>option</span> <span class='ident'>seq</span> <span class='ident'>seq_fixed_size</span> <span class='ident'>bytes</span> <span class='ident'>map</span> <span class='ident'>unit_struct</span> <span class='ident'>newtype_struct</span>
-        <span class='ident'>tuple_struct</span> <span class='kw'>struct</span> <span class='ident'>struct_field</span> <span class='ident'>tuple</span> <span class='kw'>enum</span> <span class='ident'>ignored_any</span>
+    <span class="macro">forward_to_deserialize</span><span class="macro">!</span> {
+        <span class="ident">bool</span> <span class="ident">usize</span> <span class="ident">u8</span> <span class="ident">u16</span> <span class="ident">u32</span> <span class="ident">u64</span> <span class="ident">isize</span> <span class="ident">i8</span> <span class="ident">i16</span> <span class="ident">i32</span> <span class="ident">i64</span> <span class="ident">f32</span> <span class="ident">f64</span> <span class="ident">char</span> <span class="ident">str</span> <span class="ident">string</span>
+        <span class="ident">unit</span> <span class="ident">option</span> <span class="ident">seq</span> <span class="ident">seq_fixed_size</span> <span class="ident">bytes</span> <span class="ident">map</span> <span class="ident">unit_struct</span> <span class="ident">newtype_struct</span>
+        <span class="ident">tuple_struct</span> <span class="kw">struct</span> <span class="ident">struct_field</span> <span class="ident">tuple</span> <span class="kw">enum</span> <span class="ident">ignored_any</span>
     }
-}<a class='test-arrow' target='_blank' href=''>Run</a></pre>
+}</pre>
 </div></section>
     <section id='search' class="content hidden"></section>
 
@@ -84,18 +96,22 @@ better approach is tracked in <a href="https://github.com/serde-rs/serde/issues/
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -127,11 +143,8 @@ better approach is tracked in <a href="https://github.com/serde-rs/serde/issues/
     <script>
         window.rootPath = "../";
         window.currentCrate = "serde";
-        window.playgroundUrl = "";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    
     <script defer src="../search-index.js"></script>
 </body>
 </html>

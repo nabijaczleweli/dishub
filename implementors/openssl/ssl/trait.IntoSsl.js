@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors["openssl"] = [];implementors["hyper"] = [];implementors["websocket"] = [];implementors["dishub"] = [];
+implementors["openssl"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

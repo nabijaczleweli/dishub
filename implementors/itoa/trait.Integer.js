@@ -1,5 +1,5 @@
 (function() {var implementors = {};
-implementors["itoa"] = [];implementors["dishub"] = [];
+implementors["itoa"] = [];
 
             if (window.register_implementors) {
                 window.register_implementors(implementors);

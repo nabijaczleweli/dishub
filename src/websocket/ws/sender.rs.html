@@ -9,14 +9,18 @@
 
     <title>sender.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,7 +54,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1"> 1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1"> 1</span>
 <span id="2"> 2</span>
 <span id="3"> 3</span>
 <span id="4"> 4</span>
@@ -65,28 +77,28 @@
 <span id="21">21</span>
 <span id="22">22</span>
 <span id="23">23</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Provides a trait for sending data frames and messages.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! See the `ws` module documentation for more information.</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! Provides a trait for sending data frames and messages.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! See the `ws` module documentation for more information.</span>
 
-<span class='kw'>use</span> <span class='ident'>ws</span>::<span class='ident'>Message</span>;
-<span class='kw'>use</span> <span class='ident'>ws</span>::<span class='ident'>dataframe</span>::<span class='ident'>DataFrame</span>;
-<span class='kw'>use</span> <span class='ident'>result</span>::<span class='ident'>WebSocketResult</span>;
+<span class="kw">use</span> <span class="ident">ws</span>::<span class="ident">Message</span>;
+<span class="kw">use</span> <span class="ident">ws</span>::<span class="ident">dataframe</span>::<span class="ident">DataFrame</span>;
+<span class="kw">use</span> <span class="ident">result</span>::<span class="ident">WebSocketResult</span>;
 
-<span class='doccomment'>/// A trait for sending data frames and messages.</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>Sender</span> {
-	<span class='doccomment'>/// Sends a single data frame using this sender.</span>
-	<span class='kw'>fn</span> <span class='ident'>send_dataframe</span><span class='op'>&lt;</span><span class='ident'>D</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>dataframe</span>: <span class='kw-2'>&amp;</span><span class='ident'>D</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>
-	<span class='kw'>where</span> <span class='ident'>D</span>: <span class='ident'>DataFrame</span>;
+<span class="doccomment">/// A trait for sending data frames and messages.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Sender</span> {
+	<span class="doccomment">/// Sends a single data frame using this sender.</span>
+	<span class="kw">fn</span> <span class="ident">send_dataframe</span><span class="op">&lt;</span><span class="ident">D</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">dataframe</span>: <span class="kw-2">&amp;</span><span class="ident">D</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+	<span class="kw">where</span> <span class="ident">D</span>: <span class="ident">DataFrame</span>;
 
-	<span class='doccomment'>/// Sends a single message using this sender.</span>
-	<span class='kw'>fn</span> <span class='ident'>send_message</span><span class='op'>&lt;</span><span class='lifetime'>&#39;m</span>, <span class='ident'>M</span>, <span class='ident'>D</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>message</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;m</span> <span class='ident'>M</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>
-	<span class='kw'>where</span> <span class='ident'>M</span>: <span class='ident'>Message</span><span class='op'>&lt;</span><span class='lifetime'>&#39;m</span>, <span class='ident'>D</span><span class='op'>&gt;</span>, <span class='ident'>D</span>: <span class='ident'>DataFrame</span> {
-		<span class='kw'>for</span> <span class='kw-2'>ref</span> <span class='ident'>dataframe</span> <span class='kw'>in</span> <span class='ident'>message</span>.<span class='ident'>dataframes</span>() {
-			<span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>send_dataframe</span>(<span class='ident'>dataframe</span>));
+	<span class="doccomment">/// Sends a single message using this sender.</span>
+	<span class="kw">fn</span> <span class="ident">send_message</span><span class="op">&lt;</span><span class="lifetime">&#39;m</span>, <span class="ident">M</span>, <span class="ident">D</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">message</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;m</span> <span class="ident">M</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+	<span class="kw">where</span> <span class="ident">M</span>: <span class="ident">Message</span><span class="op">&lt;</span><span class="lifetime">&#39;m</span>, <span class="ident">D</span><span class="op">&gt;</span>, <span class="ident">D</span>: <span class="ident">DataFrame</span> {
+		<span class="kw">for</span> <span class="kw-2">ref</span> <span class="ident">dataframe</span> <span class="kw">in</span> <span class="ident">message</span>.<span class="ident">dataframes</span>() {
+			<span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">send_dataframe</span>(<span class="ident">dataframe</span>));
 		}
-		<span class='prelude-val'>Ok</span>(())
+		<span class="prelude-val">Ok</span>(())
 	}
 }
 </pre>
@@ -103,18 +115,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -146,11 +162,8 @@
     <script>
         window.rootPath = "../../../";
         window.currentCrate = "websocket";
-        window.playgroundUrl = "";
     </script>
-    <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
-    
     <script defer src="../../../search-index.js"></script>
 </body>
 </html>

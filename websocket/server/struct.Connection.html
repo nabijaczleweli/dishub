@@ -9,14 +9,18 @@
 
     <title>websocket::server::Connection - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
+    <script src="../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'><a href='../index.html'>websocket</a>::<wbr><a href='index.html'>server</a></p><script>window.sidebarCurrent = {name: 'Connection', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct Connection</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.read_request">read_request</a><a href="#method.shutdown">shutdown</a></div></div><p class='location'><a href='../index.html'>websocket</a>::<wbr><a href='index.html'>server</a></p><script>window.sidebarCurrent = {name: 'Connection', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,18 +54,22 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>websocket</a>::<wbr><a href='index.html'>server</a>::<wbr><a class='struct' href=''>Connection</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='../index.html'>websocket</a>::<wbr><a href='index.html'>server</a>::<wbr><a class="struct" href=''>Connection</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-1061' class='srclink' href='../../src/websocket/server/mod.rs.html#140' title='goto source code'>[src]</a></span></h1>
-<pre class='rust struct'>pub struct Connection&lt;R:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Read.html' title='std::io::Read'>Read</a>,&nbsp;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>&gt;(_, _);</pre><div class='docblock'><p>Represents a connection to the server that has not been processed yet.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl&lt;R:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Read.html' title='std::io::Read'>Read</a>,&nbsp;W:&nbsp;<a class='trait' href='https://doc.rust-lang.org/nightly/std/io/trait.Write.html' title='std::io::Write'>Write</a>&gt; <a class='struct' href='../../websocket/server/struct.Connection.html' title='websocket::server::Connection'>Connection</a>&lt;R,&nbsp;W&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1067' class='srclink' href='../../src/websocket/server/mod.rs.html#142-152' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.read_request' class='method'><span id='read_request.v' class='invisible'><code>fn <a href='#method.read_request' class='fnname'>read_request</a>(self) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='struct' href='../../websocket/server/request/struct.Request.html' title='websocket::server::request::Request'>Request</a>&lt;R,&nbsp;W&gt;&gt;</code></span></h4>
+               </span><a class='srclink' href='../../src/websocket/server/mod.rs.html#140' title='goto source code'>[src]</a></span></h1>
+<pre class='rust struct'>pub struct Connection&lt;R:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html" title="trait std::io::Read">Read</a>, W:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a>&gt;(_, _);</pre><div class='docblock'><p>Represents a connection to the server that has not been processed yet.</p>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl&lt;R:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Read.html" title="trait std::io::Read">Read</a>, W:&nbsp;<a class="trait" href="https://doc.rust-lang.org/nightly/std/io/trait.Write.html" title="trait std::io::Write">Write</a>&gt; <a class="struct" href="../../websocket/server/struct.Connection.html" title="struct websocket::server::Connection">Connection</a>&lt;R, W&gt;</code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/websocket/server/mod.rs.html#142-152' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.read_request' class="method"><span id='read_request.v' class='invisible'><code>pub fn <a href='#method.read_request' class='fnname'>read_request</a>(self) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="struct" href="../../websocket/server/request/struct.Request.html" title="struct websocket::server::request::Request">Request</a>&lt;R, W&gt;&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/websocket/server/mod.rs.html#144-151' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Process this connection and read the request.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../../websocket/server/struct.Connection.html' title='websocket::server::Connection'>Connection</a>&lt;<a class='enum' href='../../websocket/stream/enum.WebSocketStream.html' title='websocket::stream::WebSocketStream'>WebSocketStream</a>,&nbsp;<a class='enum' href='../../websocket/stream/enum.WebSocketStream.html' title='websocket::stream::WebSocketStream'>WebSocketStream</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a id='src-1074' class='srclink' href='../../src/websocket/server/mod.rs.html#154-161' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.shutdown' class='method'><span id='shutdown.v' class='invisible'><code>fn <a href='#method.shutdown' class='fnname'>shutdown</a>(&amp;mut self, how: <a class='enum' href='../../websocket/stream/enum.Shutdown.html' title='websocket::stream::Shutdown'>Shutdown</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>&gt;</code></span></h4>
+</div></div><h3 id='impl-1' class='impl'><span class='in-band'><code>impl <a class="struct" href="../../websocket/server/struct.Connection.html" title="struct websocket::server::Connection">Connection</a>&lt;<a class="enum" href="../../websocket/stream/enum.WebSocketStream.html" title="enum websocket::stream::WebSocketStream">WebSocketStream</a>, <a class="enum" href="../../websocket/stream/enum.WebSocketStream.html" title="enum websocket::stream::WebSocketStream">WebSocketStream</a>&gt;</code><a href='#impl-1' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/websocket/server/mod.rs.html#154-161' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.shutdown' class="method"><span id='shutdown.v' class='invisible'><code>pub fn <a href='#method.shutdown' class='fnname'>shutdown</a>(&amp;mut self, how: <a class="enum" href="../../websocket/stream/enum.Shutdown.html" title="enum websocket::stream::Shutdown">Shutdown</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/std/io/error/type.Result.html" title="type std::io::error::Result">Result</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/websocket/server/mod.rs.html#158-160' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Shuts down the currennt connection in the specified way.
 All future IO calls to this connection will return immediately with an appropriate
 return value.</p>
@@ -70,18 +86,22 @@ return value.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -113,11 +133,8 @@ return value.</p>
     <script>
         window.rootPath = "../../";
         window.currentCrate = "websocket";
-        window.playgroundUrl = "";
     </script>
-    <script src="../../jquery.js"></script>
     <script src="../../main.js"></script>
-    
     <script defer src="../../search-index.js"></script>
 </body>
 </html>

@@ -9,14 +9,18 @@
 
     <title>discord::State - Rust</title>
 
-    <link rel="stylesheet" type="text/css" href="../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../main.css">
+    <link rel="stylesheet" type="text/css" href="../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../dark.css">
+    <link rel="stylesheet" type="text/css" href="../main.css" id="themeStyle">
+    <script src="../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc struct">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'><a href='index.html'>discord</a></p><script>window.sidebarCurrent = {name: 'State', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script>
+        <p class='location'>Struct State</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.new">new</a><a href="#method.unknown_members">unknown_members</a><a href="#method.all_private_channels">all_private_channels</a><a href="#method.all_servers">all_servers</a><a href="#method.update">update</a><a href="#method.user">user</a><a href="#method.servers">servers</a><a href="#method.unavailable_servers">unavailable_servers</a><a href="#method.private_channels">private_channels</a><a href="#method.groups">groups</a><a href="#method.calls">calls</a><a href="#method.presences">presences</a><a href="#method.relationships">relationships</a><a href="#method.settings">settings</a><a href="#method.server_settings">server_settings</a><a href="#method.notes">notes</a><a href="#method.find_channel">find_channel</a><a href="#method.find_voice_user">find_voice_user</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Debug">Debug</a><a href="#impl-Clone">Clone</a></div></div><p class='location'><a href='index.html'>discord</a></p><script>window.sidebarCurrent = {name: 'State', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,72 +54,73 @@
         </form>
     </nav>
 
-    <section id='main' class="content struct">
-<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>discord</a>::<wbr><a class='struct' href=''>State</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content">
+<h1 class='fqn'><span class='in-band'>Struct <a href='index.html'>discord</a>::<wbr><a class="struct" href=''>State</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-507' class='srclink' href='../src/discord/state.rs.html#6-19' title='goto source code'>[src]</a></span></h1>
+               </span><a class='srclink' href='../src/discord/state.rs.html#6-19' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct State { /* fields omitted */ }</pre><div class='docblock'><p>Known state composed from received events.</p>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../discord/struct.State.html' title='discord::State'>State</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-549' class='srclink' href='../src/discord/state.rs.html#21-479' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.new' class='method'><span id='new.v' class='invisible'><code>fn <a href='#method.new' class='fnname'>new</a>(ready: <a class='struct' href='../discord/model/struct.ReadyEvent.html' title='discord::model::ReadyEvent'>ReadyEvent</a>) -&gt; <a class='struct' href='../discord/struct.State.html' title='discord::State'>State</a></code></span></h4>
+</div>
+                    <h2 id='methods' class='small-section-header'>
+                      Methods<a href='#methods' class='anchor'></a>
+                    </h2>
+                <h3 id='impl' class='impl'><span class='in-band'><code>impl <a class="struct" href="../discord/struct.State.html" title="struct discord::State">State</a></code><a href='#impl' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#21-479' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.new' class="method"><span id='new.v' class='invisible'><code>pub fn <a href='#method.new' class='fnname'>new</a>(ready: <a class="struct" href="../discord/model/struct.ReadyEvent.html" title="struct discord::model::ReadyEvent">ReadyEvent</a>) -&gt; <a class="struct" href="../discord/struct.State.html" title="struct discord::State">State</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#23-54' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Create a new state from an initial <code>ReadyEvent</code>.</p>
-</div><h4 id='method.unknown_members' class='method'><span id='unknown_members.v' class='invisible'><code>fn <a href='#method.unknown_members' class='fnname'>unknown_members</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.u64.html'>u64</a></code></span></h4>
+</div><h4 id='method.unknown_members' class="method"><span id='unknown_members.v' class='invisible'><code>pub fn <a href='#method.unknown_members' class='fnname'>unknown_members</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u64.html">u64</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#57-68' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Count the total number of server members not yet downloaded.</p>
-</div><h4 id='method.all_private_channels' class='method'><span id='all_private_channels.v' class='invisible'><code>fn <a href='#method.all_private_channels' class='fnname'>all_private_channels</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>&gt;</code></span></h4>
+</div><h4 id='method.all_private_channels' class="method"><span id='all_private_channels.v' class='invisible'><code>pub fn <a href='#method.all_private_channels' class='fnname'>all_private_channels</a>(&amp;self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="../discord/model/struct.ChannelId.html" title="struct discord::model::ChannelId">ChannelId</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#71-73' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Build a list of all known private and group channel IDs.</p>
-</div><h4 id='method.all_servers' class='method'><span id='all_servers.v' class='invisible'><code>fn <a href='#method.all_servers' class='fnname'>all_servers</a>(&amp;self) -&gt; <a class='struct' href='https://doc.rust-lang.org/nightly/collections/vec/struct.Vec.html' title='collections::vec::Vec'>Vec</a>&lt;<a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>&gt;</code></span></h4>
+</div><h4 id='method.all_servers' class="method"><span id='all_servers.v' class='invisible'><code>pub fn <a href='#method.all_servers' class='fnname'>all_servers</a>(&amp;self) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;<a class="struct" href="../discord/model/struct.ServerId.html" title="struct discord::model::ServerId">ServerId</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#76-78' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Build a list of all known server IDs.</p>
-</div><h4 id='method.update' class='method'><span id='update.v' class='invisible'><code>fn <a href='#method.update' class='fnname'>update</a>(&amp;mut self, event: &amp;<a class='enum' href='../discord/model/enum.Event.html' title='discord::model::Event'>Event</a>)</code></span></h4>
+</div><h4 id='method.update' class="method"><span id='update.v' class='invisible'><code>pub fn <a href='#method.update' class='fnname'>update</a>(&amp;mut self, event: &amp;<a class="enum" href="../discord/model/enum.Event.html" title="enum discord::model::Event">Event</a>)</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#89-379' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Update the state according to the changes described in the given event.</p>
-</div><h4 id='method.user' class='method'><span id='user.v' class='invisible'><code>fn <a href='#method.user' class='fnname'>user</a>(&amp;self) -&gt; &amp;<a class='struct' href='../discord/model/struct.CurrentUser.html' title='discord::model::CurrentUser'>CurrentUser</a></code></span></h4>
+</div><h4 id='method.user' class="method"><span id='user.v' class='invisible'><code>pub fn <a href='#method.user' class='fnname'>user</a>(&amp;self) -&gt; &amp;<a class="struct" href="../discord/model/struct.CurrentUser.html" title="struct discord::model::CurrentUser">CurrentUser</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#383' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Get information about the logged-in user.</p>
-</div><h4 id='method.servers' class='method'><span id='servers.v' class='invisible'><code>fn <a href='#method.servers' class='fnname'>servers</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../discord/model/struct.LiveServer.html' title='discord::model::LiveServer'>LiveServer</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a></code></span></h4>
+</div><h4 id='method.servers' class="method"><span id='servers.v' class='invisible'><code>pub fn <a href='#method.servers' class='fnname'>servers</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="struct" href="../discord/model/struct.LiveServer.html" title="struct discord::model::LiveServer">LiveServer</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#387' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Get the servers this user has access to.</p>
-</div><h4 id='method.unavailable_servers' class='method'><span id='unavailable_servers.v' class='invisible'><code>fn <a href='#method.unavailable_servers' class='fnname'>unavailable_servers</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a></code></span></h4>
+</div><h4 id='method.unavailable_servers' class="method"><span id='unavailable_servers.v' class='invisible'><code>pub fn <a href='#method.unavailable_servers' class='fnname'>unavailable_servers</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="struct" href="../discord/model/struct.ServerId.html" title="struct discord::model::ServerId">ServerId</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#390' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Get the currently unavailable servers.</p>
-</div><h4 id='method.private_channels' class='method'><span id='private_channels.v' class='invisible'><code>fn <a href='#method.private_channels' class='fnname'>private_channels</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../discord/model/struct.PrivateChannel.html' title='discord::model::PrivateChannel'>PrivateChannel</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a></code></span></h4>
+</div><h4 id='method.private_channels' class="method"><span id='private_channels.v' class='invisible'><code>pub fn <a href='#method.private_channels' class='fnname'>private_channels</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="struct" href="../discord/model/struct.PrivateChannel.html" title="struct discord::model::PrivateChannel">PrivateChannel</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#394' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Get the active 1-on-1 private channels with other users.</p>
-</div><h4 id='method.groups' class='method'><span id='groups.v' class='invisible'><code>fn <a href='#method.groups' class='fnname'>groups</a>(&amp;self) -&gt; &amp;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/btree/map/struct.BTreeMap.html' title='collections::btree::map::BTreeMap'>BTreeMap</a>&lt;<a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>,&nbsp;<a class='struct' href='../discord/model/struct.Group.html' title='discord::model::Group'>Group</a>&gt;</code></span></h4>
+</div><h4 id='method.groups' class="method"><span id='groups.v' class='invisible'><code>pub fn <a href='#method.groups' class='fnname'>groups</a>(&amp;self) -&gt; &amp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/btree/map/struct.BTreeMap.html" title="struct alloc::btree::map::BTreeMap">BTreeMap</a>&lt;<a class="struct" href="../discord/model/struct.ChannelId.html" title="struct discord::model::ChannelId">ChannelId</a>, <a class="struct" href="../discord/model/struct.Group.html" title="struct discord::model::Group">Group</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#398' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Get the active groups with other users.</p>
-</div><h4 id='method.calls' class='method'><span id='calls.v' class='invisible'><code>fn <a href='#method.calls' class='fnname'>calls</a>(&amp;self) -&gt; &amp;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/btree/map/struct.BTreeMap.html' title='collections::btree::map::BTreeMap'>BTreeMap</a>&lt;<a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>,&nbsp;<a class='struct' href='../discord/model/struct.Call.html' title='discord::model::Call'>Call</a>&gt;</code></span></h4>
+</div><h4 id='method.calls' class="method"><span id='calls.v' class='invisible'><code>pub fn <a href='#method.calls' class='fnname'>calls</a>(&amp;self) -&gt; &amp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/btree/map/struct.BTreeMap.html" title="struct alloc::btree::map::BTreeMap">BTreeMap</a>&lt;<a class="struct" href="../discord/model/struct.ChannelId.html" title="struct discord::model::ChannelId">ChannelId</a>, <a class="struct" href="../discord/model/struct.Call.html" title="struct discord::model::Call">Call</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#405' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Get the currently ongoing calls.</p>
-
 <p>Calls which were already ongoing when the user connected may require
 calling <code>Connection::sync_calls</code> to appear here.</p>
-</div><h4 id='method.presences' class='method'><span id='presences.v' class='invisible'><code>fn <a href='#method.presences' class='fnname'>presences</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../discord/model/struct.Presence.html' title='discord::model::Presence'>Presence</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a></code></span></h4>
+</div><h4 id='method.presences' class="method"><span id='presences.v' class='invisible'><code>pub fn <a href='#method.presences' class='fnname'>presences</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="struct" href="../discord/model/struct.Presence.html" title="struct discord::model::Presence">Presence</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#411' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Get the presences of online friends.</p>
-
 <p>Usually empty for bot accounts.</p>
-</div><h4 id='method.relationships' class='method'><span id='relationships.v' class='invisible'><code>fn <a href='#method.relationships' class='fnname'>relationships</a>(&amp;self) -&gt; <a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../discord/model/struct.Relationship.html' title='discord::model::Relationship'>Relationship</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a></code></span></h4>
+</div><h4 id='method.relationships' class="method"><span id='relationships.v' class='invisible'><code>pub fn <a href='#method.relationships' class='fnname'>relationships</a>(&amp;self) -&gt; <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="struct" href="../discord/model/struct.Relationship.html" title="struct discord::model::Relationship">Relationship</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#417' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Get the friend/block relationships with other users.</p>
-
 <p>Usually empty for bot accounts.</p>
-</div><h4 id='method.settings' class='method'><span id='settings.v' class='invisible'><code>fn <a href='#method.settings' class='fnname'>settings</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='struct' href='../discord/model/struct.UserSettings.html' title='discord::model::UserSettings'>UserSettings</a>&gt;</code></span></h4>
-<div class='docblock'><p>Get the logged-in user&#39;s client settings.</p>
-
+</div><h4 id='method.settings' class="method"><span id='settings.v' class='invisible'><code>pub fn <a href='#method.settings' class='fnname'>settings</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="struct" href="../discord/model/struct.UserSettings.html" title="struct discord::model::UserSettings">UserSettings</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#423' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Get the logged-in user's client settings.</p>
 <p>Returns <code>None</code> on bot accounts.</p>
-</div><h4 id='method.server_settings' class='method'><span id='server_settings.v' class='invisible'><code>fn <a href='#method.server_settings' class='fnname'>server_settings</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>&amp;[</a><a class='struct' href='../discord/model/struct.UserServerSettings.html' title='discord::model::UserServerSettings'>UserServerSettings</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.slice.html'>]</a>&gt;</code></span></h4>
-<div class='docblock'><p>Get the logged-in user&#39;s per-server notification settings.</p>
-
+</div><h4 id='method.server_settings' class="method"><span id='server_settings.v' class='invisible'><code>pub fn <a href='#method.server_settings' class='fnname'>server_settings</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">&amp;[</a><a class="struct" href="../discord/model/struct.UserServerSettings.html" title="struct discord::model::UserServerSettings">UserServerSettings</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.slice.html">]</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#429' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Get the logged-in user's per-server notification settings.</p>
 <p>Returns <code>None</code> on bot accounts.</p>
-</div><h4 id='method.notes' class='method'><span id='notes.v' class='invisible'><code>fn <a href='#method.notes' class='fnname'>notes</a>(&amp;self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;&amp;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/btree/map/struct.BTreeMap.html' title='collections::btree::map::BTreeMap'>BTreeMap</a>&lt;<a class='struct' href='../discord/model/struct.UserId.html' title='discord::model::UserId'>UserId</a>,&nbsp;<a class='struct' href='https://doc.rust-lang.org/nightly/collections/string/struct.String.html' title='collections::string::String'>String</a>&gt;&gt;</code></span></h4>
+</div><h4 id='method.notes' class="method"><span id='notes.v' class='invisible'><code>pub fn <a href='#method.notes' class='fnname'>notes</a>(&amp;self) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/btree/map/struct.BTreeMap.html" title="struct alloc::btree::map::BTreeMap">BTreeMap</a>&lt;<a class="struct" href="../discord/model/struct.UserId.html" title="struct discord::model::UserId">UserId</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#435' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Get the map of notes that have been made by this user.</p>
-
 <p>Returns <code>None</code> on bot accounts.</p>
-</div><h4 id='method.find_channel' class='method'><span id='find_channel.v' class='invisible'><code>fn <a href='#method.find_channel' class='fnname'>find_channel</a>(&amp;self, id: &amp;<a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='enum' href='../discord/enum.ChannelRef.html' title='discord::ChannelRef'>ChannelRef</a>&gt;</code></span></h4>
+</div><h4 id='method.find_channel' class="method"><span id='find_channel.v' class='invisible'><code>pub fn <a href='#method.find_channel' class='fnname'>find_channel</a>(&amp;self, id: &amp;<a class="struct" href="../discord/model/struct.ChannelId.html" title="struct discord::model::ChannelId">ChannelId</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="enum" href="../discord/enum.ChannelRef.html" title="enum discord::ChannelRef">ChannelRef</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#438-455' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Look up a private or public channel by its ID.</p>
-</div><h4 id='method.find_voice_user' class='method'><span id='find_voice_user.v' class='invisible'><code>fn <a href='#method.find_voice_user' class='fnname'>find_voice_user</a>(&amp;self, user_id: <a class='struct' href='../discord/model/struct.UserId.html' title='discord::model::UserId'>UserId</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>(</a><a class='enum' href='https://doc.rust-lang.org/nightly/core/option/enum.Option.html' title='core::option::Option'>Option</a>&lt;<a class='struct' href='../discord/model/struct.ServerId.html' title='discord::model::ServerId'>ServerId</a>&gt;, <a class='struct' href='../discord/model/struct.ChannelId.html' title='discord::model::ChannelId'>ChannelId</a><a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>)</a>&gt;</code></span></h4>
+</div><h4 id='method.find_voice_user' class="method"><span id='find_voice_user.v' class='invisible'><code>pub fn <a href='#method.find_voice_user' class='fnname'>find_voice_user</a>(<br>&nbsp;&nbsp;&nbsp;&nbsp;&amp;self, <br>&nbsp;&nbsp;&nbsp;&nbsp;user_id: <a class="struct" href="../discord/model/struct.UserId.html" title="struct discord::model::UserId">UserId</a><br>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="../discord/model/struct.ServerId.html" title="struct discord::model::ServerId">ServerId</a>&gt;, <a class="struct" href="../discord/model/struct.ChannelId.html" title="struct discord::model::ChannelId">ChannelId</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>&gt;</code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#460-478' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Look up the voice channel or group call a user is in, if any.</p>
-
 <p>For bot users which may be in multiple voice channels, the first found is returned.</p>
-</div></div><h2 id='implementations'>Trait Implementations</h2><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html' title='core::fmt::Debug'>Debug</a> for <a class='struct' href='../discord/struct.State.html' title='discord::State'>State</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-519' class='srclink' href='../src/discord/state.rs.html#5' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.fmt' class='method'><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class='struct' href='https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html' title='core::fmt::Formatter'>Formatter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/core/fmt/type.Result.html' title='core::fmt::Result'>Result</a></code></span></h4>
-<div class='docblock'><p>Formats the value using the given formatter.</p>
-</div></div><h3 class='impl'><span class='in-band'><code>impl <a class='trait' href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html' title='core::clone::Clone'>Clone</a> for <a class='struct' href='../discord/struct.State.html' title='discord::State'>State</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-535' class='srclink' href='../src/discord/state.rs.html#5' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.clone' class='method'><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class='struct' href='../discord/struct.State.html' title='discord::State'>State</a></code></span></h4>
+</div></div>
+            <h2 id='implementations' class='small-section-header'>
+              Trait Implementations<a href='#implementations' class='anchor'></a>
+            </h2>
+        <h3 id='impl-Debug' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html" title="trait core::fmt::Debug">Debug</a> for <a class="struct" href="../discord/struct.State.html" title="struct discord::State">State</a></code><a href='#impl-Debug' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#5' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.fmt' class="method"><span id='fmt.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt' class='fnname'>fmt</a>(&amp;self, __arg_0: &amp;mut <a class="struct" href="https://doc.rust-lang.org/nightly/core/fmt/struct.Formatter.html" title="struct core::fmt::Formatter">Formatter</a>) -&gt; <a class="type" href="https://doc.rust-lang.org/nightly/core/fmt/type.Result.html" title="type core::fmt::Result">Result</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#5' title='goto source code'>[src]</a></span></h4>
+<div class='docblock'><p>Formats the value using the given formatter. <a href="https://doc.rust-lang.org/nightly/core/fmt/trait.Debug.html#tymethod.fmt">Read more</a></p>
+</div></div><h3 id='impl-Clone' class='impl'><span class='in-band'><code>impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html" title="trait core::clone::Clone">Clone</a> for <a class="struct" href="../discord/struct.State.html" title="struct discord::State">State</a></code><a href='#impl-Clone' class='anchor'></a></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#5' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.clone' class="method"><span id='clone.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone' class='fnname'>clone</a>(&amp;self) -&gt; <a class="struct" href="../discord/struct.State.html" title="struct discord::State">State</a></code></span><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../src/discord/state.rs.html#5' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Returns a copy of the value. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#tymethod.clone">Read more</a></p>
-</div><h4 id='method.clone_from' class='method'><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: &amp;Self)</code><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div></span></h4>
+</div><h4 id='method.clone_from' class="method"><span id='clone_from.v' class='invisible'><code>fn <a href='https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from' class='fnname'>clone_from</a>(&amp;mut self, source: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.reference.html">&amp;</a>Self)</code></span><span class='out-of-band'><div class='ghost'></div><div class='since' title='Stable since Rust version 1.0.0'>1.0.0</div><a class='srclink' href='https://doc.rust-lang.org/nightly/src/core/clone.rs.html#112-114' title='goto source code'>[src]</a></span></h4>
 <div class='docblock'><p>Performs copy-assignment from <code>source</code>. <a href="https://doc.rust-lang.org/nightly/core/clone/trait.Clone.html#method.clone_from">Read more</a></p>
 </div></div></section>
     <section id='search' class="content hidden"></section>
@@ -122,18 +135,22 @@ calling <code>Connection::sync_calls</code> to appear here.</p>
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -165,11 +182,8 @@ calling <code>Connection::sync_calls</code> to appear here.</p>
     <script>
         window.rootPath = "../";
         window.currentCrate = "discord";
-        window.playgroundUrl = "";
     </script>
-    <script src="../jquery.js"></script>
     <script src="../main.js"></script>
-    
     <script defer src="../search-index.js"></script>
 </body>
 </html>

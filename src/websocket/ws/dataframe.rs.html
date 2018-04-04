@@ -9,14 +9,18 @@
 
     <title>dataframe.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
-    <link rel="stylesheet" type="text/css" href="../../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../normalize.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle">
+    
+    <link rel="stylesheet" type="text/css" href="../../../dark.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css" id="themeStyle">
+    <script src="../../../storage.js"></script>
     
 
     
     
 </head>
-<body class="rustdoc">
+<body class="rustdoc source">
     <!--[if lte IE 8]>
     <div class="warning">
         This old browser is unsupported and will most likely display funky
@@ -27,10 +31,18 @@
     
 
     <nav class="sidebar">
+        <div class="sidebar-menu">&#9776;</div>
         
         
     </nav>
 
+    <div class="theme-picker">
+        <button id="theme-picker" aria-label="Pick another theme!">
+            <img src="../../../brush.svg" width="18" alt="Pick another theme!">
+        </button>
+        <div id="theme-choices"></div>
+    </div>
+    <script src="../../../theme.js"></script>
     <nav class="sub">
         <form class="search-form js-only">
             <div class="search-container">
@@ -42,7 +54,7 @@
         </form>
     </nav>
 
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -166,129 +178,129 @@
 <span id="122">122</span>
 <span id="123">123</span>
 <span id="124">124</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! Describes the generic DataFrame, defining a trait</span>
-<span class='doccomment'>//! that all dataframes should share. This is so one can</span>
-<span class='doccomment'>//! optomize the memory footprint of a dataframe for their</span>
-<span class='doccomment'>//! own needs, and be able to use custom dataframes quickly</span>
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>io</span>::<span class='ident'>Write</span>;
-<span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>borrow</span>::<span class='ident'>Cow</span>;
-<span class='kw'>use</span> <span class='ident'>result</span>::<span class='ident'>WebSocketResult</span>;
-<span class='kw'>use</span> <span class='ident'>ws</span>::<span class='ident'>util</span>::<span class='ident'>header</span> <span class='kw'>as</span> <span class='ident'>dfh</span>;
-<span class='kw'>use</span> <span class='ident'>ws</span>::<span class='ident'>util</span>::<span class='ident'>mask</span>::<span class='ident'>Masker</span>;
-<span class='kw'>use</span> <span class='ident'>ws</span>::<span class='ident'>util</span>::<span class='ident'>mask</span>;
+</pre><pre class="rust ">
+<span class="doccomment">//! Describes the generic DataFrame, defining a trait</span>
+<span class="doccomment">//! that all dataframes should share. This is so one can</span>
+<span class="doccomment">//! optomize the memory footprint of a dataframe for their</span>
+<span class="doccomment">//! own needs, and be able to use custom dataframes quickly</span>
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Write</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
+<span class="kw">use</span> <span class="ident">result</span>::<span class="ident">WebSocketResult</span>;
+<span class="kw">use</span> <span class="ident">ws</span>::<span class="ident">util</span>::<span class="ident">header</span> <span class="kw">as</span> <span class="ident">dfh</span>;
+<span class="kw">use</span> <span class="ident">ws</span>::<span class="ident">util</span>::<span class="ident">mask</span>::<span class="ident">Masker</span>;
+<span class="kw">use</span> <span class="ident">ws</span>::<span class="ident">util</span>::<span class="ident">mask</span>;
 
-<span class='doccomment'>/// A generic DataFrame. Every dataframe should be able to</span>
-<span class='doccomment'>/// provide these methods. (If the payload is not known in advance then</span>
-<span class='doccomment'>/// rewrite the write_payload method)</span>
-<span class='kw'>pub</span> <span class='kw'>trait</span> <span class='ident'>DataFrame</span> {
-    <span class='doccomment'>/// Is this dataframe the final dataframe of the message?</span>
-    <span class='kw'>fn</span> <span class='ident'>is_last</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span>;
-    <span class='doccomment'>/// What type of data does this dataframe contain?</span>
-    <span class='kw'>fn</span> <span class='ident'>opcode</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u8</span>;
-    <span class='doccomment'>/// Reserved bits of this dataframe</span>
-    <span class='kw'>fn</span> <span class='ident'>reserved</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> [<span class='ident'>bool</span>; <span class='number'>3</span>];
-    <span class='doccomment'>/// Entire payload of the dataframe. If not known then implement</span>
-    <span class='doccomment'>/// write_payload as that is the actual method used when sending the</span>
-    <span class='doccomment'>/// dataframe over the wire.</span>
-    <span class='kw'>fn</span> <span class='ident'>payload</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Cow</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, [<span class='ident'>u8</span>]<span class='op'>&gt;</span>;
+<span class="doccomment">/// A generic DataFrame. Every dataframe should be able to</span>
+<span class="doccomment">/// provide these methods. (If the payload is not known in advance then</span>
+<span class="doccomment">/// rewrite the write_payload method)</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">DataFrame</span> {
+    <span class="doccomment">/// Is this dataframe the final dataframe of the message?</span>
+    <span class="kw">fn</span> <span class="ident">is_last</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span>;
+    <span class="doccomment">/// What type of data does this dataframe contain?</span>
+    <span class="kw">fn</span> <span class="ident">opcode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u8</span>;
+    <span class="doccomment">/// Reserved bits of this dataframe</span>
+    <span class="kw">fn</span> <span class="ident">reserved</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">bool</span>; <span class="number">3</span>];
+    <span class="doccomment">/// Entire payload of the dataframe. If not known then implement</span>
+    <span class="doccomment">/// write_payload as that is the actual method used when sending the</span>
+    <span class="doccomment">/// dataframe over the wire.</span>
+    <span class="kw">fn</span> <span class="ident">payload</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span>;
 
-    <span class='doccomment'>/// How long (in bytes) is this dataframe&#39;s payload</span>
-    <span class='kw'>fn</span> <span class='ident'>size</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='self'>self</span>.<span class='ident'>payload</span>().<span class='ident'>len</span>()
+    <span class="doccomment">/// How long (in bytes) is this dataframe&#39;s payload</span>
+    <span class="kw">fn</span> <span class="ident">size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="self">self</span>.<span class="ident">payload</span>().<span class="ident">len</span>()
     }
 
-    <span class='doccomment'>/// Write the payload to a writer</span>
-    <span class='kw'>fn</span> <span class='ident'>write_payload</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>socket</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>W</span>: <span class='ident'>Write</span> {
-        <span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>socket</span>.<span class='ident'>write_all</span>(<span class='kw-2'>&amp;</span><span class='op'>*</span><span class='self'>self</span>.<span class='ident'>payload</span>()));
-        <span class='prelude-val'>Ok</span>(())
+    <span class="doccomment">/// Write the payload to a writer</span>
+    <span class="kw">fn</span> <span class="ident">write_payload</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">socket</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">W</span>: <span class="ident">Write</span> {
+        <span class="macro">try</span><span class="macro">!</span>(<span class="ident">socket</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="self">self</span>.<span class="ident">payload</span>()));
+        <span class="prelude-val">Ok</span>(())
     }
 
-    <span class='doccomment'>/// Writes a DataFrame to a Writer.</span>
-    <span class='kw'>fn</span> <span class='ident'>write_to</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>writer</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>, <span class='ident'>mask</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>
-	<span class='kw'>where</span> <span class='ident'>W</span>: <span class='ident'>Write</span> {
-    	<span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>flags</span> <span class='op'>=</span> <span class='ident'>dfh</span>::<span class='ident'>DataFrameFlags</span>::<span class='ident'>empty</span>();
-    	<span class='kw'>if</span> <span class='self'>self</span>.<span class='ident'>is_last</span>() {
-            <span class='ident'>flags</span>.<span class='ident'>insert</span>(<span class='ident'>dfh</span>::<span class='ident'>FIN</span>);
+    <span class="doccomment">/// Writes a DataFrame to a Writer.</span>
+    <span class="kw">fn</span> <span class="ident">write_to</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>, <span class="ident">mask</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+	<span class="kw">where</span> <span class="ident">W</span>: <span class="ident">Write</span> {
+    	<span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">flags</span> <span class="op">=</span> <span class="ident">dfh</span>::<span class="ident">DataFrameFlags</span>::<span class="ident">empty</span>();
+    	<span class="kw">if</span> <span class="self">self</span>.<span class="ident">is_last</span>() {
+            <span class="ident">flags</span>.<span class="ident">insert</span>(<span class="ident">dfh</span>::<span class="ident">FIN</span>);
         }
         {
-            <span class='kw'>let</span> <span class='ident'>reserved</span> <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>reserved</span>();
-        	<span class='kw'>if</span> <span class='ident'>reserved</span>[<span class='number'>0</span>] {
-                <span class='ident'>flags</span>.<span class='ident'>insert</span>(<span class='ident'>dfh</span>::<span class='ident'>RSV1</span>);
+            <span class="kw">let</span> <span class="ident">reserved</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">reserved</span>();
+        	<span class="kw">if</span> <span class="ident">reserved</span>[<span class="number">0</span>] {
+                <span class="ident">flags</span>.<span class="ident">insert</span>(<span class="ident">dfh</span>::<span class="ident">RSV1</span>);
             }
-        	<span class='kw'>if</span> <span class='ident'>reserved</span>[<span class='number'>1</span>] {
-                <span class='ident'>flags</span>.<span class='ident'>insert</span>(<span class='ident'>dfh</span>::<span class='ident'>RSV2</span>);
+        	<span class="kw">if</span> <span class="ident">reserved</span>[<span class="number">1</span>] {
+                <span class="ident">flags</span>.<span class="ident">insert</span>(<span class="ident">dfh</span>::<span class="ident">RSV2</span>);
             }
-        	<span class='kw'>if</span> <span class='ident'>reserved</span>[<span class='number'>2</span>] {
-                <span class='ident'>flags</span>.<span class='ident'>insert</span>(<span class='ident'>dfh</span>::<span class='ident'>RSV3</span>);
+        	<span class="kw">if</span> <span class="ident">reserved</span>[<span class="number">2</span>] {
+                <span class="ident">flags</span>.<span class="ident">insert</span>(<span class="ident">dfh</span>::<span class="ident">RSV3</span>);
             }
         }
 
-    	<span class='kw'>let</span> <span class='ident'>masking_key</span> <span class='op'>=</span> <span class='kw'>if</span> <span class='ident'>mask</span> {
-            <span class='prelude-val'>Some</span>(<span class='ident'>mask</span>::<span class='ident'>gen_mask</span>())
-        } <span class='kw'>else</span> {
-            <span class='prelude-val'>None</span>
+    	<span class="kw">let</span> <span class="ident">masking_key</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">mask</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">mask</span>::<span class="ident">gen_mask</span>())
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
         };
 
-    	<span class='kw'>let</span> <span class='ident'>header</span> <span class='op'>=</span> <span class='ident'>dfh</span>::<span class='ident'>DataFrameHeader</span> {
-    		<span class='ident'>flags</span>: <span class='ident'>flags</span>,
-    		<span class='ident'>opcode</span>: <span class='self'>self</span>.<span class='ident'>opcode</span>() <span class='kw'>as</span> <span class='ident'>u8</span>,
-    		<span class='ident'>mask</span>: <span class='ident'>masking_key</span>,
-    		<span class='ident'>len</span>: <span class='self'>self</span>.<span class='ident'>size</span>() <span class='kw'>as</span> <span class='ident'>u64</span>,
+    	<span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="ident">dfh</span>::<span class="ident">DataFrameHeader</span> {
+    		<span class="ident">flags</span>: <span class="ident">flags</span>,
+    		<span class="ident">opcode</span>: <span class="self">self</span>.<span class="ident">opcode</span>() <span class="kw">as</span> <span class="ident">u8</span>,
+    		<span class="ident">mask</span>: <span class="ident">masking_key</span>,
+    		<span class="ident">len</span>: <span class="self">self</span>.<span class="ident">size</span>() <span class="kw">as</span> <span class="ident">u64</span>,
     	};
 
-    	<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>dfh</span>::<span class='ident'>write_header</span>(<span class='ident'>writer</span>, <span class='ident'>header</span>));
+    	<span class="macro">try</span><span class="macro">!</span>(<span class="ident">dfh</span>::<span class="ident">write_header</span>(<span class="ident">writer</span>, <span class="ident">header</span>));
 
-    	<span class='kw'>match</span> <span class='ident'>masking_key</span> {
-    		<span class='prelude-val'>Some</span>(<span class='ident'>mask</span>) <span class='op'>=&gt;</span> {
-                <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>masker</span> <span class='op'>=</span> <span class='ident'>Masker</span>::<span class='ident'>new</span>(<span class='ident'>mask</span>, <span class='ident'>writer</span>);
-                <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>write_payload</span>(<span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>masker</span>))
+    	<span class="kw">match</span> <span class="ident">masking_key</span> {
+    		<span class="prelude-val">Some</span>(<span class="ident">mask</span>) <span class="op">=&gt;</span> {
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">masker</span> <span class="op">=</span> <span class="ident">Masker</span>::<span class="ident">new</span>(<span class="ident">mask</span>, <span class="ident">writer</span>);
+                <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">write_payload</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">masker</span>))
             },
-    		<span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='macro'>try</span><span class='macro'>!</span>(<span class='self'>self</span>.<span class='ident'>write_payload</span>(<span class='ident'>writer</span>)),
+    		<span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">write_payload</span>(<span class="ident">writer</span>)),
     	};
-    	<span class='macro'>try</span><span class='macro'>!</span>(<span class='ident'>writer</span>.<span class='ident'>flush</span>());
-        <span class='prelude-val'>Ok</span>(())
+    	<span class="macro">try</span><span class="macro">!</span>(<span class="ident">writer</span>.<span class="ident">flush</span>());
+        <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class='kw'>impl</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span>, <span class='ident'>D</span><span class='op'>&gt;</span> <span class='ident'>DataFrame</span> <span class='kw'>for</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>D</span>
-<span class='kw'>where</span> <span class='ident'>D</span>: <span class='ident'>DataFrame</span> {
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>is_last</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>bool</span> {
-        <span class='ident'>D</span>::<span class='ident'>is_last</span>(<span class='self'>self</span>)
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">D</span><span class="op">&gt;</span> <span class="ident">DataFrame</span> <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">D</span>
+<span class="kw">where</span> <span class="ident">D</span>: <span class="ident">DataFrame</span> {
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">is_last</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+        <span class="ident">D</span>::<span class="ident">is_last</span>(<span class="self">self</span>)
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>opcode</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>u8</span> {
-        <span class='ident'>D</span>::<span class='ident'>opcode</span>(<span class='self'>self</span>)
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">opcode</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u8</span> {
+        <span class="ident">D</span>::<span class="ident">opcode</span>(<span class="self">self</span>)
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>reserved</span><span class='op'>&lt;</span><span class='lifetime'>&#39;b</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;b</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;b</span> [<span class='ident'>bool</span>; <span class='number'>3</span>] {
-        <span class='ident'>D</span>::<span class='ident'>reserved</span>(<span class='self'>self</span>)
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">reserved</span><span class="op">&lt;</span><span class="lifetime">&#39;b</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;b</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;b</span> [<span class="ident">bool</span>; <span class="number">3</span>] {
+        <span class="ident">D</span>::<span class="ident">reserved</span>(<span class="self">self</span>)
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>payload</span><span class='op'>&lt;</span><span class='lifetime'>&#39;b</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;b</span> <span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>Cow</span><span class='op'>&lt;</span><span class='lifetime'>&#39;b</span>, [<span class='ident'>u8</span>]<span class='op'>&gt;</span> {
-        <span class='ident'>D</span>::<span class='ident'>payload</span>(<span class='self'>self</span>)
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">payload</span><span class="op">&lt;</span><span class="lifetime">&#39;b</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;b</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;b</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span> {
+        <span class="ident">D</span>::<span class="ident">payload</span>(<span class="self">self</span>)
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>size</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>usize</span> {
-        <span class='ident'>D</span>::<span class='ident'>size</span>(<span class='self'>self</span>)
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">size</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+        <span class="ident">D</span>::<span class="ident">size</span>(<span class="self">self</span>)
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>write_payload</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>socket</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>
-    <span class='kw'>where</span> <span class='ident'>W</span>: <span class='ident'>Write</span> {
-        <span class='ident'>D</span>::<span class='ident'>write_payload</span>(<span class='self'>self</span>, <span class='ident'>socket</span>)
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">write_payload</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">socket</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+    <span class="kw">where</span> <span class="ident">W</span>: <span class="ident">Write</span> {
+        <span class="ident">D</span>::<span class="ident">write_payload</span>(<span class="self">self</span>, <span class="ident">socket</span>)
     }
 
-    <span class='attribute'>#[<span class='ident'>inline</span>(<span class='ident'>always</span>)]</span>
-    <span class='kw'>fn</span> <span class='ident'>write_to</span><span class='op'>&lt;</span><span class='ident'>W</span><span class='op'>&gt;</span>(<span class='kw-2'>&amp;</span><span class='self'>self</span>, <span class='ident'>writer</span>: <span class='kw-2'>&amp;</span><span class='kw-2'>mut</span> <span class='ident'>W</span>, <span class='ident'>mask</span>: <span class='ident'>bool</span>) <span class='op'>-&gt;</span> <span class='ident'>WebSocketResult</span><span class='op'>&lt;</span>()<span class='op'>&gt;</span>
-	<span class='kw'>where</span> <span class='ident'>W</span>: <span class='ident'>Write</span> {
-        <span class='ident'>D</span>::<span class='ident'>write_to</span>(<span class='self'>self</span>, <span class='ident'>writer</span>, <span class='ident'>mask</span>)
+    <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">write_to</span><span class="op">&lt;</span><span class="ident">W</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">writer</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>, <span class="ident">mask</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">WebSocketResult</span><span class="op">&lt;</span>()<span class="op">&gt;</span>
+	<span class="kw">where</span> <span class="ident">W</span>: <span class="ident">Write</span> {
+        <span class="ident">D</span>::<span class="ident">write_to</span>(<span class="self">self</span>, <span class="ident">writer</span>, <span class="ident">mask</span>)
     }
 }
 </pre>
@@ -305,18 +317,22 @@
                 <h2>Keyboard Shortcuts</h2>
 
                 <dl>
-                    <dt>?</dt>
+                    <dt><kbd>?</kbd></dt>
                     <dd>Show this help dialog</dd>
-                    <dt>S</dt>
+                    <dt><kbd>S</kbd></dt>
                     <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
+                    <dt><kbd>↑</kbd></dt>
                     <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
+                    <dt><kbd>↓</kbd></dt>
                     <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
+                    <dt><kbd>↹</kbd></dt>
+                    <dd>Switch tab</dd>
+                    <dt><kbd>&#9166;</kbd></dt>
                     <dd>Go to active search result</dd>
-                    <dt>+</dt>
-                    <dd>Collapse/expand all sections</dd>
+                    <dt><kbd>+</kbd></dt>
+                    <dd>Expand all sections</dd>
+                    <dt><kbd>-</kbd></dt>
+                    <dd>Collapse all sections</dd>
                 </dl>
             </div>
 
@@ -348,11 +364,8 @@
     <script>
         window.rootPath = "../../../";
         window.currentCrate = "websocket";
-        window.playgroundUrl = "";
     </script>
-    <script src="../../../jquery.js"></script>
     <script src="../../../main.js"></script>
-    
     <script defer src="../../../search-index.js"></script>
 </body>
 </html>
