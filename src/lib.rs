@@ -23,7 +23,7 @@
 //!
 //! ## Executable manpage
 //!
-//! [All manpages](https://cdn.rawgit.com/nabijaczleweli/dishub/man/dishub.1.html)
+//! [All manpages](https://rawcdn.githack.com/nabijaczleweli/dishub/man/dishub.1.html)
 
 
 extern crate rustc_serialize;
