@@ -1,60 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/discord-0.7.0/src/connection.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>connection.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../normalize.css">
-    <link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle">
-    
-    <link rel="stylesheet" type="text/css" href="../../dark.css">
-    <link rel="stylesheet" type="text/css" href="../../main.css" id="themeStyle">
-    <script src="../../storage.js"></script>
-    
-
-    
-    
-</head>
-<body class="rustdoc source">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        <div class="sidebar-menu">&#9776;</div>
-        
-        
-    </nav>
-
-    <div class="theme-picker">
-        <button id="theme-picker" aria-label="Pick another theme!">
-            <img src="../../brush.svg" width="18" alt="Pick another theme!">
-        </button>
-        <div id="theme-choices"></div>
-    </div>
-    <script src="../../theme.js"></script>
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/discord-0.7.0/src/connection.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>connection.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -645,7 +589,7 @@
 			},
 			<span class="ident">GatewayEvent</span>::<span class="ident">InvalidateSession</span> <span class="op">=&gt;</span> {
 				<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Session invalidated, reidentifying&quot;</span>);
-				<span class="kw">let</span> _ <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">identify</span>));
+				<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">tx</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">identify</span>));
 				<span class="kw">match</span> <span class="macro">try</span><span class="macro">!</span>(<span class="ident">receiver</span>.<span class="ident">recv_json</span>(<span class="ident">GatewayEvent</span>::<span class="ident">decode</span>)) {
 					<span class="ident">GatewayEvent</span>::<span class="ident">Dispatch</span>(<span class="ident">seq</span>, <span class="ident">Event</span>::<span class="ident">Ready</span>(<span class="ident">event</span>)) <span class="op">=&gt;</span> {
 						<span class="ident">sequence</span> <span class="op">=</span> <span class="ident">seq</span>;
@@ -714,7 +658,7 @@
 				}
 			})
 			.<span class="ident">build</span>();
-		<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">msg</span>));
+		<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">msg</span>));
 	}
 
 	<span class="doccomment">/// Get a handle to the voice connection for a server.</span>
@@ -773,16 +717,16 @@
 			}
 			<span class="prelude-val">Ok</span>(<span class="ident">GatewayEvent</span>::<span class="ident">Dispatch</span>(<span class="ident">sequence</span>, <span class="ident">event</span>)) <span class="op">=&gt;</span> {
 				<span class="self">self</span>.<span class="ident">last_sequence</span> <span class="op">=</span> <span class="ident">sequence</span>;
-				<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">Sequence</span>(<span class="ident">sequence</span>));
+				<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">Sequence</span>(<span class="ident">sequence</span>));
 				<span class="kw">if</span> <span class="kw">let</span> <span class="ident">Event</span>::<span class="ident">Resumed</span> { <span class="ident">heartbeat_interval</span>, .. } <span class="op">=</span> <span class="ident">event</span> {
 					<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Resumed successfully&quot;</span>);
-					<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">ChangeInterval</span>(<span class="ident">heartbeat_interval</span>));
+					<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">ChangeInterval</span>(<span class="ident">heartbeat_interval</span>));
 				}
 				<span class="macro">voice_only</span><span class="macro">!</span> {{
 					<span class="kw">if</span> <span class="kw">let</span> <span class="ident">Event</span>::<span class="ident">VoiceStateUpdate</span>(<span class="ident">server_id</span>, <span class="kw-2">ref</span> <span class="ident">voice_state</span>) <span class="op">=</span> <span class="ident">event</span> {
 						<span class="self">self</span>.<span class="ident">voice</span>(<span class="ident">server_id</span>).<span class="ident">__update_state</span>(<span class="ident">voice_state</span>);
 					}
-					<span class="kw">if</span> <span class="kw">let</span> <span class="ident">Event</span>::<span class="ident">VoiceServerUpdate</span> { <span class="ident">server_id</span>, <span class="ident">channel_id</span>: _, <span class="kw-2">ref</span> <span class="ident">endpoint</span>, <span class="kw-2">ref</span> <span class="ident">token</span> } <span class="op">=</span> <span class="ident">event</span> {
+					<span class="kw">if</span> <span class="kw">let</span> <span class="ident">Event</span>::<span class="ident">VoiceServerUpdate</span> { <span class="ident">server_id</span>, <span class="ident">channel_id</span>: <span class="kw">_</span>, <span class="kw-2">ref</span> <span class="ident">endpoint</span>, <span class="kw-2">ref</span> <span class="ident">token</span> } <span class="op">=</span> <span class="ident">event</span> {
 						<span class="self">self</span>.<span class="ident">voice</span>(<span class="ident">server_id</span>).<span class="ident">__update_server</span>(<span class="ident">endpoint</span>, <span class="ident">token</span>);
 					}
 				}}
@@ -794,7 +738,7 @@
 					.<span class="ident">insert</span>(<span class="string">&quot;op&quot;</span>, <span class="number">1</span>)
 					.<span class="ident">insert</span>(<span class="string">&quot;d&quot;</span>, <span class="ident">sequence</span>)
 					.<span class="ident">build</span>();
-				<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">map</span>));
+				<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">map</span>));
 				<span class="self">self</span>.<span class="ident">recv_event</span>()
 			}
 			<span class="prelude-val">Ok</span>(<span class="ident">GatewayEvent</span>::<span class="ident">HeartbeatAck</span>) <span class="op">=&gt;</span> {
@@ -806,7 +750,7 @@
 			<span class="prelude-val">Ok</span>(<span class="ident">GatewayEvent</span>::<span class="ident">InvalidateSession</span>) <span class="op">=&gt;</span> {
 				<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Session invalidated, reidentifying&quot;</span>);
 				<span class="self">self</span>.<span class="ident">session_id</span> <span class="op">=</span> <span class="prelude-val">None</span>;
-				<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">identify</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">token</span>, <span class="self">self</span>.<span class="ident">shard_info</span>)));
+				<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">identify</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">token</span>, <span class="self">self</span>.<span class="ident">shard_info</span>)));
 				<span class="self">self</span>.<span class="ident">recv_event</span>()
 			}
 		}
@@ -816,7 +760,7 @@
 	<span class="kw">fn</span> <span class="ident">reconnect</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ReadyEvent</span><span class="op">&gt;</span> {
 		<span class="macro">debug</span><span class="macro">!</span>(<span class="string">&quot;Reconnecting...&quot;</span>);
 		<span class="comment">// Make two attempts on the current known gateway URL</span>
-		<span class="kw">for</span> _ <span class="kw">in</span> <span class="number">0</span>..<span class="number">2</span> {
+		<span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="number">2</span> {
 			<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>((<span class="ident">conn</span>, <span class="ident">ready</span>)) <span class="op">=</span> <span class="ident">Connection</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">ws_url</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">token</span>, <span class="self">self</span>.<span class="ident">shard_info</span>) {
 				<span class="macro">try</span><span class="macro">!</span>(::<span class="ident">std</span>::<span class="ident">mem</span>::<span class="ident">replace</span>(<span class="self">self</span>, <span class="ident">conn</span>).<span class="ident">shutdown</span>());
 				<span class="self">self</span>.<span class="ident">session_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">ready</span>.<span class="ident">session_id</span>.<span class="ident">clone</span>());
@@ -877,7 +821,7 @@
 
 		<span class="comment">// switch everything to the new connection</span>
 		<span class="self">self</span>.<span class="ident">receiver</span> <span class="op">=</span> <span class="ident">receiver</span>;
-		<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">ChangeSender</span>(<span class="ident">sender</span>));
+		<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">ChangeSender</span>(<span class="ident">sender</span>));
 		<span class="prelude-val">Ok</span>(<span class="ident">first_event</span>)
 	}
 
@@ -905,7 +849,7 @@
 				.<span class="ident">insert</span>(<span class="string">&quot;limit&quot;</span>, <span class="number">0</span>)
 			)
 			.<span class="ident">build</span>();
-		<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">msg</span>));
+		<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">msg</span>));
 	}
 
 	<span class="doccomment">/// Requests a download of online member lists.</span>
@@ -920,7 +864,7 @@
 			.<span class="ident">insert</span>(<span class="string">&quot;op&quot;</span>, <span class="number">12</span>)
 			.<span class="ident">insert_array</span>(<span class="string">&quot;d&quot;</span>, <span class="op">|</span><span class="ident">a</span><span class="op">|</span> <span class="ident">servers</span>.<span class="ident">iter</span>().<span class="ident">fold</span>(<span class="ident">a</span>, <span class="op">|</span><span class="ident">a</span>, <span class="ident">s</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">push</span>(<span class="ident">s</span>.<span class="number">0</span>)))
 			.<span class="ident">build</span>();
-		<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">msg</span>));
+		<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">msg</span>));
 	}
 
 	<span class="doccomment">/// Request a synchronize of active calls for the specified channels.</span>
@@ -934,7 +878,7 @@
 					.<span class="ident">insert</span>(<span class="string">&quot;channel_id&quot;</span>, <span class="ident">channel</span>.<span class="number">0</span>)
 				)
 				.<span class="ident">build</span>();
-			<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">msg</span>));
+			<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">msg</span>));
 		}
 	}
 
@@ -953,7 +897,7 @@
 				.<span class="ident">insert</span>(<span class="string">&quot;limit&quot;</span>, <span class="number">0</span>)
 			)
 			.<span class="ident">build</span>();
-		<span class="kw">let</span> _ <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">msg</span>));
+		<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">keepalive_channel</span>.<span class="ident">send</span>(<span class="ident">Status</span>::<span class="ident">SendMessage</span>(<span class="ident">msg</span>));
 	}
 }
 
@@ -986,7 +930,7 @@
 <span class="attribute">#[<span class="ident">inline</span>]</span>
 <span class="kw">fn</span> <span class="ident">build_gateway_url</span>(<span class="ident">base</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>::<span class="ident">websocket</span>::<span class="ident">client</span>::<span class="ident">request</span>::<span class="ident">Url</span><span class="op">&gt;</span> {
 	::<span class="ident">websocket</span>::<span class="ident">client</span>::<span class="ident">request</span>::<span class="ident">Url</span>::<span class="ident">parse</span>(<span class="kw-2">&amp;</span><span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}?v={}&quot;</span>, <span class="ident">base</span>, <span class="ident">GATEWAY_VERSION</span>))
-		.<span class="ident">map_err</span>(<span class="op">|</span>_<span class="op">|</span> <span class="ident">Error</span>::<span class="ident">Other</span>(<span class="string">&quot;Invalid gateway URL&quot;</span>))
+		.<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Error</span>::<span class="ident">Other</span>(<span class="string">&quot;Invalid gateway URL&quot;</span>))
 }
 
 <span class="kw">fn</span> <span class="ident">keepalive</span>(<span class="ident">interval</span>: <span class="ident">u64</span>, <span class="kw-2">mut</span> <span class="ident">sender</span>: <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">WebSocketStream</span><span class="op">&gt;</span>, <span class="ident">channel</span>: <span class="ident">mpsc</span>::<span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">Status</span><span class="op">&gt;</span>) {
@@ -1029,71 +973,7 @@
 			}
 		}
 	}
-	<span class="kw">let</span> _ <span class="op">=</span> <span class="ident">sender</span>.<span class="ident">get_mut</span>().<span class="ident">shutdown</span>(::<span class="ident">std</span>::<span class="ident">net</span>::<span class="ident">Shutdown</span>::<span class="ident">Both</span>);
+	<span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">sender</span>.<span class="ident">get_mut</span>().<span class="ident">shutdown</span>(::<span class="ident">std</span>::<span class="ident">net</span>::<span class="ident">Shutdown</span>::<span class="ident">Both</span>);
 }
 </pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt><kbd>?</kbd></dt>
-                    <dd>Show this help dialog</dd>
-                    <dt><kbd>S</kbd></dt>
-                    <dd>Focus the search field</dd>
-                    <dt><kbd>↑</kbd></dt>
-                    <dd>Move up in search results</dd>
-                    <dt><kbd>↓</kbd></dt>
-                    <dd>Move down in search results</dd>
-                    <dt><kbd>↹</kbd></dt>
-                    <dd>Switch tab</dd>
-                    <dt><kbd>&#9166;</kbd></dt>
-                    <dd>Go to active search result</dd>
-                    <dt><kbd>+</kbd></dt>
-                    <dd>Expand all sections</dd>
-                    <dt><kbd>-</kbd></dt>
-                    <dd>Collapse all sections</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code> or <code>* -> vec</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../";
-        window.currentCrate = "discord";
-    </script>
-    <script src="../../main.js"></script>
-    <script defer src="../../search-index.js"></script>
-</body>
-</html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "discord";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>
