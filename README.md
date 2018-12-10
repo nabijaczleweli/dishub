@@ -1,2 +1,2 @@
 # dishub docs
-Viewable as rendered HTML [here](https://cdn.rawgit.com/nabijaczleweli/dishub/doc/dishub/index.html) 
+Viewable as rendered HTML [here](https://rawcdn.githack.com/nabijaczleweli/dishub/doc/dishub/index.html) 
